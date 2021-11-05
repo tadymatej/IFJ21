@@ -10,6 +10,59 @@
 
 #define MAX_LEN 128
 
+char get_next_token(char *string, int *index){
+  return string[(*index)++];
+}
+
+void print_decode(char letter){
+  switch (letter) {
+    case LTE:
+      putchar('<');
+      putchar('=');
+      break;
+    case GTE:
+      putchar('>');
+      putchar('=');
+      break;
+    case NEQ:
+      putchar('~');
+      putchar('=');
+      break;
+    case CONCAT:
+      putchar('.');
+      putchar('.');
+      break;
+    case EQ:
+      putchar('=');
+      putchar('=');
+      break;
+    default:
+      putchar(letter);
+      break;
+  }
+}
+
+
+void decode_stack_print(ext_stack_t *stack, int wide){
+  int index;
+  for (index = 0; index < stack->top_index; index++) {
+    print_decode(stack->array[index]);
+  }
+  for (; index < wide; index++) {
+    putchar(' ');
+  }
+}
+
+void decode_string(char *string, int wide){
+  int index = 0;
+  while(string[index] != '\0'){
+    print_decode(string[index++]);
+  }
+  for (; index < wide; index++) {
+    putchar(' ');
+  }
+}
+
 int symb_to_index(char symbol){
   int index;
   switch (symbol) {
@@ -97,7 +150,7 @@ char get_stack_operand(ext_stack_t *stack){
   return operand;
 }
 
-void precedence_analyzer( const char *infixExpression ) {
+void precedence_analyzer(char *infixExpression ) {
   char *postfixExpression = (char *) calloc(MAX_LEN, sizeof(char));
   unsigned postfixExpressionLength = 0;
   int infix_exp_index = 0;
@@ -110,14 +163,16 @@ void precedence_analyzer( const char *infixExpression ) {
 
   int done = 0;     //when whole expression is processed
   char operator = '<';
-  printf("Stack                          | op |   Input                        | top | output    \n" );
+  printf("Stack                         | op |   Input                       | top | output    \n" );
   while(!done){
     //first index is operand at the top of stack, second operator is next char from infixExpression
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(infixExpression[infix_exp_index])];
 
-    stack_print(stack, 30);
-    printf("| %c  | %30s | %c  | %30s \n", operator, &infixExpression[infix_exp_index], top_stack_operand, postfixExpression);
-    //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, identifier,
+    decode_stack_print(stack, 30);
+    printf("| %c  |", operator);
+    decode_string(&infixExpression[infix_exp_index], 30);
+    printf("| %c   | %30s \n", top_stack_operand, postfixExpression);
+    //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, LTE, GTE, NEQ, EQ, CONCAT, identifier,
     switch (operator) {
       case '<':  //TODO doriesit operator a prev operator
         temp = stack_top(stack);

@@ -1,4 +1,3 @@
-
 /* ***************************** c204-test.c ******************************** */
 /*  Předmět: Algoritmy (IAL) - FIT VUT v Brně                                 */
 /*  Úkol: c204 - Převod infixového výrazu na postfixový (s využitím c202)     */
@@ -16,7 +15,9 @@
 #include <string.h>
 #include <assert.h>
 
+#define STRING_LEN 100
 int error_flag;
+char formated_string[STRING_LEN];
 
 /******************************************************************************
  * Speciální ošetření testovaných funkcí.                                     *
@@ -43,63 +44,69 @@ int main() {
 
 	printf("[TEST01] Upper and lower case characters with plus operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a+B=");
+	convert_and_verify("a+Bx= ");
 
 	printf("[TEST02] Digits with minus operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("0-1=");
+	convert_and_verify("0-1= ");
 
 	printf("[TEST03] Mixed operands with multiplication operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a*0=");
+	convert_and_verify("a*0= ");
 
 	printf("[TEST04] Mixed operands with division operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("B/1=");
+	convert_and_verify("B/1= ");
 
 	printf("[TEST05] Parentheses support\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("(a+b)=");
+	convert_and_verify("(a+b)= ");
 
 	printf("[TEST06] Expression evaluation from the left to the right\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a+b+c=");
+	convert_and_verify("a+b+c= ");
 
 	printf("[TEST07] Minus operator does not have higher priority than plus\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a+b-c=");
+	convert_and_verify("a+b-c= ");
 
 	printf("[TEST08] Plus operator does not have higher priority than minus\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("A-B+C=");
+	convert_and_verify("A-B+C= ");
 
 	printf("[TEST09] Division operator does not have higher priority than multiplication\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("1*2/3=");
+	convert_and_verify("1*2/3= ");
 
 	printf("[TEST10] Multiplication operator does not have higher priority than division\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a/B*C=");
+	convert_and_verify("a/B*C= ");
 
 	printf("[TEST11] Multiplication operator has higher priority than plus\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a*B+c=");
+	convert_and_verify("a*B+c= ");
 
 	printf("[TEST12] Parentheses change operator priority\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("A+(B-c)=");
+	convert_and_verify("A+(B-c)= ");
 
 	printf("[TEST13] Parentheses change operator priority\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("A*(b/c)=");
+	convert_and_verify("A*(b/c)= ");
 
 	printf("[TEST14] Parentheses change operator priority\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("A*(b-C)=");
+	convert_and_verify("A*(b-C)= ");
 
 	printf("[TEST15] Complex expression conversion\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("(A*0+b)*((c*(1+D))-(e/(3*f+g)))=");
+	convert_and_verify("(A*0+b)*((c*(1+D))-(e/(3*f+g)))= ");
+
+	printf("[TEST16] IFJ21 basic expression\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("Expression: a ~= b =\n");
+	snprintf(formated_string, STRING_LEN, "a %c b =", NEQ);
+	convert_and_verify(formated_string);
 
 	printf("\n----- C204 - The End of Basic Tests -----\n");
 

@@ -21,12 +21,26 @@
                          /*(*/ {'<', '<', '<', '=', '<', '#'},\
                          /*)*/ {'>', '>', '#', '>', '#', '>'},\
                          /*i*/ {'>', '>', '#', '>', '#', '>'},\
-                         /*=*/ {'<', '<', '<', '#', '<', '&'} }
+                         /*=*/ {'<', '<', '<', '#', '<', '&'}}
 
 #define STACK_END '=' //'=' is because the ending symbol of given expression is '=', so at the bottom should be the same
 #define NT '@' //this is substitution for nonterminal, as this character cannot be used in Expression
 
-void precedence_analyzer( const char *expression );
+//substitutions for double character operators
+/*
+#define LTE 243
+#define GTE 242
+#define NEQ 240
+#define EQ 241
+#define CONCAT 245
+*/
+#define LTE -2
+#define GTE -3
+#define NEQ -4
+#define EQ -5
+#define CONCAT -6
+
+void precedence_analyzer(char *expression );
 
 #endif
 
