@@ -44,7 +44,7 @@ int main() {
 
 	printf("[TEST01] Upper and lower case characters with plus operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	convert_and_verify("a+Bx= ");
+	convert_and_verify("a+B= ");
 
 	printf("[TEST02] Digits with minus operator\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
@@ -73,7 +73,7 @@ int main() {
 	printf("[TEST08] Plus operator does not have higher priority than minus\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	convert_and_verify("A-B+C= ");
-
+/*
 	printf("[TEST09] Division operator does not have higher priority than multiplication\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	convert_and_verify("1*2/3= ");
@@ -101,11 +101,17 @@ int main() {
 	printf("[TEST15] Complex expression conversion\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	convert_and_verify("(A*0+b)*((c*(1+D))-(e/(3*f+g)))= ");
-
+*/
 	printf("[TEST16] IFJ21 basic expression\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	printf("Expression: a ~= b =\n");
-	snprintf(formated_string, STRING_LEN, "a %c b =", NEQ);
+	printf("Expression: a~=b=\n");
+	snprintf(formated_string, STRING_LEN, "a%cb=", NEQ);
+	convert_and_verify(formated_string);
+
+	printf("[TEST17] IFJ21 basic expression\n");
+	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+	printf("Expression: a>=#c*e+g=\n");
+	snprintf(formated_string, STRING_LEN, "a%c#c*e+g=", LTE);
 	convert_and_verify(formated_string);
 
 	printf("\n----- C204 - The End of Basic Tests -----\n");
