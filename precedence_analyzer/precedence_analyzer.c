@@ -7,6 +7,7 @@
 */
 
 #include "precedence_analyzer.h"
+#include <string.h>
 
 #define MAX_LEN 128
 
@@ -14,49 +15,60 @@ char get_next_token(char *string, int *index){
   return string[(*index)++];
 }
 
-void print_decode(char letter){
-  switch (letter) {
-    case LTE:
-      putchar('<');
-      putchar('=');
-      break;
-    case GTE:
-      putchar('>');
-      putchar('=');
-      break;
-    case NEQ:
-      putchar('~');
-      putchar('=');
-      break;
-    case CONCAT:
-      putchar('.');
-      putchar('.');
-      break;
-    case EQ:
-      putchar('=');
-      putchar('=');
-      break;
-    default:
-      putchar(letter);
-      break;
+void string_decode(char *source, char *dest, int source_len){
+  int index_source = 0;
+  int dest_index = 0;
+  while(source[index_source]){
+    switch (source[index_source]) {
+      case LTE:
+        dest[dest_index++] = '<';
+        dest[dest_index++] = '=';
+        break;
+      case GTE:
+        dest[dest_index++] = '>';
+        dest[dest_index++] = '=';
+        break;
+      case NEQ:
+        dest[dest_index++] = '~';
+        dest[dest_index++] = '=';
+        break;
+      case CONCAT:
+        dest[dest_index++] = '.';
+        dest[dest_index++] = '.';
+        break;
+      case EQ:
+        dest[dest_index++] = '=';
+        dest[dest_index++] = '=';
+        break;
+      default:
+        dest[dest_index++] = source[index_source];
+        break;
+    }
+    index_source++;
+    if (index_source == source_len) break;
   }
+  dest[dest_index] = '\0';
 }
 
 
 void decode_stack_print(ext_stack_t *stack, int wide){
   int index;
-  for (index = 0; index < stack->top_index; index++) {
-    print_decode(stack->array[index]);
+  char decoded_string[MAX_LEN] = {'\0'};
+  string_decode(stack->array, decoded_string, stack->top_index+1);
+  for (index = 0; decoded_string[index]; index++) {
+    putchar(decoded_string[index]);
   }
   for (; index < wide; index++) {
     putchar(' ');
   }
 }
 
-void decode_string(char *string, int wide){
+void decode_print_string(char *string, int wide){
   int index = 0;
-  while(string[index] != '\0'){
-    print_decode(string[index++]);
+  char decoded_string[MAX_LEN] = {'\0'};
+  string_decode(string, decoded_string, MAX_LEN);
+  while(decoded_string[index]){
+    putchar(decoded_string[index++]);
   }
   for (; index < wide; index++) {
     putchar(' ');
@@ -66,26 +78,40 @@ void decode_string(char *string, int wide){
 int symb_to_index(char symbol){
   int index;
   switch (symbol) {
-    case '+': case '-':
+    case '#':
       index = 0;
       break;
-    case '*': case '/':
+    case '*': case '/': case IDIV:
       index = 1;
       break;
-    case '(':
+    case '+': case '-':
       index = 2;
       break;
-    case ')':
+    case CONCAT:
       index = 3;
       break;
+    case LTE: case GTE: case NEQ: case EQ: case '>': case '<':
+      index = 4;
+      break;
+    case '(':
+      index = 7;
+      break;
+    case ')':
+      index = 8;
+      break;
     case STACK_END:
-      index = 5;
+      index = 9;
       break;
     default:
-      index = 4;
+      index = 5;
       break;
   }
   return index;
+}
+
+void decode_append(char operator, char *dest, unsigned *dest_len){
+  string_decode(&operator , dest, 1);
+  *dest_len += strlen(dest);
 }
 
 /**
@@ -106,8 +132,17 @@ int symb_to_index(char symbol){
  */
 void doOperation(ext_stack_t *stack, char operator, char *postfixExpression, unsigned *postfixExpressionLength) {
   switch (operator) {
-    case '+': case'-': case '*': case '/':
-      postfixExpression[(*postfixExpressionLength)++] = operator; //add operator to postfixExpression
+    case '#': //teplace <#E with E
+      postfixExpression[(*postfixExpressionLength)++] = operator;
+      stack_pop(stack);
+      stack_pop(stack);
+      stack_pop(stack);
+      stack_push(stack, NT);
+      break;
+    case '+': case'-': case '*': case '/': case '<': case '>':
+    case LTE: case GTE: case IDIV: case NEQ: case EQ: case CONCAT:
+      //postfixExpression[(*postfixExpressionLength)++] = operator; //add operator to postfixExpression
+      decode_append(operator, &(postfixExpression[*postfixExpressionLength]), postfixExpressionLength);
       stack_pop(stack); //pop whole expression, for instance <E*E and replace it with single E
       stack_pop(stack);
       stack_pop(stack);
@@ -158,25 +193,25 @@ void precedence_analyzer(char *infixExpression ) {
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
   ext_stack_t *stack = stack_init();
   char top_stack_operand = STACK_END;
-  char temp;
+  char top;
   stack_push(stack, top_stack_operand); //stack is prepared now
 
   int done = 0;     //when whole expression is processed
   char operator = '<';
-  printf("Stack                         | op |   Input                       | top | output    \n" );
+  printf("Stack                         | op |   Input                      | top | output    \n" );
   while(!done){
     //first index is operand at the top of stack, second operator is next char from infixExpression
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(infixExpression[infix_exp_index])];
 
     decode_stack_print(stack, 30);
     printf("| %c  |", operator);
-    decode_string(&infixExpression[infix_exp_index], 30);
+    decode_print_string(&infixExpression[infix_exp_index], 30);
     printf("| %c   | %30s \n", top_stack_operand, postfixExpression);
     //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, LTE, GTE, NEQ, EQ, CONCAT, identifier,
     switch (operator) {
       case '<':  //TODO doriesit operator a prev operator
-        temp = stack_top(stack);
-        if(temp == NT) { //if top of stack looks like $E and we want $<E*
+        top = stack_top(stack);
+        if(top == NT) { //if top of stack looks like $E and we want $<E*
           stack_pop(stack);
           stack_push(stack, '<');
           stack_push(stack, NT);
