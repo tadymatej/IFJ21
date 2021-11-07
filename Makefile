@@ -25,7 +25,7 @@ $(SIMPLE_STACK)-test: $(TEST_PATH)$(SIMPLE_STACK)-test.c $(LIB_PATH)$(SIMPLE_STA
 	$(CC) $(CFLAGS) -o build/$@ $^
 
 $(SCANNER_PRECEDENCE)-test: $(TEST_PATH)$(SCANNER_PRECEDENCE)-test.c $(ANALYZER_PATH)$(ANALYZER).c $(SCANNER_PATH)scanner.c $(LIB_PATH)*.c
-	mkdir -p /build
+	mkdir -p build/
 	$(CC) $(CFLAGS) -o build/$@ $^
 
 clean:
