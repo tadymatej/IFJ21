@@ -13,7 +13,7 @@ Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *a
 StringsArray* StringsArrayCreate(char separator) {
     StringsArray *strArr = malloc(sizeof(StringsArray));
     if(strArr == NULL) return NULL;
-    strArr->arr = malloc(sizeof(char) * DEFAULT_STRINGS_ARR_LEN);
+    strArr->arr = malloc(sizeof(char) * DEFAULT_STRINGS_ARR_LEN);   //TODO strArr by som prerobil na flexible array member, bude sa to potom dat alokovat na jeden malloc
     if(strArr->arr == NULL) {
         free(strArr);
         return NULL;
@@ -569,7 +569,7 @@ int main(int argc, char **argv) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", sc.row, sc.col);
             sc.actualState = STATE_START;
         }
-        else printf("%s\n", lex2String(token.token_type));
+        else printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
         /*if(token.attribute != NULL) {
             printf("attribute: %s\n", token.attribute);
         }
