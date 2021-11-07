@@ -22,7 +22,7 @@ run_analyzer: $(ANALYZER)-test
 $(SIMPLE_STACK)-test: $(TEST_PATH)$(SIMPLE_STACK)-test.c $(LIB_PATH)$(SIMPLE_STACK).c
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(ANALYZER)-test: $(TEST_PATH)$(ANALYZER)-test.c $(ANALYZER_PATH)$(ANALYZER).c $(LIB_PATH)$(SIMPLE_STACK).c
+scanner_precedence-test: $(TEST_PATH)scanner_precedence-test.c $(ANALYZER_PATH)$(ANALYZER).c $(SCANNER_PATH)scanner.c $(LIB_PATH)*.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:

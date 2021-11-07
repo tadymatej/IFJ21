@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "simple_stack.h"
 #include "scanner.h"
@@ -39,7 +40,7 @@
                       /*   )   */{ '>',   '>',   '>',  '>',   '>',   '#',   '#',    '#',   '>',  '>'},\
                       /*   $   */{ '<',   '<',   '<',  '<',   '<',   '<',   '<',    '<',   '#',  '&'}}
 
-#define STACK_END '=' //'=' is because the ending symbol of given expression is '=', so at the bottom should be the same
+#define STACK_END '$' //dno zásobníka. Ukončuje analýzu, ak sa dostane aj na vstup token, ktorý ukončuje expression
 #define NT '@' //this is substitution for nonterminal, as this character cannot be used in Expression
 
 //substitutions for double character operators
@@ -48,9 +49,9 @@
 #define NEQ -4 // ~=
 #define EQ -5  // ==
 #define CONCAT -6 // ..
-#define IDIV -7 // //
+#define IMOD -7 // //
 
-void precedence_analyzer(char *expression );
+int precedence_analyzer(ScannerContext *sc);
 
 #endif
 

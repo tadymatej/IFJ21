@@ -14,8 +14,9 @@ int main() {
 
 	ScannerContextInit(&sc);
 	strArr = StringsArrayCreate('\0');
-	
-	void precedence_analyzer(char *infixExpression )
+
+	error_flag = precedence_analyzer(&sc);
+	printf("ukoncene spracovanie textu, navratova hodnota: %d", error_flag);
 	return (0);
 }
 

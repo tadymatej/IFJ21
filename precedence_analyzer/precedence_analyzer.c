@@ -7,13 +7,9 @@
 */
 
 #include "precedence_analyzer.h"
-#include <string.h>
+#include "scanner.h"
 
 #define MAX_LEN 128
-
-char get_next_token(char *string, int *index){
-  return string[(*index)++];
-}
 
 void string_decode(char *source, char *dest, int source_len){
   int index_source = 0;
@@ -75,13 +71,47 @@ void decode_print_string(char *string, int wide){
   }
 }
 
+/**
+ *  Funkcia. ktorá preloži typ tokenu na index v precedenčnej tabulke.
+ *  Indexy pre operátory sa musia zhodovať s funkciou symb_to_index
+ *  @param token token, z kktorého chceme index
+ *  @returns index tokenu v precedenčnej tabulke
+ */
+char token_to_symb(Token *token){
+  char symbol;
+  switch(token->token_type){
+    case TOKEN_LEN: symbol = '#'; break;
+    case TOKEN_MUL: symbol = '*'; break;
+    case TOKEN_MOD: symbol = IMOD; break;
+    case TOKEN_DIV: symbol = '/'; break;
+    case TOKEN_ADD: symbol = '+'; break;
+    case TOKEN_SUB: symbol = '-'; break;
+    case TOKEN_CONCAT: symbol = CONCAT; break;
+    case TOKEN_EQ: symbol = EQ; break;
+    case TOKEN_NOTEQ: symbol = NEQ; break;
+    case TOKEN_G: symbol = '>'; break;
+    case TOKEN_L: symbol = '<'; break;
+    case TOKEN_LEQ: symbol = LTE; break;
+    case TOKEN_GEQ: symbol = GTE; break;
+    case TOKEN_ID: symbol = 'i'; break;
+    case TOKEN_NUMBER: symbol = 'i'; break;
+    case TOKEN_NUMBER_INT: symbol = 'i'; break;
+    case TOKEN_START_BRACKET: symbol = '('; break;
+    case TOKEN_END_BRACKET: symbol = ')'; break;
+    default:
+      symbol = STACK_END;
+      break;
+  }
+  return symbol;
+}
+
 int symb_to_index(char symbol){
   int index;
   switch (symbol) {
     case '#':
       index = 0;
       break;
-    case '*': case '/': case IDIV:
+    case '*': case '/': case IMOD:
       index = 1;
       break;
     case '+': case '-':
@@ -140,7 +170,7 @@ void doOperation(simp_stack_t *stack, char operator, char *postfixExpression, un
       stack_push(stack, NT);
       break;
     case '+': case'-': case '*': case '/': case '<': case '>':
-    case LTE: case GTE: case IDIV: case NEQ: case EQ: case CONCAT:
+    case LTE: case GTE: case IMOD: case NEQ: case EQ: case CONCAT:
       //postfixExpression[(*postfixExpressionLength)++] = operator; //add operator to postfixExpression
       decode_append(operator, &(postfixExpression[*postfixExpressionLength]), postfixExpressionLength);
       stack_pop(stack); //pop whole expression, for instance <E*E and replace it with single E
@@ -185,10 +215,16 @@ char get_stack_operand(simp_stack_t *stack){
   return operand;
 }
 
-void precedence_analyzer(char *infixExpression ) {
+int precedence_analyzer(ScannerContext *sc) {
+  //genrovanie postfixoveho zapisu z vstupného reťazca
   char *postfixExpression = (char *) calloc(MAX_LEN, sizeof(char));
   unsigned postfixExpressionLength = 0;
-  int infix_exp_index = 0;
+
+  int error_code = 0;
+
+  //token štartujúci expression
+  Token token = GetNextToken(sc);
+  char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
   simp_stack_t *stack = stack_init();
@@ -198,15 +234,15 @@ void precedence_analyzer(char *infixExpression ) {
 
   int done = 0;     //when whole expression is processed
   char operator = '<';
-  printf("Stack                         | op |   Input                      | top | output    \n" );
+  printf("Stack                         | op | Token           | top | output    \n" );
   while(!done){
-    //first index is operand at the top of stack, second operator is next char from infixExpression
-    operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(infixExpression[infix_exp_index])];
+    //first index is operand at the top of stack, second operator is from token on input
+    token_operator = token_to_symb(&token);
+    operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(token_operator)];
 
     decode_stack_print(stack, 30);
-    printf("| %c  |", operator);
-    decode_print_string(&infixExpression[infix_exp_index], 30);
-    printf("| %c   | %30s \n", top_stack_operand, postfixExpression);
+    printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression);
+
     //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, LTE, GTE, NEQ, EQ, CONCAT, identifier,
     switch (operator) {
       case '<':  //TODO doriesit operator a prev operator
@@ -219,28 +255,36 @@ void precedence_analyzer(char *infixExpression ) {
         else{                       // adding identifier to top of the stack
           stack_push(stack, '<');
         }
-          stack_push(stack, infixExpression[infix_exp_index++]);
+        stack_push(stack, token_operator);
+        token = GetNextToken(sc);
         break;
       case '>':
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
         break;
       case '=':
-        stack_push(stack, infixExpression[infix_exp_index++]);
+        stack_push(stack, token_operator);
+        token = GetNextToken(sc);
         break;
       case '#':
         fprintf(stderr, "Error: Submitted expression is not syntactically correct");
+        TokenStore(token, sc);
         done = 1;
         break;
       case '&':
         done = 1;
-        postfixExpression[postfixExpressionLength++] = '=';
+        if (!stack_empty(stack)) {
+          error_code = 1;
+          fprintf(stderr, "Error: Submitted expression is not syntactically correct");
+        }
+        TokenStore(token, sc);
         postfixExpression[postfixExpressionLength] = 0;
-        break;
+        return error_code;
+        //break;
     }
     top_stack_operand = get_stack_operand(stack);
   }
   free(postfixExpression);
-  return;
+  return error_code;
 }
 
 //koniec súboru precedence_analyzer.c
