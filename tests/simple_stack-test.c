@@ -1,11 +1,4 @@
 
-/* ******************** extended_stack-test.c ******************************* */
-/*  Předmět: Algoritmy (IAL) - FIT VUT v Brně                                 */
-/*  Vytvořil: Václav Topinka, září 2005                                       */
-/*  Úpravy: Kamil Jeřábek, září 2019                                          */
-/*          Daniel Dolejška, září 2021                                        */
-/* ************************************************************************** */
-
 /* Program je z upravený test na úlohu c202 */
 
 #include "simple_stack.h"
@@ -22,7 +15,7 @@ int error_e_stack;
 int solved;
 
 /** Vytiskne obsah zásobníku. */
-void stackPrint( ext_stack_t *stack ) {
+void stackPrint( simp_stack_t *stack ) {
 	if (solved)
 	{
 		int maxi = stack->top_index;
@@ -40,20 +33,20 @@ void stackPrint( ext_stack_t *stack ) {
 }
 
 /** Zavolá funkci Stack_Init a v případě, že nebyla řešena, ohlásí to. */
-void use_stack_init(ext_stack_t **stack) {
+void use_stack_init(simp_stack_t **stack) {
 	solved = TRUE;
 	*stack = stack_init();
 }
 
 /** Zavolá funkci Stack_IsEmpty a vytiskne výsledek. */
-void use_stack_empty( ext_stack_t *stack ) {
+void use_stack_empty( simp_stack_t *stack ) {
 	solved = TRUE;
 	int i = stack_empty(stack);
 	printf("Stack_IsEmpty returned '%s'\n", i ? "TRUE" : "FALSE");
 }
 
 /** Zavolá funkci Stack_Top a vytiskne výsledek. */
-void use_stack_top( ext_stack_t *stack ) {
+void use_stack_top( simp_stack_t *stack ) {
 	solved = TRUE;
 	error_e_stack = 0;
 	char c;
@@ -63,13 +56,13 @@ void use_stack_top( ext_stack_t *stack ) {
 }
 
 /** Zavolá funkci Stack_Pop. */
-void use_stack_pop( ext_stack_t *stack ) {
+void use_stack_pop( simp_stack_t *stack ) {
 	solved = TRUE;
 	stack_pop(stack);
 }
 
 /** Zavolá funkci Stack_Push. */
-void use_stack_push( ext_stack_t *stack, char c ) {
+void use_stack_push( simp_stack_t *stack, char c ) {
 	solved = TRUE;
 	stack_push(stack, c);
 	if (!solved)
@@ -86,7 +79,7 @@ int main() {
 
 	printf("\n[TEST01] Stack initialization\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	ext_stack_t *stack;
+	simp_stack_t *stack;
 	use_stack_init(&stack);
 	stackPrint(stack);
 

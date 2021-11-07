@@ -51,7 +51,7 @@ void string_decode(char *source, char *dest, int source_len){
 }
 
 
-void decode_stack_print(ext_stack_t *stack, int wide){
+void decode_stack_print(simp_stack_t *stack, int wide){
   int index;
   char decoded_string[MAX_LEN] = {'\0'};
   string_decode(stack->array, decoded_string, stack->top_index+1);
@@ -130,7 +130,7 @@ void decode_append(char operator, char *dest, unsigned *dest_len){
  * @param postfixExpression Znakový řetězec obsahující výsledný postfixový výraz
  * @param postfixExpressionLength Ukazatel na aktuální délku výsledného postfixového výrazu
  */
-void doOperation(ext_stack_t *stack, char operator, char *postfixExpression, unsigned *postfixExpressionLength) {
+void doOperation(simp_stack_t *stack, char operator, char *postfixExpression, unsigned *postfixExpressionLength) {
   switch (operator) {
     case '#': //teplace <#E with E
       postfixExpression[(*postfixExpressionLength)++] = operator;
@@ -174,7 +174,7 @@ void doOperation(ext_stack_t *stack, char operator, char *postfixExpression, uns
  * @param stack Stack with valid expression on it
  * @returns Operand nearest to the top of stack
 */
-char get_stack_operand(ext_stack_t *stack){
+char get_stack_operand(simp_stack_t *stack){
   char operand;
   operand = stack_top(stack);
   if (operand == NT) {
@@ -191,7 +191,7 @@ void precedence_analyzer(char *infixExpression ) {
   int infix_exp_index = 0;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
-  ext_stack_t *stack = stack_init();
+  simp_stack_t *stack = stack_init();
   char top_stack_operand = STACK_END;
   char top;
   stack_push(stack, top_stack_operand); //stack is prepared now

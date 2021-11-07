@@ -2,8 +2,6 @@
 #ifndef __SCANNER__
 #define __SCANNER__
 
-StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
-
 /**
  * Stavy automatu scanneru
  */
@@ -61,6 +59,8 @@ typedef struct {
 typedef unsigned long long ptrInt;
 
 #define DEFAULT_STRINGS_ARR_LEN 100
+
+StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
 
 /**
  * Vytvoří nový token

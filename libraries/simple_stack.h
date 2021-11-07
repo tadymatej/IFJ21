@@ -30,23 +30,23 @@ typedef struct ext_stack_struct {
   int top_index;
   int size;
   char *array;
-}ext_stack_t;
+}simp_stack_t;
 
-ext_stack_t *stack_init();
+simp_stack_t *stack_init();
 
-int stack_empty(ext_stack_t *stack);
+int stack_empty(simp_stack_t *stack);
 
-void stack_push(ext_stack_t *stack, char symbol);
+void stack_push(simp_stack_t *stack, char symbol);
 
-void stack_pop(ext_stack_t *stack);
+void stack_pop(simp_stack_t *stack);
 
-char stack_top(ext_stack_t *stack);
+char stack_top(simp_stack_t *stack);
 
-void stack_push_word(ext_stack_t *stack, const char *source);
+void stack_push_word(simp_stack_t *stack, const char *source);
 
-void sack_pop_word(ext_stack_t *stack, char *dest);
+void sack_pop_word(simp_stack_t *stack, char *dest);
 
-void stack_print(ext_stack_t *stack, int wide);
+void stack_print(simp_stack_t *stack, int wide);
 
 #endif
 //koniec súboru extended_stack.h

@@ -10,7 +10,7 @@
 // Globálna premenná značiaca chybu pri operácii so zásobníkom. Nastaví sa na 1 ak dôjde k chybe
 int error_e_stack = 0;
 
-void realloc_stack(ext_stack_t *stack){
+void realloc_stack(simp_stack_t *stack){
   char *new_array;
   new_array = malloc(stack->size*INFLATION_KOEFICIENT);
   if(new_array == NULL){
@@ -36,8 +36,8 @@ void realloc_stack(ext_stack_t *stack){
  *
  * @returns ukazateľ na inicializovaný zásobník
  */
-ext_stack_t *stack_init(){
-  ext_stack_t *stack;
+simp_stack_t *stack_init(){
+  simp_stack_t *stack;
   stack = malloc(sizeof(struct ext_stack_struct));
   if(stack == NULL) goto error_handler;
 
@@ -63,7 +63,7 @@ ext_stack_t *stack_init(){
  * @param stack Ukazateľ na inicializovanú štruktúru stack
  * @returns True hodnotu ak je zásobník prázdny, inak 0
  */
-int stack_empty(ext_stack_t *stack){
+int stack_empty(simp_stack_t *stack){
   if (stack == NULL) {
     ERROR_MSG(EMPTY_STACK);
     error_e_stack = 1;
@@ -79,7 +79,7 @@ int stack_empty(ext_stack_t *stack){
  *
  * @param stack Ukazateľ na inicializovanú štruktúru stack
  */
-void stack_push(ext_stack_t *stack, char symbol){
+void stack_push(simp_stack_t *stack, char symbol){
   if (stack == NULL) return;
   if (stack->top_index+1 == stack->size) {
     realloc_stack(stack);
@@ -97,7 +97,7 @@ void stack_push(ext_stack_t *stack, char symbol){
  *
  * @param stack Ukazateľ na inicializovanú štruktúru stack
  */
-void stack_pop(ext_stack_t *stack){
+void stack_pop(simp_stack_t *stack){
   if (stack_empty(stack)) return;
   stack->top_index--;
 }
@@ -109,7 +109,7 @@ void stack_pop(ext_stack_t *stack){
  * @param stack Ukazateľ na inicializovanú štruktúru stack
  * @returns symbol na vrchole zásobníka
  */
-char stack_top(ext_stack_t *stack){
+char stack_top(simp_stack_t *stack){
   if (stack_empty(stack)) return -1;
   return stack->array[stack->top_index];
 }
@@ -120,7 +120,7 @@ char stack_top(ext_stack_t *stack){
  * @param stack Ukazateľ na inicializovanú štruktúru stack
  * @param wide je minimálna šírka výpisu
  */
-void stack_print(ext_stack_t *stack, int wide){
+void stack_print(simp_stack_t *stack, int wide){
   int i;
   for (i = 0; i <= stack->top_index; i++) {
     putchar(stack->array[i]);
