@@ -589,7 +589,7 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
-#ifdef __STANDALONE__ //Pridané aby mohol tento kód fungovať ako knižnica alebo ako samostatný program. V prekladači sa potom dá prepínač -D__STANDALONE__
+#ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
     sc.lastReadedChar = -1;
@@ -609,7 +609,7 @@ int main(int argc, char **argv) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", sc.row, sc.col);
             sc.actualState = STATE_START;
         }
-        else printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
+        else printf("%s\n", lex2String(token.token_type));
         if(token.attribute != NULL) {
             printf("attribute: %s\n", token.attribute);
         }
