@@ -1,6 +1,9 @@
 
 #ifndef __SCANNER__
 #define __SCANNER__
+
+StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
+
 /**
  * Stavy automatu scanneru
  */
@@ -142,4 +145,4 @@ int StringsArrayExtend(StringsArray *strArr);
  */
 StringsArray* StringsArrayCreate(char separator);
 
-#endif 
+#endif

@@ -104,9 +104,6 @@ int whiteSpace(char c) {
     return false;
 }
 
-StringsArray *strArr;
-
-
 void ScannerContextInit(ScannerContext *sc) {
     sc->actualState = STATE_START;
     sc->lastReadedChar = -1;
@@ -548,6 +545,8 @@ Token GetNextToken(ScannerContext *sc) {
 void TokenStore(Token token, ScannerContext *sc) {
     sc->token = token;
 }
+
+
 
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
