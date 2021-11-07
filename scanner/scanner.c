@@ -549,7 +549,7 @@ void TokenStore(Token token, ScannerContext *sc) {
     sc->token = token;
 }
 
-
+#ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
     sc.lastReadedChar = -1;
@@ -577,3 +577,4 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
+#endif
