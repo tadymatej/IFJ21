@@ -1,3 +1,7 @@
+#ifndef SCANNER_H
+#define SCANNER_H 1
+#include "symtable.h"
+
 /**
  * Stavy automatu scanneru
  */ 
@@ -10,9 +14,11 @@ typedef enum STATES {STATE_START, STATE_ID1, STATE_ID2, STATE_ID3, STATE_NF1, ST
 /**
  * Typy tokenů
  */ 
-typedef enum {TOKEN_LEN, TOKEN_ID, TOKEN_MOD, TOKEN_DIV, TOKEN_CONCAT, TOKEN_MUL, TOKEN_ADD, TOKEN_SUB, TOKEN_NOTEQ, TOKEN_LEQ, TOKEN_L, TOKEN_GEQ, TOKEN_G, 
+typedef enum {TOKEN_LEN, TOKEN_ID, TOKEN_ID_F, TOKEN_MOD, TOKEN_DIV, TOKEN_CONCAT, TOKEN_MUL, TOKEN_ADD, TOKEN_SUB, TOKEN_NOTEQ, TOKEN_LEQ, TOKEN_L, TOKEN_GEQ, TOKEN_G, 
               TOKEN_EQ, TOKEN_SET, TOKEN_STRING, TOKEN_NUMBER, TOKEN_NUMBER_INT, TOKEN_NONE, TOKEN_START_BRACKET, TOKEN_END_BRACKET, TOKEN_SEMICOLON, 
-              TOKEN_COMMA, TOKEN_COLON} TOKEN_TYPES;
+              TOKEN_COMMA, TOKEN_COLON, TOKEN_KEYWORD} TOKEN_TYPES;
+
+#define NUMBER_OF_KEYWORDS 15
 
 /**
  * Typy atributů tokenů
@@ -47,9 +53,11 @@ typedef struct {
 typedef struct {
     int actualState; /**< Aktuální stav scanneru */
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
-    Token token;    /**< Uložený token ve scanneru */
+    Token tokens[2];    /**< Uložené tokeny ve scanneru */
+    bool recursiveCall;
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
+    BinaryTree *kw;
 } ScannerContext;
 
 typedef unsigned long long ptrInt;
@@ -66,11 +74,18 @@ typedef unsigned long long ptrInt;
 Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute);
 
 /**
- * Uloží token uvnitř lexikální analýzy
+ * Uloží token dovnitř lexikální analýzy
  * @param token Token, který má lexikální analýza uložit
  * @param sc ScannerContext, do kterého se Token uloží
  */ 
 void TokenStore(Token token, ScannerContext *sc);
+
+/**
+ * Získá uložený token z ScannerContext
+ * @param sc ScannerContext, ze kterého se má načíst uložený token
+ * @return Vrací uložený token. Pokud žádný token nebyl uložený, vrátí token.token_type == TOKEN_NONE
+ */ 
+Token TokenGetStored(ScannerContext *sc);
 
 /**
  * Vrací další token. V případě, že si uživatel uložil token ve scanneru, vrací uložený token.
@@ -138,3 +153,12 @@ int StringsArrayExtend(StringsArray *strArr);
  * @return Vrací NULL v případě neúspěchu, jinak ukazatel na vytvořený StringsArray
  */ 
 StringsArray* StringsArrayCreate(char separator);
+
+/**
+ * Updatuje pozici scanneru = řádek a sloupec vstupu
+ * @param c Znak, který scanner právě čte
+ * @param sc ScannerContext, který má být aktualizován
+ */ 
+void updateScannerPosition(char c, ScannerContext *sc);
+
+#endif

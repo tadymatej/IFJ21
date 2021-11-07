@@ -1,4 +1,5 @@
-
+#ifndef STACK_H
+#define STACK_H 1
 /** 
  * Struktura obsahující informace o položce v zásobníku
  * 
@@ -67,3 +68,5 @@ void Stack_pop(Stack *stack);
  * @param stack Zásobník, kterého položky se mají vypsat
  */
 void Stack_print(Stack *stack);
+
+#endif
