@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "libs/stack.h"
+#include "stack.h"
 
 void Stack_delete(Stack *stack) {
     if(stack != NULL) {

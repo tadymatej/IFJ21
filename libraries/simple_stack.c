@@ -57,7 +57,7 @@ simp_stack_t *stack_init(){
 }
 
 /**
- * Vracai True ak je zásobník prázdny.
+ * Vracia True ak je zásobník prázdny.
  * Ak je dodaný neplatný ukazateľ, vráti hodnotu 1 a zapíše do error_e_stack 1. Túto vlastnosť využivajú iné funkcie.
  *
  * @param stack Ukazateľ na inicializovanú štruktúru stack
