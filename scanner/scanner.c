@@ -589,7 +589,7 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
-#ifdef __STANDALONE__
+#ifdef __STANDALONE__ //Pridané aby mohol tento kód fungovať ako knižnica alebo ako samostatný program. V prekladači sa potom dá prepínač -D__STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
     sc.lastReadedChar = -1;
