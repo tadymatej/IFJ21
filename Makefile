@@ -1,24 +1,30 @@
-all: build
+SIMPLE_STACK=simple_stack
+ANALYZER=precedence_analyzer
+#
+PROGS=$(SIMPLE_STACK)-test $(ANALYZER)-test
+LIB_PATH=libraries/
+ANALYZER_PATH=precedence_analyzer/
+TEST_PATH=tests/
+SCANNER_PATH=scanner/
+CC=gcc
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -fcommon
 
-build: clean mkbuild stack.o scanner.o symtable.o
-	gcc ./build/stack.o ./build/scanner.o ./build/symtable.o -o ./build/app
+.PHONY: run_stack clean tests
 
-mkbuild:
-	mkdir build
+all: $(PROGS)
 
-symtable.o: stack.o symtable.c
-	gcc -c ./build/stack.o symtable.c -o ./build/symtable.o
+run_stack: $(SIMPLE_STACK)-test
+	@./$(SIMPLE_STACK)-test
 
-scanner.o: scanner.c ./libs/scanner.h
-	gcc -c scanner.c -o ./build/scanner.o
+run_analyzer: $(ANALYZER)-test
+	@./$(ANALYZER)-test
 
-stack.o: stack.c ./libs/stack.h
-	gcc -c stack.c -o ./build/stack.o
+$(SIMPLE_STACK)-test: $(TEST_PATH)$(SIMPLE_STACK)-test.c $(LIB_PATH)$(SIMPLE_STACK).c
+	$(CC) $(CFLAGS) -o $@ $^
 
-run:
-	./build/app
-
-clear: clean
+scanner_precedence-test: $(TEST_PATH)scanner_precedence-test.c $(ANALYZER_PATH)$(ANALYZER).c $(SCANNER_PATH)scanner.c $(LIB_PATH)*.c
+	$(CC) $(CFLAGS) -o build/$@ $^
 
 clean:
-	if [ -d "./build" ]; then rm -r ./build; fi
+	rm -f *.o $(PROGS)
+#
