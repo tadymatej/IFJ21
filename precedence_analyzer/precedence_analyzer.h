@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "extended_stack.h"
+#include "simple_stack.h"
 
 #ifdef OLD_TABLE
 #define PRECEDENCE_TABLE_SIZE 6

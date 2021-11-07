@@ -5,7 +5,7 @@
  *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
-#include "extended_stack.h"
+#include "simple_stack.h"
 
 // Globálna premenná značiaca chybu pri operácii so zásobníkom. Nastaví sa na 1 ak dôjde k chybe
 int error_e_stack = 0;

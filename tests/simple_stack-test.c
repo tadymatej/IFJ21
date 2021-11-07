@@ -8,7 +8,7 @@
 
 /* Program je z upravený test na úlohu c202 */
 
-#include "extended_stack.h"
+#include "simple_stack.h"
 
 #include <stdio.h>
 #include <stdlib.h>

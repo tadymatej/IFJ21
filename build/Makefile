@@ -1,27 +1,28 @@
-STACK=extended_stack
+SIMPLE_STACK=simple_stack
 ANALYZER=precedence_analyzer
 #
-PROGS=$(STACK)-test $(ANALYZER)-test
+PROGS=$(SIMPLE_STACK)-test $(ANALYZER)-test
 LIB_PATH=../libraries/
 ANALYZER_PATH=../precedence_analyzer/
 TEST_PATH=../tests/
+SCANNER_PATH=../scanner/
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -fcommon
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -fcommon
 
 .PHONY: run_stack clean tests
 
 all: $(PROGS)
 
-run_stack: $(STACK)-test
-	@./$(STACK)-test
+run_stack: $(SIMPLE_STACK)-test
+	@./$(SIMPLE_STACK)-test
 
 run_analyzer: $(ANALYZER)-test
 	@./$(ANALYZER)-test
 
-$(STACK)-test: $(TEST_PATH)$(STACK)-test.c $(LIB_PATH)$(STACK).c
+$(SIMPLE_STACK)-test: $(TEST_PATH)$(SIMPLE_STACK)-test.c $(LIB_PATH)$(SIMPLE_STACK).c
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(ANALYZER)-test: $(TEST_PATH)$(ANALYZER)-test.c $(ANALYZER_PATH)$(ANALYZER).c $(LIB_PATH)$(STACK).c
+$(ANALYZER)-test: $(TEST_PATH)$(ANALYZER)-test.c $(ANALYZER_PATH)$(ANALYZER).c $(LIB_PATH)$(SIMPLE_STACK).c
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
