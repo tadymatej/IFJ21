@@ -111,6 +111,13 @@ Token GetNextToken(ScannerContext *sc);
 void ScannerContextInit(ScannerContext *sc);
 
 /**
+ * prevedie typ tokenu na reťazec čitaetľný pre človeka
+ * @param typ tokenu
+ * @returns odkaz na literál
+ */
+char *lex2String(int lex);
+
+/**
  * Samotný stavový automat scanneru
  * @param actualChar Znak, který se právě zpracovává
  * @param sc ScannerContext scanneru
