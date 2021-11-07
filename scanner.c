@@ -514,6 +514,15 @@ void updateScannerPosition(char c, ScannerContext *sc) {
     else sc->col++;
 }
 
+bool statePushChar(ScannerContext *sc) {
+    if(sc->actualState == STATE_S1 || sc->actualState == STATE_S2 || sc->actualState == STATE_SE || sc->actualState == STATE_S3 
+        || sc->actualState == STATE_SB1 || sc->actualState == STATE_SB2 || sc->actualState == STATE_SF || sc->actualState == STATE_ID1
+        || sc->actualState == STATE_ID2 || sc->actualState == STATE_ID3 || sc->actualState == STATE_NF1
+        || sc->actualState == STATE_N2 || sc->actualState == STATE_N3 || sc->actualState == STATE_NF2 || sc->actualState == STATE_N4 || sc->actualState == STATE_NF3
+        || sc->actualState == STATE_N5 || sc->actualState == STATE_N6 || sc->actualState == STATE_NF4) return true;
+    return false;
+}
+
 Token GetNextToken(ScannerContext *sc) {
     Token token;
     if((token = TokenGetStored(sc)).token_type != TOKEN_NONE) {    //Vrátím token, který si uložili
@@ -530,7 +539,7 @@ Token GetNextToken(ScannerContext *sc) {
     while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
         token = FSM(c, sc);
         if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL); 
-        if(!whiteSpace(c)) StringsArrayPush(strArr, c);
+        if(statePushChar(sc)) StringsArrayPush(strArr, c);
         
         if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
             updateScannerPosition((char) sc->lastReadedChar, sc);
@@ -538,6 +547,9 @@ Token GetNextToken(ScannerContext *sc) {
         if(token.token_type != TOKEN_NONE) break;
         else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
             token = FSM((char) sc->lastReadedChar, sc);
+            //TODO možná tu nemá být
+            if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
+                updateScannerPosition((char) sc->lastReadedChar, sc);
         }
     }
 
@@ -549,10 +561,15 @@ Token GetNextToken(ScannerContext *sc) {
         else
         {
             Token token2 = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-            if((token2 = GetNextToken(sc)).token_type == TOKEN_START_BRACKET) {
+            StringsArrayPush(strArr, '\0');
+            strArr->lastValid++;
+            if((token2 = GetNextToken(sc)).token_type == TOKEN_START_BRACKET) 
+            {
                 token.token_type = TOKEN_ID_F;
             }
-            else TokenStore(token2, sc);
+            else {
+                TokenStore(token2, sc);
+            }
         }
     }
     return token;
@@ -599,10 +616,11 @@ int main(int argc, char **argv) {
             sc.actualState = STATE_START;
         }
         else printf("%s\n", lex2String(token.token_type));
-        /*if(token.attribute != NULL) {
+        if(token.attribute != NULL) {
             printf("attribute: %s\n", token.attribute);
         }
-        else printf("attribute: ATTRIBUTE_NONE\n");*/ 
+        else printf("attribute: ATTRIBUTE_NONE\n"); 
+        printf("----------------\n");
     }
     return 0;
 }

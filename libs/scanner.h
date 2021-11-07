@@ -89,6 +89,8 @@ Token TokenGetStored(ScannerContext *sc);
 
 /**
  * Vrací další token. V případě, že si uživatel uložil token ve scanneru, vrací uložený token.
+ * @param sc ScannerContext scanneru 
+ * @param nofCall počet rekurzivních volání. Uživatel by měl volat s nofCall = 0
  * @return Vrací další načtený token. V případě, že se odhalí lexikální chyba, vrací Token.token_type == TOKEN_NONE a sc.actualState = STATE_ERR,
  *         Pokud dočetl celý vstup do konce, vrací Token.token_type == TOKEN_NONE
  */ 
@@ -160,5 +162,10 @@ StringsArray* StringsArrayCreate(char separator);
  * @param sc ScannerContext, který má být aktualizován
  */ 
 void updateScannerPosition(char c, ScannerContext *sc);
+
+/**
+ * Zjistí zda se scanner nachází ve stavu, kdy má ukládat do pole řetězců
+ */ 
+bool statePushChar(ScannerContext *sc);
 
 #endif
