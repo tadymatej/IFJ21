@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "libraries/scanner.h"
+#include "scanner.h"
 
 Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute) {
     Token token = {token_type, attributeType, attribute};
@@ -22,6 +22,7 @@ StringsArray* StringsArrayCreate(char separator) {
     strArr->len = 0;
     strArr->lastValid = 0;
     strArr->separator = separator;
+    return strArr;
 }
 
 int StringsArrayExtend(StringsArray *strArr) {
@@ -73,6 +74,7 @@ char *lex2String(int lex) {
         case TOKEN_COMMA: return "comma";
         case COMMENT: return "comment";
     }
+  return NULL;
 }
 
 int a(char c) {
@@ -435,7 +437,8 @@ Token FSM(char actualChar, ScannerContext *sc/*int *actualState, int *lastReaded
         } break;
         case STATE_C2: {
             if(actualChar == '[') sc->actualState = STATE_C3;
-            else sc->actualState = sc->actualState = STATE_CF2;
+            //else sc->actualState = sc->actualState = STATE_CF2;
+            else sc->actualState = STATE_CF2;
         } break;
         case STATE_C3: {
             if(actualChar == '\n') sc->actualState = STATE_C5;
