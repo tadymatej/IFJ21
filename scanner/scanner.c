@@ -526,24 +526,31 @@ Token GetNextToken(ScannerContext *sc) {
     char c;
     sc->actualState = STATE_START;
     if(sc->lastReadedChar != -1) {  //Musím podruhé přečíst již přečtený znak
-        updateScannerPosition((char) sc->lastReadedChar, sc);   //Nový řádek se nezapočítal z poslední lexémy, musím zvýšit nyní
-        token = FSM((char) sc->lastReadedChar, sc);
+        char tmp = (char) sc->lastReadedChar;
+        updateScannerPosition(tmp, sc);   //Nový řádek se nezapočítal z poslední lexémy, musím zvýšit nyní
+        token = FSM(tmp, sc);
+        if(statePushChar(sc)) 
+            StringsArrayPush(strArr, tmp);
     }
 
     while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
         token = FSM(c, sc);
         if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-        if(statePushChar(sc)) StringsArrayPush(strArr, c);
+        if(statePushChar(sc)) 
+            StringsArrayPush(strArr, c);
 
         if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
             updateScannerPosition((char) sc->lastReadedChar, sc);
 
         if(token.token_type != TOKEN_NONE) break;
         else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
-            token = FSM((char) sc->lastReadedChar, sc);
+            char tmp = (char) sc->lastReadedChar;
+            token = FSM(tmp, sc);
             //TODO možná tu nemá být
             if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
-                updateScannerPosition((char) sc->lastReadedChar, sc);
+                updateScannerPosition(tmp, sc);
+            if(statePushChar(sc)) 
+                StringsArrayPush(strArr, tmp);
         }
     }
 
@@ -589,6 +596,8 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
+#define __STANDALONE__ 1    //Remove.. pro visual studio jenom
+
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
@@ -600,7 +609,7 @@ int main(int argc, char **argv) {
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
         if(sc.actualState == STATE_ERR) {
 
-            /*Obsluha chybi mimo lexikalni analyzu
+            /*Obsluha chyby mimo lexikalni analyzu
             int len = strlen(token.attribute);
             sc.col -= len;
             //Vypis chybu
@@ -609,12 +618,7 @@ int main(int argc, char **argv) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", sc.row, sc.col);
             sc.actualState = STATE_START;
         }
-        else printf("%s\n", lex2String(token.token_type));
-        if(token.attribute != NULL) {
-            printf("attribute: %s\n", token.attribute);
-        }
-        else printf("attribute: ATTRIBUTE_NONE\n");
-        printf("----------------\n");
+        else printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
     }
     return 0;
 }
