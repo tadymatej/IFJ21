@@ -8,7 +8,7 @@ ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
 SCANNER_PATH=scanner/
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -fcommon
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -fcommon -g
 
 .PHONY: run_stack run_analyzer clean
 
