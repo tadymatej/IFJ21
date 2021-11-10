@@ -16,7 +16,7 @@ int main() {
 	strArr = StringsArrayCreate('\0');
 
 	error_flag = precedence_analyzer(&sc);
-	printf("ukoncene spracovanie textu, navratova hodnota: %d", error_flag);
+	printf("ukoncene spracovanie textu, navratova hodnota: %d\n", error_flag);
 	return (0);
 }
 
