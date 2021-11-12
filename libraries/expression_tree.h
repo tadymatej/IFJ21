@@ -15,9 +15,9 @@
 
 #include"scanner.h"
 #include"stack.h"
-#include"symtable.c"
+//#include"symtable.c"
 
-typedef enum ret_type_t {INT, REAL, STRING, TYPE_ERROR};
+typedef enum {INT, REAL, STRING, TYPE_ERROR} ret_type_t;
 
 typedef struct exp_node_s{
   TreeNode *data;
@@ -28,6 +28,9 @@ typedef struct exp_node_s{
 }exp_node_t;
 
 typedef Stack exp_tree_stack_t;
+
+#define Stack_top(name) (StackGetLast(name))->value
+#define Stack_empty(name) ((StackGetLast(name) == NULL) ? 1 : 0)
 
 /*
  * Inicializuje stack obsahujúci stromy s výrazmi
@@ -69,7 +72,7 @@ void do_conversion(Stack *stack);
  * param stack ukazateľ na inicializovaný stack
  * param operator akým operátorom chceme spojiť operandy do stromu
  */
-void operator_merge(Stack *stack, TOKEN_TYPES operator);
+void operator_merge(Stack *stack, TOKEN_TYPES operator, ret_type_t ret_type);
 
 /*
  * Funkcia vypíše stromy výrazov na konzolu

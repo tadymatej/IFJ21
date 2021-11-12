@@ -8,9 +8,6 @@
 
 #include"expression_tree.h"
 
-#define Stack_top(name) (StackGetLast(stack))->value
-#define Stack_empty(name) ((StackGetLast(stack) == NULL) ? 1 : 0)
-
 Stack *exp_tree_init(){
   return Stack_create();
 }
@@ -28,13 +25,16 @@ void add_id_node(Stack *stack, TreeNode *data, ret_type_t ret_type){
 
 ret_type_t get_top_type(Stack *stack){
   if(Stack_empty(stack)) return TYPE_ERROR;
-  exp_node_t *temporary = Stack_top(name);
+  exp_node_t *temporary = Stack_top(stack);
   return temporary->ret_type;
 }
 
 ret_type_t get_second_type(Stack *stack){
   if(Stack_empty(stack)) return TYPE_ERROR;
-  if(stack->stackPointer >= 2) return stack->stack[stackPointer-2]->value->ret_type; //zavisle na implenetacii stack TODO
+  if(stack->stackPointer >= 2) {
+    exp_node_t *temp = stack->stack[stack->stackPointer-2]->value;
+    return temp->ret_type; //zavisle na implenetacii stack TODO
+  }
   return TYPE_ERROR;
 }
 
@@ -62,6 +62,7 @@ void operator_merge(Stack *stack, TOKEN_TYPES operator, ret_type_t ret_type){
 //kod pozicany zo zadania projektu v predmete IAL
 const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
+typedef enum direction { left, right, none } direction_t;
 
 void print_exp_node(exp_node_t *node){
   printf("[%s]\n", lex2String(node->type));
@@ -119,7 +120,7 @@ void print_exp_tree(exp_node_t *tree) {
 void print_exp_stack(Stack *stack){
   printf("printing stack of trees\n");
   exp_node_t *tree;
-  while(tree = Stack_top(stack)){
+  while((tree = Stack_top(stack))){
     Stack_pop(stack);
     print_exp_tree(tree);
   }
@@ -140,7 +141,7 @@ void destroy_top_tree(Stack *stack){
 
 void destroy_stack(Stack **stack){
   while(Stack_top(*stack) != NULL){
-    destroy_top_tree(stack);
+    destroy_top_tree(*stack);
   }
   Stack_delete(*stack);
   *stack = NULL;

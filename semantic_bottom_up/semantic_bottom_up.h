@@ -10,11 +10,10 @@
 #define __SEMANTIC_BOTTOM_UP__
 
 #include<stdio.h>
-#include<stdlib.b>
+#include<stdlib.h>
 #include<string.h>
 
 #include"scanner.h"
-#include"precedence_analyzer.h"
 #include"expression_tree.h"
 
 #define bottom_up_init exp_tree_init()

@@ -7,7 +7,6 @@
 */
 
 #include "precedence_analyzer.h"
-#include "scanner.h"
 
 #define MAX_LEN 128
 #define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
@@ -273,7 +272,6 @@ int precedence_analyzer(ScannerContext *sc) {
           stack_push(stack, '<');
         }
         stack_push(stack, token_operator);
-        //token = GetNextToken(sc);
         GET_VALID_TOKEN(token, sc);
         break;
       case '>':
@@ -282,7 +280,6 @@ int precedence_analyzer(ScannerContext *sc) {
       case '=':
         stack_push(stack, token_operator);
         GET_VALID_TOKEN(token, sc);
-        //token = GetNextToken(sc);
         break;
       case '#':
         fprintf(stderr, "Error: Submitted expression is not syntactically correct");

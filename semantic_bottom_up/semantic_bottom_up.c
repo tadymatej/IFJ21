@@ -6,6 +6,8 @@
  ********************************************************************************
 */
 
+#include"semantic_bottom_up.h"
+
 void do_action(exp_tree_stack_t *stack, Token *token, int nest_level){
   switch (teoken->type) {
     case TOKEN_ID:

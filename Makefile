@@ -7,8 +7,9 @@ LIB_PATH=libraries/
 ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
 SCANNER_PATH=scanner/
+SEMANTIC_BOTTOM_PATH=semantic_bottom_up/
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -fcommon -g
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -fcommon -g
 
 .PHONY: run_stack run_analyzer clean
 
