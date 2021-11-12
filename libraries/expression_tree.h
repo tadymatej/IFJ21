@@ -17,11 +17,12 @@
 #include"stack.h"
 #include"symtable.c"
 
-typedef enum ret_type_t {INT, REAL, STRING};
+typedef enum ret_type_t {INT, REAL, STRING, TYPE_ERROR};
 
 typedef struct exp_node_s{
   TreeNode *data;
   ret_type_t ret_type;
+  TOKEN_TYPES type;
   struct exp_node_s *right;
   struct exp_node_s *left;
 }exp_node_t;
@@ -73,7 +74,7 @@ void operator_merge(Stack *stack, TOKEN_TYPES operator);
  * Použiva vnútornú štrukuru stacku
  * param stack ukazateľ na inicializovaný ďstruktúru stacku
  */
-void print_exp_trees(Stack *stack);
+void print_exp_stack(Stack *stack);
 
 /*
  * Korektne uvoľní z pamäťe celý jeden strom na vrchole zásobníka
