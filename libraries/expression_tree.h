@@ -27,6 +27,8 @@ typedef struct exp_node_s{
   struct exp_node_s *left;
 }exp_node_t;
 
+typedef Stack exp_tree_stack_t;
+
 /*
  * Inicializuje stack obsahujúci stromy s výrazmi
  * Zatiaľ bez jediného stromu
