@@ -9,12 +9,18 @@
 #include"semantic_bottom_up.h"
 
 void do_action(exp_tree_stack_t *stack, Token *token, int nest_level){
-  switch (teoken->type) {
-    case TOKEN_ID:
-      add_id_node(stack, NULL, INT);
+  switch (token->token_type) {
+    case TOKEN_ID: case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT:
+      add_id_node(stack, NULL, ATTRIBUTE_INTEGER, token->token_type); //pozna atributy INTEGER, STRING, NONE, NUMBER
+      break;
+    case TOKEN_LEN:
+      unary_operator(stack);
+      break;
+    case TOKEN_END_BRACKET:
       break;
     default:
-      operator_merge(stack, token->type);
+      operator_merge(stack, token->token_type, ATTRIBUTE_INTEGER);
+      break;
   }
 
 }
