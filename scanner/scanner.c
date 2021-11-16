@@ -111,7 +111,7 @@ void ScannerContextInit(ScannerContext *sc) {
     sc->col = 0;
     sc->recursiveCall = false;
     sc->kw = NULL;
-    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
+    char *kw[] = {"do", "else", "elseif", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
     for(int i = 0; i < NUMBER_OF_KEYWORDS; ++i) {
         BinaryTreeInsertNode(&sc->kw, charSumHash(kw[i]), kw[i]);
     }
@@ -596,7 +596,7 @@ void TokenStore(Token token, ScannerContext *sc) {
 }
 
 #define __STANDALONE__ 1    //TODO Remove.. pro visual studio jenom
-
+/*
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
@@ -613,7 +613,7 @@ int main(int argc, char **argv) {
             sc.col -= len;
             //Vypis chybu
             sc.col += len;
-            */
+            *//*
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", sc.row, sc.col);
             sc.actualState = STATE_START;
         }
@@ -622,3 +622,4 @@ int main(int argc, char **argv) {
     return 0;
 }
 #endif
+*/

@@ -363,7 +363,6 @@ def test14():
                 write(\"Vysledek je: \", vysl, \"\\\n\")
             end
         end
-
         main()
         """]
     tests(commands, expected_lines, "test14")
