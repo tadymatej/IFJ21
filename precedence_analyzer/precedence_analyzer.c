@@ -108,8 +108,9 @@ char token_to_symb(Token *token){
     case TOKEN_LEQ: symbol = LTE; break;
     case TOKEN_GEQ: symbol = GTE; break;
     case TOKEN_ID: symbol = 'i'; break;
-    case TOKEN_NUMBER: symbol = 'i'; break;
-    case TOKEN_NUMBER_INT: symbol = 'i'; break;
+    case TOKEN_NUMBER: symbol = 'n'; break;
+    case TOKEN_NUMBER_INT: symbol = 'f'; break;
+    case TOKEN_STRING: symbol = 's'; break;
     case TOKEN_START_BRACKET: symbol = '('; break;
     case TOKEN_END_BRACKET: symbol = ')'; break;
     default:
@@ -117,6 +118,32 @@ char token_to_symb(Token *token){
       break;
   }
   return symbol;
+}
+
+Token make_fake_token(Token token, char top_stack_operand){
+  Token temp = token;
+  temp.attributeType = token.attributeType;
+  temp.attribute = token.attribute;
+  switch (top_stack_operand) {
+    case '#': temp.token_type = TOKEN_LEN; break;
+    case '*': temp.token_type = TOKEN_MUL; break;
+    case IMOD: temp.token_type = TOKEN_MOD; break;
+    case '/': temp.token_type = TOKEN_DIV; break;
+    case '+': temp.token_type = TOKEN_ADD; break;
+    case '-': temp.token_type = TOKEN_SUB; break;
+    case CONCAT: temp.token_type = TOKEN_CONCAT; break;
+    case EQ: temp.token_type = TOKEN_EQ; break;
+    case NEQ: temp.token_type = TOKEN_NOTEQ; break;
+    case '>': temp.token_type = TOKEN_G; break;
+    case '<': temp.token_type = TOKEN_L; break;
+    case LTE: temp.token_type = TOKEN_LEQ; break;
+    case GTE: temp.token_type = TOKEN_GEQ; break;
+    case '(': temp.token_type = TOKEN_START_BRACKET; break;
+    case ')': temp.token_type = TOKEN_END_BRACKET; break;
+    default:
+      break;
+  }
+  return temp;
 }
 
 /*
@@ -153,7 +180,7 @@ int symb_to_index(char symbol){
       index = 9;
       break;
     default:
-      index = 5;
+      index = 5; //for identifiers and constants
       break;
   }
   return index;
@@ -238,8 +265,12 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int error_code = 0;
 
+  //inicializacia zasobnika stromov pre reprezentaciu v stromovej strukture
+  exp_tree_stack_t *exp_stack =  bottom_up_init;
+
   //token štartujúci expression
   Token token = GetNextToken(sc);
+  Token prev_token = token;
   if(token.token_type == TOKEN_NONE) return error_code;
   char token_operator;
 
@@ -272,13 +303,18 @@ int precedence_analyzer(ScannerContext *sc) {
           stack_push(stack, '<');
         }
         stack_push(stack, token_operator);
+        prev_token = token;
         GET_VALID_TOKEN(token, sc);
         break;
       case '>':
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
+        prev_token = make_fake_token(prev_token, top_stack_operand);
+        do_action(exp_stack, &prev_token, 1);
+        print_exp_stack(exp_stack);
         break;
       case '=':
         stack_push(stack, token_operator);
+        prev_token = token;
         GET_VALID_TOKEN(token, sc);
         break;
       case '#':
@@ -300,6 +336,7 @@ int precedence_analyzer(ScannerContext *sc) {
     }
     top_stack_operand = get_stack_operand(stack);
   }
+  end_bottom_up(&exp_stack);
   free(postfixExpression);
   stack_destroy(&stack);
   return error_code;
