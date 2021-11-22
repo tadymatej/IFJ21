@@ -183,4 +183,11 @@ void updateScannerPosition(char c, ScannerContext *sc);
  */
 bool statePushChar(ScannerContext *sc);
 
+/**
+ * Provede scanner operaci nad znakem, který byl již jednou zpracován
+ * Tj. zavolá FSM a v případě potřeby vloží znak do pole řetězců
+ * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
+ */ 
+Token processOnceReadedChar(ScannerContext *sc);
+
 #endif
