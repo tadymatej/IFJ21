@@ -1,0 +1,21 @@
+.IFJcode21
+CALL $main
+
+LABEL $main
+
+CREATEFRAME
+
+DEFVAR GF@y
+
+PUSHS int@5
+PUSHS int@5
+ADDS
+POPS GF@y
+WRITE GF@y
+PUSHS int@6
+PUSHS int@6
+MULS
+POPS GF@y
+WRITE GF@y
+
+EXIT int@0
