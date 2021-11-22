@@ -111,7 +111,7 @@ void ScannerContextInit(ScannerContext *sc) {
     sc->col = 0;
     sc->recursiveCall = false;
     sc->kw = NULL;
-    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
+    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "elseif", "then", "while", "require"};
     for(int i = 0; i < NUMBER_OF_KEYWORDS; ++i) {
         BinaryTreeInsertNode(&sc->kw, charSumHash(kw[i]), kw[i]);
     }
