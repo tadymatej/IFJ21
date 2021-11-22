@@ -30,12 +30,17 @@ void dispose_table(Sym_table_t **table){
 
 TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn){
   Sym_table_t *temp = table;
-  TS_data_t *retval;
+  TreeNode *retNode;
   while (temp != NULL){
-    retval = (BinaryTreeFindByStr(temp->tree, name))->data;
-    if (retval != NULL) break; //nasiel sa uzol, nehladaj dalej
+    retNode = (BinaryTreeFindByStr(temp->tree, name));
+    if(retNode != NULL)
+    {
+      *foundIn = temp;
+      break;
+    }
+    temp = temp->upper;
   }
-  return retval;
+  return (retNode != NULL) ? retNode->data : NULL;
 }
 
 int add_variable(Sym_table_t *table, TS_data_t *data){
