@@ -22,6 +22,26 @@ typedef struct TreeNode{
     struct TreeNode *rPtr;
 } TreeNode;
 
+typedef struct TS_root{
+  Treenode *tree;
+  struct TS_root *upper;
+}TS_root_t;
+
+typedef struct TS_data{
+  ATTRIBUTE_TYPES type;
+  char *name;
+  char *value;
+}TS_data_t;
+
+typedef struct TS_f_data{
+  ATTRIBUTE_TYPES *ret_types;
+  TS_data_t *params;
+  int ret_count;
+  int param_count;
+  char *name;
+}
+
+
 /**
  * Struktura pouze pro přehlednost kódu, BinaryTree jako kořenový uzel
  */
