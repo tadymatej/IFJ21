@@ -1,0 +1,6 @@
+ERROR || $1
+ERROR
+$4 <prog> => EOF
+---------------------------
+RESULT: 0
+syntax OK: 0
