@@ -3,6 +3,7 @@
 #define SAME_HASH_LEFT_STEP 2000
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stack.h>
@@ -22,31 +23,26 @@ typedef struct TreeNode{
     struct TreeNode *rPtr;
 } TreeNode;
 
-typedef struct TS_root{
-  Treenode *tree;
-  struct TS_root *upper;
-}TS_root_t;
+typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL } DataTypes_t;
+
+typedef struct Sym_table{
+  TreeNode *tree;
+  int nested_identifier;
+  //Fun_data_t *fce_parent;
+  struct Sym_table *upper;
+}Sym_table_t;
 
 typedef struct TS_data{
-  ATTRIBUTE_TYPES type;
+  DataTypes_t type; //!!!!!!!!!!!!!!!!!!!!!!
   char *name;
   char *value;
 }TS_data_t;
-
-typedef struct TS_f_data{
-  ATTRIBUTE_TYPES *ret_types;
-  TS_data_t *params;
-  int ret_count;
-  int param_count;
-  char *name;
-}
 
 
 /**
  * Struktura pouze pro přehlednost kódu, BinaryTree jako kořenový uzel
  */
 typedef TreeNode BinaryTree;
-
 /**
  * Vloží do binárního stromu nový uzel na vhodnou pozici podle hash hodnoty vkládaného uzlu.
  * Pokud již ve stromě je uzel s hash hodnotou právě vkládaného uzlu, funkce bude vkládat co nejvíce vlevo od nalezeného uzlu se shodným hashem. Pro tento
