@@ -1,6 +1,6 @@
 #include "semantic_global.h"
 
-SemanticGlobals_t globals;
+SemanticGlobals globals;
 
 int init_sem_globals() {
     globals.var = NULL;
@@ -8,9 +8,9 @@ int init_sem_globals() {
     globals.q_assignments = init_queue();
     globals.cur_function = NULL;
     globals.tmp = 0;
-    globals.TS = TS_init();
+    globals.ts = TS_init();
     globals.ft = init_fun_table();
-    if (globals.q_assignments == NULL || globals.TS == NULL || globals.ft == NULL)
+    if (globals.q_assignments == NULL || globals.ts == NULL || globals.ft == NULL)
         return 1;
     return 0;
 }

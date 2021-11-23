@@ -9,7 +9,7 @@ Fun_data_t *init_fun_data(char *name) {
     ptr->ret_vals = init_array();
     if (ptr->params == NULL || ptr->ret_vals == NULL) {
         free(ptr);
-        return NULL:
+        return NULL;
     }
     ptr->isCalledBeforeDefinition = false;
     return ptr;
@@ -23,10 +23,10 @@ int fun_add_ret_val(Fun_data_t *data, TS_data_t *retval) {
     return arr_add(data->ret_vals, (void *)retval);
 }
 
-int dispose_fun_data(Fun_data_t **data) {
+void dispose_fun_data(Fun_data_t **data) {
     if (data != NULL && *data != NULL) {
-        dispose_array(&((*data)->params));
-        dispose_array(&((*data)->ret_vals));
+        dispose_array(&((*data)->params), true);
+        dispose_array(&((*data)->ret_vals), true);
         free(*data);
         *data = NULL;
     }
@@ -35,13 +35,13 @@ int dispose_fun_data(Fun_data_t **data) {
 bool fun_is_equal(Fun_data_t *first, Fun_data_t *second) {
     bool isEqual = strcmp(first->name, second->name) == 0;
     if (isEqual) {
-        isEqual = (first->params.length == second->params.length) && (first->ret_vals.length == second->ret_vals.length);
+        isEqual = (first->params->length == second->params->length) && (first->ret_vals->length == second->ret_vals->length);
         if (isEqual) {
-            for (int i = 0; i < first->params.length; i++) {
+            for (int i = 0; i < first->params->length; i++) {
                 if (((TS_data_t *)arr_get_element_at(first->params, i))->type != ((TS_data_t *)arr_get_element_at(second->params, i))->type)
                     return false;
             }
-            for (int i = 0; i < first->ret_vals.length; i++) {
+            for (int i = 0; i < first->ret_vals->length; i++) {
                 if (((TS_data_t *)arr_get_element_at(first->ret_vals, i))->type != ((TS_data_t *)arr_get_element_at(second->ret_vals, i))->type)
                     return false;
             }

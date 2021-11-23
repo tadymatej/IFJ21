@@ -14,16 +14,16 @@ void add_function_dec(Fun_table_t *table, Fun_data_t *fun) {
 }
 
 void add_function_def(Fun_table_t *table, Fun_data_t *fun) {
-    Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name);
+    Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name)->data;
     if (dec != NULL)
         fun->isCalledBeforeDefinition = dec->isCalledBeforeDefinition;
     BinaryTreeInsertNode(&(table->defFunTree), charSumHash(fun->name), (void *)fun);
 }
 
 Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared) {
-    Fun_data_t *fun = BinaryTreeFindByStr(table->defFunTree, fun_name);
+    Fun_data_t *fun = BinaryTreeFindByStr(table->defFunTree, fun_name)->data;
     if (fun == NULL) {
-        fun = BinaryTreeFindByStr(table->decFunTree, fun_name);
+        fun = BinaryTreeFindByStr(table->decFunTree, fun_name)->data;
         if (fun != NULL && isOnlyDeclared != NULL)
             *isOnlyDeclared = true;
     }
@@ -31,7 +31,7 @@ Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclar
 }
 
 bool is_dec_and_def_equal(Fun_table_t *table, Fun_data_t *fun) {
-    Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name);
+    Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name)->data;
     if (dec == NULL)
         return true;
     return fun_is_equal(fun, dec);

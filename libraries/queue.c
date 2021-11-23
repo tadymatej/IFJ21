@@ -20,6 +20,7 @@ int q_push(Queue_t* q, void* elem) {
     else
         q->first = new;
     q->last = new;
+    return 0;
 }
 
 void* q_top(Queue_t* q) {
