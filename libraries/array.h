@@ -1,12 +1,15 @@
 #ifndef __INFLATABLE_ARRAY_H_
 #define __INFLATABLE_ARRAY_H_ 1
 
-#define DEFAULT_ARRAY_SIZE 10
+#define DEFAULT_ARRAY_SIZE 5
+
+#include <stdlib.h>
+#include <stdbool.h>
 
 //primarne pouziti pro TS_data_t
 typedef struct Inflatable_Array{
     void **arr; 
-    int __size; //alokovana velikost
+    int size;
     int length;
 }Array_t;
 
