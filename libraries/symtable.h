@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stack.h>
+#include "stack.h"
 #include <string.h>
 
 /**
@@ -23,26 +23,7 @@
      struct TreeNode *rPtr;
  } TreeNode;
 
- typedef struct TS_root{
-   Treenode *tree;
-   struct TS_root *upper;
- }TS_root_t;
-
- typedef struct TS_data{
-   ATTRIBUTE_TYPES type;
-   char *name;
-   char *value;
- }TS_data_t;
-
- typedef struct TS_f_data{
-   ATTRIBUTE_TYPES *ret_types;
-   TS_data_t *params;
-   int ret_count;
-   int param_count;
-   char *name;
- }
-
-typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL } DataTypes_t;
+typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
 
 typedef struct Sym_table{
   TreeNode *tree;
