@@ -18,7 +18,7 @@
 #include"symtable.h"
 
 typedef struct exp_node_s{
-  TreeNode *data;
+  TS_data_t *data;
   DataTypes_t ret_type;
   TOKEN_TYPES type;
   struct exp_node_s *right;
@@ -45,7 +45,7 @@ Stack *exp_tree_init();
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
  * @param ret_type akú návratovú hodnotu má daný uzol
  */
-int add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type);
+int add_id_node(Stack *stack, TS_data_t *data, DataTypes_t ret_type, TOKEN_TYPES type);
 
 /*
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku

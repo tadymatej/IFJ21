@@ -12,7 +12,7 @@ Stack *exp_tree_init(){
   return Stack_create();
 }
 
-int add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type){
+int add_id_node(Stack *stack, TS_data_t *data, DataTypes_t ret_type, TOKEN_TYPES type){
   exp_node_t *temporary = malloc(sizeof(exp_node_t));
   if(temporary == NULL) return 99; //TODO error handling
   temporary->data = data;
