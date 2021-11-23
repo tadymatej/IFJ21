@@ -45,7 +45,7 @@ Stack *exp_tree_init();
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
  * @param ret_type akú návratovú hodnotu má daný uzol
  */
-void add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type);
+int add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type);
 
 /*
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku
@@ -72,7 +72,7 @@ void do_conversion(Stack *stack);
  * @param stack ukazateľ na inicializovaný stack
  * @param operator akým operátorom chceme spojiť operandy do stromu
  */
-void operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type);
+int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type);
 
 /*
  * Funkcia spracuje unárnu funkciu do stromu
