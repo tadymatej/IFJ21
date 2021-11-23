@@ -309,7 +309,11 @@ int precedence_analyzer(ScannerContext *sc) {
       case '>':
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
         prev_token = make_fake_token(prev_token, top_stack_operand);
-        do_action(exp_stack, &prev_token, 1);
+        error_code = do_action(exp_stack, &prev_token);
+        if (error_code != 0) {
+          done = 1;
+          break;
+        }
         print_exp_stack(exp_stack);
         break;
       case '=':
@@ -320,13 +324,14 @@ int precedence_analyzer(ScannerContext *sc) {
       case '#':
         fprintf(stderr, "Error: Submitted expression is not syntactically correct");
         TokenStore(token, sc);
+        error_code = 2;
         done = 1;
         break;
       case '&':
         done = 1;
         stack_pop(stack);
         if (stack_top(stack) != STACK_END) {
-          error_code = 1;
+          error_code = 2;
           fprintf(stderr, "Error: Submitted expression is not syntactically correct\n");
         }
         TokenStore(token, sc);

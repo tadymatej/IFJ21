@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stack.h>
+#include "stack.h"
 #include <string.h>
 
 /**
@@ -16,14 +16,14 @@
  * @param lPtr Ukazatel na levý uzel binárního stromu od tohoto uzlu
  * @param rPtr Ukazatel na pravý uzel binárního stromu od tohoto uzlu
  */
-typedef struct TreeNode{
-    int hashVal;
-    void *data;
-    struct TreeNode *lPtr;
-    struct TreeNode *rPtr;
-} TreeNode;
+ typedef struct TreeNode{
+     int hashVal;
+     void *data;
+     struct TreeNode *lPtr;
+     struct TreeNode *rPtr;
+ } TreeNode;
 
-typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL } DataTypes_t;
+typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
 
 typedef struct Sym_table{
   TreeNode *tree;
@@ -33,7 +33,7 @@ typedef struct Sym_table{
 }Sym_table_t;
 
 typedef struct TS_data{
-  DataTypes_t type; //!!!!!!!!!!!!!!!!!!!!!!
+  DataTypes_t type;
   char *name;
   char *value;
 }TS_data_t;
