@@ -54,6 +54,27 @@ TreeNode *BinaryTreeFindByStr(BinaryTree *tree, char *str) {
 
 }
 
+TreeNode *BinaryTreeFindStruct(BinaryTree *tree, char *str) {
+    int hash = charSumHash(str);
+    TreeNode *node = BinaryTreeFind(tree, hash);
+    if(node == NULL) return NULL;
+    if(strcmp(*((void**)node->data), str) != 0) {
+        int found = 0;
+        while(!found) {
+            node = node->lPtr;
+            if(node == NULL) break;
+            if(node->hashVal % SAME_HASH_LEFT_STEP == 0) {
+                if(strcmp(*((void**)node->data), str) == 0) {
+                    found = 1;
+                }
+            }
+        }
+        return node;
+    }
+    else return node;
+
+}
+
 void BinaryTreeDestroy(BinaryTree *tree) {
     Stack *stack = Stack_create();
     if(tree->rPtr != NULL) Stack_push(stack, (void *) tree->rPtr, 0);
