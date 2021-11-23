@@ -108,7 +108,7 @@ void ScannerContextInit(ScannerContext *sc) {
         sc->tokens[i] = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     }
     sc->row = 1;
-    sc->col = 1;
+    sc->col = 0;
     sc->recursiveCall = false;
     sc->kw = NULL;
     char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
@@ -503,7 +503,7 @@ Token FSM(char actualChar, ScannerContext *sc/*int *actualState, int *lastReaded
 void updateScannerPosition(char c, ScannerContext *sc) {
     if(c == '\n') {
             sc->row++;
-            sc->col = 1;
+            sc->col = 0;
     }
     else sc->col++;
 }
@@ -517,51 +517,57 @@ bool statePushChar(ScannerContext *sc) {
     return false;
 }
 
+Token processOnceReadedChar(ScannerContext *sc) {
+        char tmp = (char) sc->lastReadedChar;
+        Token token = FSM(tmp, sc);
+        if(statePushChar(sc)) 
+            StringsArrayPush(strArr, tmp);
+        return token;
+}
+
 Token GetNextToken(ScannerContext *sc) {
     Token token;
     if((token = TokenGetStored(sc)).token_type != TOKEN_NONE) {    //Vrátím token, který si uložili
+        if(token.token_type == TOKEN_ERR) sc->actualState = STATE_ERR;
         return token;
     }
 
     char c;
     sc->actualState = STATE_START;
     if(sc->lastReadedChar != -1) {  //Musím podruhé přečíst již přečtený znak
-        updateScannerPosition((char) sc->lastReadedChar, sc);   //Nový řádek se nezapočítal z poslední lexémy, musím zvýšit nyní
-        token = FSM((char) sc->lastReadedChar, sc);
+        //updateScannerPosition((char) sc->lastReadedChar, sc);   //Nový řádek se nezapočítal z poslední lexémy, musím zvýšit nyní
+        token = processOnceReadedChar(sc);
+        if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     }
-
+ 
     while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
+        if(token.token_type == TOKEN_NONE) updateScannerPosition(c, sc);
+        
         token = FSM(c, sc);
         if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-        if(statePushChar(sc)) StringsArrayPush(strArr, c);
-
-        if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
-            updateScannerPosition((char) sc->lastReadedChar, sc);
+        if(statePushChar(sc)) 
+            StringsArrayPush(strArr, c);
 
         if(token.token_type != TOKEN_NONE) break;
         else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
-            token = FSM((char) sc->lastReadedChar, sc);
-            //TODO možná tu nemá být
-            if(token.token_type == TOKEN_NONE) //Pokud nový řádek přečtu v rámci "dvou lexém", nenačítej nový řádek
-                updateScannerPosition((char) sc->lastReadedChar, sc);
+            token = processOnceReadedChar(sc);
+            if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
         }
     }
 
     if(token.token_type == TOKEN_ID) {
-        if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL)
-        {
-            token.token_type = TOKEN_KEYWORD;
-        }
-        else
-        {
+        if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) token.token_type = TOKEN_KEYWORD;
+        else {
             Token token2 = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
             StringsArrayPush(strArr, '\0');
             strArr->lastValid++;
             if((token2 = GetNextToken(sc)).token_type == TOKEN_START_BRACKET)
-            {
                 token.token_type = TOKEN_ID_F;
-            }
-            else {
+            else { 
+                if(sc->actualState == STATE_ERR) {
+                    sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
+                    token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
+                }
                 TokenStore(token2, sc);
             }
         }
@@ -589,6 +595,8 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
+#define __STANDALONE__ 1    //TODO Remove.. pro visual studio jenom
+
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
@@ -600,7 +608,7 @@ int main(int argc, char **argv) {
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
         if(sc.actualState == STATE_ERR) {
 
-            /*Obsluha chybi mimo lexikalni analyzu
+            /*Obsluha chyby mimo lexikalni analyzu
             int len = strlen(token.attribute);
             sc.col -= len;
             //Vypis chybu
@@ -609,12 +617,7 @@ int main(int argc, char **argv) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", sc.row, sc.col);
             sc.actualState = STATE_START;
         }
-        else printf("%s\n", lex2String(token.token_type));
-        if(token.attribute != NULL) {
-            printf("attribute: %s\n", token.attribute);
-        }
-        else printf("attribute: ATTRIBUTE_NONE\n");
-        printf("----------------\n");
+        else printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
     }
     return 0;
 }

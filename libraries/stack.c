@@ -64,8 +64,8 @@ int Stack_push(Stack *stack,void *value, int dataType) {
 }
 
 StackItem *StackGetLast(Stack *stack) {
-    if(stack->stackPointer >= 0) {
-        return stack->stack[stack->stackPointer - 1];
+    if(stack->stackPointer > 0) {
+        return stack->stack[stack->stackPointer-1];
     }
     else return NULL;
 }

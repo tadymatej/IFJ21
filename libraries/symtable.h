@@ -15,12 +15,51 @@
  * @param lPtr Ukazatel na levý uzel binárního stromu od tohoto uzlu
  * @param rPtr Ukazatel na pravý uzel binárního stromu od tohoto uzlu
  */
-typedef struct TreeNode{
-    int hashVal;
-    void *data;
-    struct TreeNode *lPtr;
-    struct TreeNode *rPtr;
-} TreeNode;
+ typedef struct TreeNode{
+     int hashVal;
+     void *data;
+     struct TreeNode *lPtr;
+     struct TreeNode *rPtr;
+ } TreeNode;
+
+ typedef struct TS_root{
+   Treenode *tree;
+   struct TS_root *upper;
+ }TS_root_t;
+
+ typedef struct TS_data{
+   ATTRIBUTE_TYPES type;
+   char *name;
+   char *value;
+ }TS_data_t;
+
+ typedef struct TS_f_data{
+   ATTRIBUTE_TYPES *ret_types;
+   TS_data_t *params;
+   int ret_count;
+   int param_count;
+   char *name;
+ }
+
+typedef struct TS_root{
+  Treenode *tree;
+  struct TS_root *upper;
+}TS_root_t;
+
+typedef struct TS_data{
+  ATTRIBUTE_TYPES type;
+  char *name;
+  char *value;
+}TS_data_t;
+
+typedef struct TS_f_data{
+  ATTRIBUTE_TYPES *ret_types;
+  TS_data_t *params;
+  int ret_count;
+  int param_count;
+  char *name;
+}
+
 
 /**
  * Struktura pouze pro přehlednost kódu, BinaryTree jako kořenový uzel
