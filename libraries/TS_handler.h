@@ -59,6 +59,13 @@ TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
  */
 int add_variable(Sym_table_t *table, TS_data_t *data);
 
+/*
+ * Funkcia inicializuje štruktúru TS_data_t
+ * @param type Typ novej datovej premennej
+ * @param name Meno novej premennej
+ * @param value Priapdná inicializaǚná hodnota
+ * @returns ukazateľ na inicializovnanú štruktúru alebo NULL, ak sa nepodarilo
+ */
 TS_data_t *make_var_data(DataTypes_t type, char *name, char *value);
 
 void print_TS_var(Sym_table_t *table);
