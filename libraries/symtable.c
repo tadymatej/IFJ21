@@ -53,10 +53,13 @@ TreeNode *BinaryTreeFindByStr(BinaryTree *tree, char *str) {
 
 }
 
-void BinaryTreeDestroy(BinaryTree *tree) {
+void BinaryTreeDestroy(BinaryTree *tree, void *dataDestroyHandler(void *)) {
+    if(tree == NULL) return;
     Stack *stack = Stack_create();
     if(tree->rPtr != NULL) Stack_push(stack, (void *) tree->rPtr, 0);
     if(tree->lPtr != NULL) Stack_push(stack, (void *) tree->lPtr, 0);
+    if(dataDestroyHandler != NULL) 
+        dataDestroyHandler(tree->data);
     free(tree);
     while(stack->stackPointer > 0) {
         StackItem *stackItem = StackGetLast(stack);
@@ -65,6 +68,8 @@ void BinaryTreeDestroy(BinaryTree *tree) {
         Stack_pop(stack);
         if(node->lPtr != NULL) Stack_push(stack, (void *) node->lPtr, 0);
         if(node->rPtr != NULL) Stack_push(stack, (void *) node->rPtr, 0);
+        if(node != NULL && dataDestroyHandler != NULL) 
+            dataDestroyHandler(node->data);
         free(node);
     }
     Stack_delete(stack);
