@@ -1,21 +1,21 @@
 
 
-#include"TS_handler.h"
+#include "TS_handler.h"
 
 Sym_table_t *TS_init(){
   Sym_table_t *temp = malloc(sizeof(Sym_table_t));
   if(temp == NULL) return NULL;
   temp->upper = NULL;
   temp->tree = NULL;
-  temp->nested_identifier = SemanticGlobals.nested_count;
+  temp->nested_identifier = globals.nested_count;
   return temp;
 }
 
-int new_stack_frame(Sym_table_t *table){
+int new_stack_frame(Sym_table_t **table){
   Sym_table_t *temp = TS_init();
   if (temp == NULL) return 99;
-  temp->upper = table;
-  table = temp;
+  temp->upper = *table;
+  *table = temp;
   return 0;
 }
 

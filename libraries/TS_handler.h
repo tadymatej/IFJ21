@@ -23,7 +23,7 @@ Sym_table_t *TS_init(); // prepsat
  * params table Ukazatel na alokovanú tabuľku symbolov
  * returns vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
  */
-int new_stack_frame(Sym_table_t *table);
+int new_stack_frame(Sym_table_t **table);
 
 /*
  * Korektne uvoľní celú tabuľku z pamaťe
