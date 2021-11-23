@@ -1,7 +1,0 @@
-require "ifj21"
-
-function main(k : integer, l : string m : number)
-    local a : integer = 88
-end
-
-main()

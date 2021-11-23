@@ -1,0 +1,17 @@
+-- Hello World example in IFJ21
+-- run it on Merlin by: tl run hello.tl
+
+require "ifj21"
+
+function main()
+    local a : integer
+    if a > 5 then
+        a = 6
+    elseif a < 4 then
+        a = 7
+    else
+        a = 0
+    end
+end
+
+main()

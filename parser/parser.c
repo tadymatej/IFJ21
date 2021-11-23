@@ -1,4 +1,5 @@
 #include "../scanner/scanner.h"
+#include "../precedence_analyzer/precedence_analyzer.h"
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,46 +8,67 @@
 #define DEBUG_USED_RULE
 #define DEBUG_ERROR
 
-// Neterminály
-bool NProg(Token *ptr, ScannerContext sc);
-bool NParams_list(Token *ptr, ScannerContext sc);
-bool NReturn_fc(Token *ptr, ScannerContext sc);
-bool NFunction_body(Token *ptr, ScannerContext sc);
-bool NFunction_call(Token *ptr, ScannerContext sc);
-bool NParam(Token *ptr, ScannerContext sc);
-bool NType(Token *ptr, ScannerContext sc);
-bool NAssignment(Token *ptr, ScannerContext sc);
-bool NExpr(Token *ptr, ScannerContext sc);
-bool NNext_params(Token *ptr, ScannerContext sc);
-bool NIf(Token *ptr, ScannerContext sc);
-bool NElseif(Token *ptr, ScannerContext sc);
-bool NWhile(Token *ptr, ScannerContext sc);
-bool NRet(Token *ptr, ScannerContext sc);
-bool NExp_cond(Token *ptr, ScannerContext sc);
-// ------------------------------------------------------------------
+int isEnd = 0;
 
-Token Next(ScannerContext *sc){
-    return GetNextToken(sc);
+void ErrMessage(Token *ptr, ScannerContext *sc){
+    //Obsluha chyby mimo lexikalni analyzu
+    int len = strlen(ptr->attribute);
+    sc->col -= len;
+        
+    //Vypis chybu
+    //sc->col += len;
+
+    fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
 }
 
 // ------------------------------------------------------------------
 
-bool Req(Token *ptr, ScannerContext sc){
+Token Next(ScannerContext *sc){
+    Token token = GetNextToken(sc);
+    if(token.token_type != TOKEN_NONE && sc->actualState == STATE_ERR){
+        // lexikalni chyba
+        fprintf(stderr, "%d\n", LEX_ERR);
+
+        fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
+        //sc->actualState = STATE_START;
+
+        exit(LEX_ERR);
+    }
+
+    else if(token.token_type == TOKEN_NONE){
+        // doceten vstup do konce
+
+        //TokenStore(token, sc);
+        //printf("konec\n");
+        //isEnd++;
+    }
+
+    return token;
+}
+
+// ------------------------------------------------------------------
+
+bool Req(Token *ptr, ScannerContext *sc){
     bool req = false;
     if((strcmp(ptr->attribute, "\"ifj21\"") == 0) && (ptr->token_type != TOKEN_NONE)){
         req = true;
+
+        // TODO call CG_PROLOG()
+
+    } else {
+        // chyba
     }
     return req;
 }
 
-bool NNext_params(Token *ptr, ScannerContext sc){
+bool NNext_params(Token *ptr, ScannerContext *sc){
     bool next_params = true;
     
-    while(ptr->token_type != TOKEN_NONE && sc.actualState != STATE_ERR){
+    while(ptr->token_type != TOKEN_NONE && sc->actualState != STATE_ERR){
         
         // $10 <next_params> => <param> <next_params>
         if(ptr->token_type == TOKEN_COMMA){
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             #ifdef DEBUG_USED_RULE
                 printf("$10 <next_params> => <param> <next_params>\n");
                 printf("---------------------------\n");
@@ -54,9 +76,9 @@ bool NNext_params(Token *ptr, ScannerContext sc){
             
             if(ptr->token_type == TOKEN_ID){
                 // $18 <param> => id : <type>
-                *ptr = Next(&sc);
+                *ptr = Next(sc);
                 if(ptr->token_type == TOKEN_COLON){
-                    *ptr = Next(&sc);
+                    *ptr = Next(sc);
                     #ifdef DEBUG_USED_RULE
                         printf("$18 <param> => id : <type>\n");
                         printf("---------------------------\n");
@@ -85,17 +107,18 @@ bool NNext_params(Token *ptr, ScannerContext sc){
             next_params = next_params && true;
             break;
         }
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
 
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
     
     return next_params;
 }
 
-bool NType(Token *ptr, ScannerContext sc){
+bool NType(Token *ptr, ScannerContext *sc){
     bool type = false;
 
+    //printf("NType recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
    if(ptr->token_type == TOKEN_KEYWORD){
         // $19 <type> => integer
         if(strcmp(ptr->attribute, "integer") == 0){
@@ -128,18 +151,18 @@ bool NType(Token *ptr, ScannerContext sc){
     return type;
 }
 
-bool NParam(Token *ptr, ScannerContext sc){
+bool NParam(Token *ptr, ScannerContext *sc){
     bool param = false;
 
     // $18 <param> => id : <type>
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
         
     if(ptr->token_type == TOKEN_COLON){
         #ifdef DEBUG_USED_RULE
             printf("$18 <param> => id : <type>\n");
             printf("---------------------------\n");
         #endif
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
 
         param = NType(ptr, sc);
     } else {
@@ -152,11 +175,11 @@ bool NParam(Token *ptr, ScannerContext sc){
     return param;
 }
 
-bool NParams_list(Token *ptr, ScannerContext sc){
+bool NParams_list(Token *ptr, ScannerContext *sc){
     bool params_list = false;
 
     // $6 <params_list> => )
-    if((ptr->token_type == TOKEN_END_BRACKET) && (ptr->token_type != TOKEN_NONE || sc.actualState == STATE_ERR)){
+    if((ptr->token_type == TOKEN_END_BRACKET) && (ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR)){
         #ifdef DEBUG_USED_RULE
             printf("$6 <params_list> => )\n");
             printf("---------------------------\n");
@@ -164,12 +187,12 @@ bool NParams_list(Token *ptr, ScannerContext sc){
         
         params_list = true;
         
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
         return params_list;
     }
 
     
-    while(ptr->token_type != TOKEN_NONE || sc.actualState == STATE_ERR){
+    while(ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR){
 
         // $7 <params_list> => <first_param> <next_params>
         if(ptr->token_type == TOKEN_ID){
@@ -184,28 +207,28 @@ bool NParams_list(Token *ptr, ScannerContext sc){
                 printf("$8 <first_param> => <param>\n");
                 printf("---------------------------\n");
             #endif
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             if(ptr->token_type == TOKEN_COLON){
                 #ifdef DEBUG_USED_RULE
                     printf("$18 <param> => id : <type>\n");
                     printf("---------------------------\n");
                 #endif
-                *ptr = Next(&sc);
+                *ptr = Next(sc);
                 params_list = NType(ptr, sc);
             
             }
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             params_list = params_list && NNext_params(ptr, sc);
             break;
         }
 
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
 
     return params_list;
 }
 
-bool NFunction_call(Token *ptr, ScannerContext sc){
+bool NFunction_call(Token *ptr, ScannerContext *sc){
     bool function_call = false;
 
     // $33 <function_call> => id_f ( <args_list>
@@ -213,7 +236,7 @@ bool NFunction_call(Token *ptr, ScannerContext sc){
         printf("$33 <function_call> => id_f ( <args_list>\n");
         printf("---------------------------\n");
     #endif
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
 
     if(ptr->token_type != TOKEN_END_BRACKET && ptr->token_type == TOKEN_ID){
         // $35 <args_list> => <first_arg> <next_args>
@@ -228,9 +251,9 @@ bool NFunction_call(Token *ptr, ScannerContext sc){
             printf("---------------------------\n");
         #endif
 
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
         while(ptr->token_type == TOKEN_COMMA){
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             if(ptr->token_type == TOKEN_ID){
                 // $36 <next_args> => , id <next_args>
                 #ifdef DEBUG_USED_RULE
@@ -238,7 +261,7 @@ bool NFunction_call(Token *ptr, ScannerContext sc){
                     printf("---------------------------\n");
                 #endif
             }
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
         }
 
         // $38 <next_args> => )
@@ -264,36 +287,65 @@ bool NFunction_call(Token *ptr, ScannerContext sc){
     return function_call;
 }
 
-bool NExp(Token *ptr, ScannerContext sc){
+bool NExp(Token *ptr, ScannerContext *sc){
     bool exp = false;
+    int psa = 0;
 
     // $55 <exp> => call PSA
     #ifdef DEBUG_USED_RULE
         printf("$55 <exp> => call PSA\n");
         printf("---------------------------\n");
     #endif
-    
-    // TODO call PSA
 
-    // $56 <exp> => <function_body>
-    #ifdef DEBUG_USED_RULE
-        printf("$56 <exp> => <function_body>\n");
-        printf("---------------------------\n");
-    #endif
+    //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+
+    // TODO call PSA
+    //TokenStore(*ptr, sc);
+    /*
+    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    psa = precedence_analyzer(&sc);
+    printf("\nPSA = %d\n", psa);
+    */
 
     exp = true;
 
     return exp;
 }
 
-bool NAssignment(Token *ptr, ScannerContext sc){
+bool NExpression(Token *ptr, ScannerContext *sc){
+    bool expression = false;
+
+    *ptr = Next(sc);
+    if(ptr->token_type == TOKEN_ID_F){
+        // $56 <expression> => <function_call>
+        #ifdef DEBUG_USED_RULE
+            printf("$56 <expression> => <function_call>\n");
+            printf("---------------------------\n");
+        #endif
+        expression = NFunction_call(ptr, sc);
+    } else {
+        // TODO store token pro PSA
+        //TokenStore(*ptr, sc);
+
+        // $54 <expression> => <exp>
+        #ifdef DEBUG_USED_RULE
+            printf("$54 <expression> => <exp>\n");
+            printf("---------------------------\n");
+        #endif
+        expression = NExp(ptr, sc);
+    }
+
+    return expression;
+}
+
+bool NAssignment(Token *ptr, ScannerContext *sc){
     bool assignment = true;
 
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
     
     if(ptr->token_type == TOKEN_NONE){
         while(ptr->token_type == TOKEN_NONE){
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
         }
     }
 
@@ -304,14 +356,7 @@ bool NAssignment(Token *ptr, ScannerContext sc){
             printf("---------------------------\n");
         #endif
 
-        // $54 <expression> => <exp>
-        #ifdef DEBUG_USED_RULE
-            printf("$54 <expression> => <exp>\n");
-            printf("---------------------------\n");
-        #endif
-
-        *ptr = Next(&sc);
-        assignment = NExp(ptr, sc);
+        assignment = NExpression(ptr, sc);
     }
 
     
@@ -325,14 +370,14 @@ bool NAssignment(Token *ptr, ScannerContext sc){
     return assignment;
 }
 
-bool NExp_cond(Token *ptr, ScannerContext sc){
+bool NExp_cond(Token *ptr, ScannerContext *sc){
     bool exp_cond = false;
 
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
     while(ptr->token_type != TOKEN_KEYWORD){
         // TODO pripravit tokeny pro PSA
         exp_cond = true;
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
     
     // $68 <exp_cond> => call PSA
@@ -344,7 +389,7 @@ bool NExp_cond(Token *ptr, ScannerContext sc){
     return exp_cond;
 }
 
-bool NElseif(Token *ptr, ScannerContext sc){
+bool NElseif(Token *ptr, ScannerContext *sc){
     bool elseif = true;
 
     //if(ptr->token_type == TOKEN_KEYWORD){
@@ -358,7 +403,7 @@ bool NElseif(Token *ptr, ScannerContext sc){
         elseif = NExp_cond(ptr, sc);
         if(ptr->token_type == TOKEN_KEYWORD){
             if(strcmp(ptr->attribute, "then") == 0){
-                *ptr = Next(&sc);
+                *ptr = Next(sc);
                 elseif = elseif && NFunction_body(ptr, sc);
                 if(strcmp(ptr->attribute, "else") == 0){
                     break;
@@ -377,7 +422,7 @@ bool NElseif(Token *ptr, ScannerContext sc){
             #endif
             break;
         }
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
 
     if(elseif && ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "else") == 0){
@@ -386,7 +431,7 @@ bool NElseif(Token *ptr, ScannerContext sc){
             printf("$65 <elseif> => else <function_body> <end>\n");
              printf("---------------------------\n");
         #endif
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
         elseif = elseif && NFunction_body(ptr, sc);
     }
 
@@ -407,7 +452,7 @@ bool NElseif(Token *ptr, ScannerContext sc){
     return elseif;
 }
 
-bool NIf(Token *ptr, ScannerContext sc){
+bool NIf(Token *ptr, ScannerContext *sc){
     bool fi = false;
 
     // $63 <if> => if <exp_cond> then <function_body> <elseif>
@@ -417,10 +462,10 @@ bool NIf(Token *ptr, ScannerContext sc){
     #endif
 
     fi = NExp_cond(ptr, sc);
-    //*ptr = Next(&sc);
+    //*ptr = Next(sc);
     if(ptr->token_type == TOKEN_KEYWORD){
         if(strcmp(ptr->attribute, "then") == 0){
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             fi = fi && NFunction_body(ptr, sc) && NElseif(ptr, sc);
         } else {
             fi = false; 
@@ -438,7 +483,7 @@ bool NIf(Token *ptr, ScannerContext sc){
     return fi;
 }
 
-bool NWhile(Token *ptr, ScannerContext sc){
+bool NWhile(Token *ptr, ScannerContext *sc){
     bool w = false;
 
     // $62 <while> => while <exp_cond> do <function_body> <end>
@@ -450,9 +495,9 @@ bool NWhile(Token *ptr, ScannerContext sc){
     w = NExp_cond(ptr, sc);
     if(ptr->token_type == TOKEN_KEYWORD){
         if(strcmp(ptr->attribute, "do") == 0){
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             w = NFunction_body(ptr, sc);
-            printf("NWhile recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+            //printf("NWhile recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
         }
     }
 
@@ -470,7 +515,7 @@ bool NWhile(Token *ptr, ScannerContext sc){
     return w;
 }
 
-bool NRet(Token *ptr, ScannerContext sc){
+bool NRet(Token *ptr, ScannerContext *sc){
     bool ret = false;
 
     // $59 <return> => return <list>
@@ -479,72 +524,15 @@ bool NRet(Token *ptr, ScannerContext sc){
         printf("---------------------------\n");
     #endif
 
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
     if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_ID_F || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
-        // $60 <list> => <expressions> <function_body>
+        // $60 <list> => <expressions>
         #ifdef DEBUG_USED_RULE
-            printf("$60 <list> => <expressions> <function_body>\n");
+            printf("$60 <list> => <expressions>\n");
             printf("---------------------------\n");
         #endif
-
-        if(ptr->token_type == TOKEN_ID_F){
-            // $50 <expressions> => <function_call>
-            #ifdef DEBUG_USED_RULE
-                printf("$50 <expressions> => <function_call>\n");
-                printf("---------------------------\n");
-            #endif
-            ret = NFunction_call(ptr, sc);
-
-        } else {
-
-            // $49 <expressions> => <exp_first> <next_expr>
-            #ifdef DEBUG_USED_RULE
-                printf("$49 <expressions> => <exp_first> <next_expr>\n");
-                printf("---------------------------\n");
-            #endif
-
-            // $51 <exp_first> => <expression>
-            #ifdef DEBUG_USED_RULE
-                printf("$51 <exp_first> => <expression>\n");
-                printf("---------------------------\n");
-            #endif
-
-            // $54 <expression> => <exp>
-            #ifdef DEBUG_USED_RULE
-                printf("$54 <expression> => <exp>\n");
-                printf("---------------------------\n");
-            #endif
-
-            ret = NExp(ptr, sc);
-
-            *ptr = Next(&sc);
-            
-            while(ptr->token_type == TOKEN_COMMA){
-                // $52 <next_exp> => , <expression> <next_expr>
-                #ifdef DEBUG_USED_RULE
-                    printf("$52 <next_exp> => , <expression> <next_expr>\n");
-                    printf("---------------------------\n");
-                #endif
-
-                // $54 <expression> => <exp>
-                #ifdef DEBUG_USED_RULE
-                    printf("$54 <expression> => <exp>\n");
-                    printf("---------------------------\n");
-                #endif
-                *ptr = Next(&sc);
-                ret = ret && NExp(ptr, sc);
-                *ptr = Next(&sc);
-            }
-
-            // $53 <next_exp> => <function_body>
-            #ifdef DEBUG_USED_RULE
-                printf("$53 <next_exp> => <function_body>\n");
-                printf("---------------------------\n");
-            #endif
-            
-            TokenStore(*ptr, &sc);
-            return ret;
-        }
+        TokenStore(*ptr, sc);
+        ret = NExpressions(ptr, sc);
     }
 
     // $61 <list> => <function_body>
@@ -560,27 +548,75 @@ bool NRet(Token *ptr, ScannerContext sc){
     return ret;
 }
 
-bool NFunction_body(Token *ptr, ScannerContext sc){
+bool NExpressions(Token *ptr, ScannerContext *sc){
+    bool expressions = true;
+
+    // $49 <expressions> => <exp_first> <next_expr>
+    #ifdef DEBUG_USED_RULE
+        printf("$49 <expressions> => <exp_first> <next_expr>\n");
+        printf("---------------------------\n");
+    #endif
+
+    // $51 <exp_first> => <expression>
+    #ifdef DEBUG_USED_RULE
+        printf("$51 <exp_first> => <expression>\n");
+        printf("---------------------------\n");
+    #endif
+                
+    expressions = NExpression(ptr, sc);
+                
+    *ptr = Next(sc);
+    
+    //printf("NExpressions accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+
+    if(ptr->token_type == TOKEN_COMMA){
+        while(ptr->token_type == TOKEN_COMMA){
+            //printf("NExpressions accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+            // $52 <next_exp> => , <expression> <next_expr>
+            #ifdef DEBUG_USED_RULE
+                printf("$52 <next_exp> => , <expression> <next_expr>\n");
+                printf("---------------------------\n");
+            #endif
+
+            expressions = expressions && NExpression(ptr, sc);
+            *ptr = Next(sc);
+        }
+        TokenStore(*ptr, sc);
+    } else {
+        TokenStore(*ptr, sc);
+    }
+                
+    // $53 <next_exp> => <function_body>
+    #ifdef DEBUG_USED_RULE
+        printf("$53 <next_exp> => <function_body>\n");
+        printf("---------------------------\n");
+    #endif
+
+    return expressions;
+}
+
+bool NFunction_body(Token *ptr, ScannerContext *sc){
     bool function_body = true;
     int break_from_while = 0;
 
-    while((ptr->token_type != TOKEN_NONE || sc.actualState == STATE_ERR) && function_body == true){
+    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && function_body == true && isEnd == 0){
+        //printf("NFunction_body accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
         //function_body = true;
         switch(ptr->token_type){
             case TOKEN_KEYWORD:
                 if(strcmp(ptr->attribute, "local") == 0){
                     // $41 <function_body> => local id : <type> <assignment>
-                    *ptr = Next(&sc);
+                    *ptr = Next(sc);
                     if(ptr->token_type == TOKEN_ID){
-                        *ptr = Next(&sc);
+                        *ptr = Next(sc);
                         if(ptr->token_type == TOKEN_COLON){
-                            *ptr = Next(&sc);
+                            *ptr = Next(sc);
                             #ifdef DEBUG_USED_RULE
                                 printf("$41 <function_body> => local id : <type> <assignment>\n");
                                 printf("---------------------------\n");
                             #endif
                             function_body = function_body && NType(ptr, sc) && NAssignment(ptr, sc);
-                            TokenStore(*ptr, &sc);
+                            TokenStore(*ptr, sc);
                         } else {
                             function_body = false; 
                             #ifdef DEBUG_ERROR 
@@ -604,8 +640,8 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                     #endif
 
                     function_body = function_body && NIf(ptr, sc);
-                    *ptr = Next(&sc);
-                    TokenStore(*ptr, &sc);
+                    *ptr = Next(sc);
+                    TokenStore(*ptr, sc);
 
                 } else if(strcmp(ptr->attribute, "elseif") == 0){
                     function_body = function_body && true;
@@ -636,7 +672,7 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                     function_body = function_body && NRet(ptr, sc);
                 
                 } else { 
-                    if(strcmp(ptr->attribute, "end") != 0){
+                    /*if(strcmp(ptr->attribute, "end") != 0){
                         function_body = false; 
                         #ifdef DEBUG_ERROR 
                             printf("ERROR || In Function_body recieved keyword, but it doesnt match\n"); 
@@ -644,6 +680,11 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                         #endif
                         break;
                     }
+                    */
+                    function_body = true; /// ???
+                    break_from_while++;
+                    //printf("%s\n", ptr->attribute);
+                    break;
                 }
                 break;
             case TOKEN_ID:
@@ -659,11 +700,11 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                     printf("---------------------------\n");
                 #endif
 
-                *ptr = Next(&sc);
+                *ptr = Next(sc);
                 
                 while(ptr->token_type != TOKEN_SET){
                     if(ptr->token_type == TOKEN_COMMA){
-                        *ptr = Next(&sc);
+                        *ptr = Next(sc);
                         if(ptr->token_type == TOKEN_ID){
                             // $47 <next_id> => , id <next_id>
                             #ifdef DEBUG_USED_RULE
@@ -673,7 +714,7 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                             function_body = function_body && true;
                         }
                     }
-                    *ptr = Next(&sc);
+                    *ptr = Next(sc);
                 }
 
                 if(ptr->token_type == TOKEN_SET){
@@ -692,65 +733,7 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                     break;
                 }
 
-                // $49 <expressions> => <exp_first> <next_expr>
-                #ifdef DEBUG_USED_RULE
-                    printf("$49 <expressions> => <exp_first> <next_expr>\n");
-                    printf("---------------------------\n");
-                #endif
-
-                // $51 <exp_first> => <expression>
-                #ifdef DEBUG_USED_RULE
-                    printf("$51 <exp_first> => <expression>\n");
-                    printf("---------------------------\n");
-                #endif
-
-                // $54 <expression> => <exp>
-                #ifdef DEBUG_USED_RULE
-                    printf("$54 <expression> => <exp>\n");
-                    printf("---------------------------\n");
-                #endif
-
-                *ptr = Next(&sc);
-                
-                function_body = function_body && NExp(ptr, sc);
-                
-                *ptr = Next(&sc);
-
-                if(ptr->token_type == TOKEN_COMMA){
-                    while(ptr->token_type == TOKEN_COMMA){
-
-                        // $52 <next_exp> => , <expression> <next_expr>
-                        #ifdef DEBUG_USED_RULE
-                            printf("$52 <next_exp> => , <expression> <next_expr>\n");
-                            printf("---------------------------\n");
-                        #endif
-
-                        // $54 <expression> => <exp>
-                        #ifdef DEBUG_USED_RULE
-                            printf("$54 <expression> => <exp>\n");
-                            printf("---------------------------\n");
-                        #endif
-
-                        *ptr = Next(&sc);
-                        function_body = function_body && NExp(ptr, sc);
-                        *ptr = Next(&sc);
-
-                        while (ptr->token_type == TOKEN_MOD || ptr->token_type == TOKEN_DIV || ptr->token_type == TOKEN_CONCAT || ptr->token_type == TOKEN_MUL || ptr->token_type == TOKEN_ADD || ptr->token_type == TOKEN_SUB){
-                            // TODO pripravit pro PSA
-                            *ptr = Next(&sc);
-                            *ptr = Next(&sc);
-                        }
-                    }
-                    TokenStore(*ptr, &sc);
-                } else {
-                    TokenStore(*ptr, &sc);
-                }
-                
-                // $53 <next_exp> => <function_body>
-                #ifdef DEBUG_USED_RULE
-                    printf("$53 <next_exp> => <function_body>\n");
-                    printf("---------------------------\n");
-                #endif
+                function_body = function_body && NExpressions(ptr, sc);
                 break;
             
             case TOKEN_ID_F:
@@ -764,40 +747,23 @@ bool NFunction_body(Token *ptr, ScannerContext sc){
                 break;
 
             default:
+                //break_from_while++;
                 break;
-        }
-
-        if (ptr->token_type == TOKEN_KEYWORD){
-            // $39 <function_body> => end <prog>
-            if(strcmp(ptr->attribute, "end") == 0){
-                #ifdef DEBUG_USED_RULE
-                    printf("$39 <function_body> => end <prog>\n");
-                    printf("---------------------------\n");
-                #endif
-
-                function_body = function_body && true;
-                break;
-            }
         }
 
         if(break_from_while != 0){
             break;
         }
-        
-        //printf("err: %d\n", err);
-        *ptr = Next(&sc);
-    }
 
-    if(function_body != true){
-        printf("ERROR\n");
+        *ptr = Next(sc);
     }
 
     return function_body;
 }
 
-bool NReturn_fc(Token *ptr, ScannerContext sc){
+bool NReturn_fc(Token *ptr, ScannerContext *sc){
     bool return_fc = false;
-        
+
     if(ptr->token_type == TOKEN_COLON){
         // $22 <return_fc> => : <first_ret> <next_rets>
         #ifdef DEBUG_USED_RULE
@@ -805,13 +771,13 @@ bool NReturn_fc(Token *ptr, ScannerContext sc){
             printf("---------------------------\n");
         #endif
         
-        if(sc.actualState == STATE_ERR){
+        if(sc->actualState == STATE_ERR){
             printf("@@ STATE_ERR\n");
         }
         
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
 
-        if(sc.actualState == STATE_ERR){
+        if(sc->actualState == STATE_ERR){
             printf("@@ STATE_ERR\n");
         }
 
@@ -823,16 +789,16 @@ bool NReturn_fc(Token *ptr, ScannerContext sc){
         
         return_fc = NType(ptr, sc);
 
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
         while(ptr->token_type == TOKEN_COMMA){
             // $25 <next_rets> => , <type> <next_rets>
             #ifdef DEBUG_USED_RULE
                 printf("$25 <next_rets> => , <type> <next_rets>\n");
                 printf("---------------------------\n");
             #endif
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             return_fc =  return_fc && NType(ptr, sc);
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
         }
 
         // $26 <next_rets> => <function_body>
@@ -854,7 +820,7 @@ bool NReturn_fc(Token *ptr, ScannerContext sc){
     #endif
 
     while(ptr->token_type == TOKEN_NONE){
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
 
     return_fc = NFunction_body(ptr, sc);
@@ -862,18 +828,18 @@ bool NReturn_fc(Token *ptr, ScannerContext sc){
     return return_fc;
 }
 
-bool NProg(Token *ptr, ScannerContext sc){
+bool NProg(Token *ptr, ScannerContext *sc){
     bool prog = false;
 
-    *ptr = Next(&sc);
+    *ptr = Next(sc);
     while(ptr->token_type == TOKEN_NONE){
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
 
     if(ptr->token_type == TOKEN_ID){
         if(strcmp(ptr->attribute, "require") == 0){
             // $1 <prog> => require
-            *ptr = Next(&sc);
+            *ptr = Next(sc);
             prog = Req(ptr, sc);
             #ifdef DEBUG_USED_RULE
                 printf("$1 <prog> => require\n");
@@ -892,21 +858,34 @@ bool NProg(Token *ptr, ScannerContext sc){
         #endif
     }
 
-    while((ptr->token_type != TOKEN_NONE || sc.actualState == STATE_ERR) && prog == true) {
+    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && prog == true && isEnd == 0) {
         switch(ptr->token_type){
             case TOKEN_KEYWORD:
                 if(strcmp(ptr->attribute, "function") == 0){
-                    // $2 <prog> => function id_f ( <params_list> <return_fc>
+                    // $2 <prog> => function id_f ( <params_list> <return_fc> end
                     prog = prog && true;
-                    *ptr = Next(&sc);
+                    *ptr = Next(sc);
                     if(ptr->token_type == TOKEN_ID_F){
                         #ifdef DEBUG_USED_RULE
-                            printf("$2 <prog> => function id_f ( <params_list> <return_fc>\n");
+                            printf("$2 <prog> => function id_f ( <params_list> <return_fc> end\n");
                             printf("---------------------------\n");
                         #endif
-                        *ptr = Next(&sc);
+                        *ptr = Next(sc);
                         prog = NParams_list(ptr, sc);
                         prog = prog && NReturn_fc(ptr, sc);
+
+                        //printf("%s\n", ptr->attribute); 
+
+                        if(strcmp(ptr->attribute, "end") == 0){
+                            //prog = false;
+                            //printf("%s\n", ptr->attribute);
+                        } else {
+                            prog = false; 
+                            #ifdef DEBUG_ERROR 
+                                printf("ERROR || $2\n"); 
+                            #endif
+                            break;
+                        }
                     } else {
                         prog = false; 
                         #ifdef DEBUG_ERROR 
@@ -921,101 +900,107 @@ bool NProg(Token *ptr, ScannerContext sc){
                         printf("---------------------------\n");
                     #endif
 
-                    *ptr = Next(&sc);
+                    *ptr = Next(sc);
                     if(ptr->token_type == TOKEN_ID){ // TODO opravit na TOKEN_ID_F
-                        *ptr = Next(&sc);
+                        *ptr = Next(sc);
                         if(ptr->token_type == TOKEN_COLON){
-                            *ptr = Next(&sc);
+                            *ptr = Next(sc);
                             if(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "function") == 0){
-                                *ptr = Next(&sc);
+                                *ptr = Next(sc);
                                 // $12 <types_list> => <first_type> <next_types>
                                 #ifdef DEBUG_USED_RULE
                                     printf("$12 <types_list> => <first_type> <next_types>\n");
                                     printf("---------------------------\n");
                                 #endif
-                                if(ptr->token_type == TOKEN_END_BRACKET){
-                                    // $13 <types_list> => )
-                                    #ifdef DEBUG_USED_RULE
-                                        printf("$13 <types_list> => )\n");
-                                        printf("---------------------------\n");
-                                    #endif
-                                }
-
-                                else{
-                                    // $27 <first_type> => <type>
-                                    #ifdef DEBUG_USED_RULE
-                                        printf("$27 <first_type> => <type>\n");
-                                        printf("---------------------------\n");
-                                    #endif
-                                    *ptr = Next(&sc);
-                                    prog = NType(ptr, sc);
-                                    *ptr = Next(&sc);
-                                    while(ptr->token_type == TOKEN_COMMA){
-                                        // $15 <next_types> => , <type> <next_types>
-                                        #ifdef DEBUG_USED_RULE
-                                            printf("$15 <next_types> => , <type> <next_types>\n");
-                                            printf("---------------------------\n");
-                                        #endif
-                                        *ptr = Next(&sc);
-                                        prog = prog && NType(ptr, sc);
-                                        *ptr = Next(&sc);
-                                    }
+                                //printf("%s\n", lex2String(ptr->token_type));
+                                if(ptr->token_type == TOKEN_START_BRACKET){
+                                    *ptr = Next(sc);
+                                    //printf("%s\n", lex2String(ptr->token_type));
                                     if(ptr->token_type == TOKEN_END_BRACKET){
-                                        // $14 <next_types> => )
+                                        // $13 <types_list> => )
                                         #ifdef DEBUG_USED_RULE
-                                            printf("$14 <next_types> => )\n");
+                                            printf("$13 <types_list> => )\n");
                                             printf("---------------------------\n");
                                         #endif
-                                    } else {
-                                        prog = false; 
-                                        #ifdef DEBUG_ERROR 
-                                            printf("ERROR || $14\n"); 
-                                        #endif
-                                        break;
                                     }
 
-                                    *ptr = Next(&sc);
-                                    if(ptr->token_type == TOKEN_COLON){
-                                        // $28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
+                                    else{
+                                        // $27 <first_type> => <type>
                                         #ifdef DEBUG_USED_RULE
-                                            printf("$28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>\n");
+                                            printf("$27 <first_type> => <type>\n");
                                             printf("---------------------------\n");
                                         #endif
-                                        *ptr = Next(&sc);
-                                        // $29 <fc_ret_first_type> => <type>
-                                        #ifdef DEBUG_USED_RULE
-                                            printf("$29 <fc_ret_first_type> => <type>\n");
-                                            printf("---------------------------\n");
-                                        #endif
+                                        //*ptr = Next(sc);
                                         prog = NType(ptr, sc);
-                                        *ptr = Next(&sc);
-                                        if(ptr->token_type == TOKEN_COMMA){
-                                            while(ptr->token_type == TOKEN_COMMA){
-                                                // $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
-                                                #ifdef DEBUG_USED_RULE
-                                                    printf("$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>\n");
-                                                    printf("---------------------------\n");
-                                                #endif
-                                                *ptr = Next(&sc);
-                                                prog = prog && NType(ptr, sc);
-                                                *ptr = Next(&sc);
-                                            }
-                                            TokenStore(*ptr, &sc);
+                                        *ptr = Next(sc);
+                                        while(ptr->token_type == TOKEN_COMMA){
+                                            // $15 <next_types> => , <type> <next_types>
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$15 <next_types> => , <type> <next_types>\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                            *ptr = Next(sc);
+                                            prog = prog && NType(ptr, sc);
+                                            *ptr = Next(sc);
                                         }
-                                        // $31 <fc_ret_next_types> => <prog>
-                                        #ifdef DEBUG_USED_RULE
-                                            printf("$31 <fc_ret_next_types> => <prog>\n");
-                                            printf("---------------------------\n");
-                                        #endif
-                                        
-                                    } else {
-                                        // $32 <fc_decl_ret> => <prog>
-                                        TokenStore(*ptr, &sc);
-                                        #ifdef DEBUG_USED_RULE
-                                            printf("$32 <fc_decl_ret> => <prog>\n");
-                                            printf("---------------------------\n");
-                                        #endif
+                                        if(ptr->token_type == TOKEN_END_BRACKET){
+                                            // $14 <next_types> => )
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$14 <next_types> => )\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                        } else {
+                                            prog = false; 
+                                            #ifdef DEBUG_ERROR 
+                                                printf("ERROR || $14\n"); 
+                                            #endif
+                                            break;
+                                        }
                                     }
+                                        
+                                    *ptr = Next(sc);
+                                    if(ptr->token_type == TOKEN_COLON){
+                                            // $28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                            *ptr = Next(sc);
+                                            // $29 <fc_ret_first_type> => <type>
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$29 <fc_ret_first_type> => <type>\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                            prog = NType(ptr, sc);
+                                            *ptr = Next(sc);
+                                            if(ptr->token_type == TOKEN_COMMA){
+                                                while(ptr->token_type == TOKEN_COMMA){
+                                                    // $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
+                                                    #ifdef DEBUG_USED_RULE
+                                                        printf("$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>\n");
+                                                        printf("---------------------------\n");
+                                                    #endif
+                                                    *ptr = Next(sc);
+                                                    prog = prog && NType(ptr, sc);
+                                                    *ptr = Next(sc);
+                                                }
+                                            }
+                                            //TokenStore(*ptr, sc);
+                                            // $31 <fc_ret_next_types> => <prog>
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$31 <fc_ret_next_types> => <prog>\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                            
+                                    } else {
+                                            // $32 <fc_decl_ret> => <prog>
+                                            //TokenStore(*ptr, sc);
+                                            #ifdef DEBUG_USED_RULE
+                                                printf("$32 <fc_decl_ret> => <prog>\n");
+                                                printf("---------------------------\n");
+                                            #endif
+                                    }
+                                    TokenStore(*ptr, sc);
                                 }
                             } else {
                                 prog = false; 
@@ -1059,10 +1044,13 @@ bool NProg(Token *ptr, ScannerContext sc){
                 break;
         }
         //printf("err: %d\n", err);
-        *ptr = Next(&sc);
+        *ptr = Next(sc);
     }
+
     if(prog != true){
-        printf("ERROR\n");
+        fprintf(stderr, "%d\n", SYNTAX_ERR);
+        //ErrMessage(ptr, sc);
+        exit(SYNTAX_ERR);
     }
     
     // $4 <prog> => EOF
@@ -1074,7 +1062,7 @@ bool NProg(Token *ptr, ScannerContext sc){
     return prog;
 }
 
-bool Begin(ScannerContext sc){
+bool Begin(ScannerContext *sc){
     //Token token;
     
     Token *token;
@@ -1093,9 +1081,10 @@ bool Begin(ScannerContext sc){
     OK = NProg(ptr, sc);
 
     // LEX
-    /*while(((*ptr = Next(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR)) {
+    /*while(((*ptr = Next(sc)).token_type != TOKEN_NONE || sc->actualState == STATE_ERR)) {
         printf("*********%s %s\n", lex2String(ptr->token_type), ptr->attribute);
-    }*/
+    }
+    */
     
 
     printf("RESULT: %d\n", OK);
@@ -1108,9 +1097,10 @@ bool Parse(){
     sc.lastReadedChar = -1;
 
     ScannerContextInit(&sc);
+    
     strArr = StringsArrayCreate('\0');
 
     
     
-    return Begin(sc);
+    return Begin(&sc);
 }
