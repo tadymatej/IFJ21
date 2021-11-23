@@ -13,12 +13,14 @@ int q_push(Queue_t* q, void* elem) {
     Q_elem_t* new = (Q_elem_t*)malloc(sizeof(Q_elem_t));
     if (new == NULL)
         return 1;
+    new->data = elem;
     new->next = NULL;
     if (q->last != NULL)
         q->last->next = new;
     else
         q->first = new;
     q->last = new;
+    return 0;
 }
 
 void* q_top(Queue_t* q) {

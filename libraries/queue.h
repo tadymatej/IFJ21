@@ -16,7 +16,7 @@
 
 typedef struct Q_Elem {
     void *data;
-    struct Q_Eleme *next;
+    struct Q_Elem *next;
 }Q_elem_t;
 
 typedef struct Queue {

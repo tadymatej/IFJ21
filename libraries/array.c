@@ -26,7 +26,7 @@ Array_t *init_array() {
 int arr_add(Array_t *arr, void *element) {
     if (arr->length == arr->size)
         if (__resize_array(arr) == 1) {
-            dispose_array(&arr);
+            dispose_array(&arr, true);
             return 1;
         }
     arr->arr[arr->length++] = element;
@@ -43,13 +43,13 @@ void *arr_get_element_at(Array_t *arr, int idx) {
 
 void dispose_array(Array_t **arr, bool dispose_elements) {
     if (arr != NULL && *arr != NULL) {
-        if (dispoce_elements) {
+        if (dispose_elements) {
             for (int i = 0; i < (*arr)->length; i++) {
                 free((*arr)->arr[i]);
             }
         }
         free((*arr)->arr);
         free(*arr);
-        *arr = NULL:
+        *arr = NULL;
     }
 }

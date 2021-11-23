@@ -16,6 +16,6 @@ typedef struct Inflatable_Array{
 Array_t* init_array();
 int arr_add(Array_t *arr, void *element);
 void* arr_get_element_at(Array_t *arr, int idx);
-void dispose_array(Array_t **arr);
+void dispose_array(Array_t **arr, bool dispose_elements);
 
 #endif
