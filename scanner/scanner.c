@@ -20,6 +20,14 @@ StringsArray* StringsArrayCreate(char separator) {
     return strArr;
 }
 
+void StringsArrayDelete(StringsArray **strArr) {
+    if(*strArr != NULL) {
+        free((*strArr)->arr);
+        free(*strArr);
+        *strArr = NULL;
+    }
+}
+
 int StringsArrayExtend(StringsArray *strArr) {
     void *tmp = realloc(strArr->arr, sizeof(char) * strArr->cap * 2);
     if(tmp != NULL) {
@@ -101,7 +109,7 @@ int whiteSpace(char c) {
     return false;
 }
 
-void ScannerContextInit(ScannerContext *sc) {
+int ScannerContextInit(ScannerContext *sc) {
     sc->actualState = STATE_START;
     sc->lastReadedChar = -1;
     for(int i = 0; i < 2; ++i) {
@@ -109,12 +117,19 @@ void ScannerContextInit(ScannerContext *sc) {
     }
     sc->row = 1;
     sc->col = 0;
-    sc->recursiveCall = false;
+    sc->errorMalloc = false;
     sc->kw = NULL;
-    char *kw[] = {"do", "else", "elseif", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
+
+    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "elseif", "then", "while", "require"};
+
     for(int i = 0; i < NUMBER_OF_KEYWORDS; ++i) {
-        BinaryTreeInsertNode(&sc->kw, charSumHash(kw[i]), kw[i]);
+        if(BinaryTreeInsertNode(&sc->kw, charSumHash(kw[i]), kw[i]) == -1) return -1;
     }
+    return 0;
+}
+
+void ScannerContextDelete(ScannerContext *sc) {
+    BinaryTreeDestroy(&sc->kw, NULL);
 }
 
 Token FSM(char actualChar, ScannerContext *sc/*int *actualState, int *lastReadedChar*/) {
@@ -520,8 +535,14 @@ bool statePushChar(ScannerContext *sc) {
 Token processOnceReadedChar(ScannerContext *sc) {
         char tmp = (char) sc->lastReadedChar;
         Token token = FSM(tmp, sc);
-        if(statePushChar(sc)) 
-            StringsArrayPush(strArr, tmp);
+        if(statePushChar(sc)) { 
+            if(StringsArrayPush(strArr, tmp) == -1) {
+                token.token_type = TOKEN_ERR;
+                sc->actualState = STATE_ERR;
+                sc->errorMalloc = true;
+                return token;
+            }
+        }
         return token;
 }
 
@@ -545,9 +566,14 @@ Token GetNextToken(ScannerContext *sc) {
         
         token = FSM(c, sc);
         if(sc->actualState == STATE_ERR) return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-        if(statePushChar(sc)) 
-            StringsArrayPush(strArr, c);
-
+        if(statePushChar(sc)) {
+            if(StringsArrayPush(strArr, c) == -1) {
+                token.token_type = TOKEN_ERR;
+                sc->actualState = STATE_ERR;
+                sc->errorMalloc = true;
+                return token;
+            }
+        }
         if(token.token_type != TOKEN_NONE) break;
         else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
             token = processOnceReadedChar(sc);
@@ -559,7 +585,12 @@ Token GetNextToken(ScannerContext *sc) {
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) token.token_type = TOKEN_KEYWORD;
         else {
             Token token2 = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-            StringsArrayPush(strArr, '\0');
+            if(StringsArrayPush(strArr, '\0') == -1) {
+                token.token_type = TOKEN_ERR;
+                sc->actualState = STATE_ERR;
+                sc->errorMalloc = true;
+                return token;
+            }
             strArr->lastValid++;
             if((token2 = GetNextToken(sc)).token_type == TOKEN_START_BRACKET)
                 token.token_type = TOKEN_ID_F;
@@ -595,8 +626,10 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
+
 #define __STANDALONE__ 1    //TODO Remove.. pro visual studio jenom
 /*
+
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;

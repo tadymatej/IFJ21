@@ -1,3 +1,4 @@
+
 import os
 from pathlib import Path
 curdir = Path(__file__).parent.absolute()
@@ -363,9 +364,81 @@ def test14():
                 write(\"Vysledek je: \", vysl, \"\\\n\")
             end
         end
+
         main()
         """]
     tests(commands, expected_lines, "test14")
+
+def test15():
+    expected_lines = [
+        ["keyword", "function", True],
+        ["id_f", "whitespaces", True],
+        ["end bracket", "(null)", True],
+        ["keyword", "local", True],
+        ["id", "s", True],
+        ["colon - dvojtecka", "(null)", True],
+        ["keyword", "string", True],
+        ["set", "(null)", True],
+        ["string", r'"\t"', True],   ##Blbě se zotavuji z chyby pokud escape je špatně (\x35A)
+        ["id_f", "write", True],
+        ["id", "s", True],
+        ["comma", "(null)", True],
+        ["string", r'"\n"', True],
+        ["end bracket", "(null)", True],
+        ["id", "s", True],
+        ["set", "(null)", True],
+        ["string", r'"a\255b"', True],
+        ["id_f", "write", True],
+        ["id", "s", True],
+        ["comma", "(null)", True],
+        ["string", r'"\n"', True],
+        ["end bracket", "(null)", True],
+        ["keyword", "local", True],
+        ["id", "x", True],
+        ["colon - dvojtecka", "(null)", True],
+        ["keyword", "integer", True],
+        ["set", "(null)", True],
+        ["number int", "0", True],
+        ["sub", "(null)", True],
+        ["number int", "1", True],
+        ["id_f", "write", True],
+        ["id", "x", True],
+        ["end bracket", "(null)", True],
+        ["keyword", "end", True],
+        ["id_f", "whitespaces", True],
+        ["end bracket", "(null)", True],
+    ]
+    commands = [
+        r"""
+
+            function whitespaces
+            ()
+            local
+            s
+            :
+            string
+            =
+            \"\\\t\"write(s, \"\\\n\")
+
+            s = \"a\\\255b\"
+            write(s
+            ,
+            \"\\\n\")local x:integer=0
+            -
+            1write(x)
+            end whitespaces()
+        """
+    ]
+    #print(os.system('echo "{}"'.format(commands[0])))
+    tests(commands, expected_lines, "test15")
+
+def test16():
+    expected_lines = [
+        ["", "", True]
+    ]
+    commands = [
+        "",]
+    tests(commands, expected_lines, "test16")
 
 
 
@@ -386,3 +459,5 @@ test12()
 test13()
 
 test14()
+
+test15()

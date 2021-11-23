@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../scanner/scanner.h"
 
+
 #define LEX_ERR 1 // chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému)
 #define SYNTAX_ERR 2 // chyba v programu v rámci syntaktické analýzy (chybná syntaxe programu)
 #define SEMANTIC_PROG_ERR 3 // sémantická chyba v programu – nedefinovaná funkce/proměnná, pokus o redefinici proměnné, atp.
@@ -32,6 +33,7 @@ bool NRet(Token *ptr, ScannerContext *sc);
 bool NExp_cond(Token *ptr, ScannerContext *sc);
 bool NExpression(Token *ptr, ScannerContext *sc);
 bool NExpressions(Token *ptr, ScannerContext *sc);
+
 
 bool Parse();
 /**

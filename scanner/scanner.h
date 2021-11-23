@@ -23,7 +23,7 @@ typedef enum {TOKEN_LEN, TOKEN_ID, TOKEN_ID_F, TOKEN_MOD, TOKEN_DIV, TOKEN_CONCA
               TOKEN_EQ, TOKEN_SET, TOKEN_STRING, TOKEN_NUMBER, TOKEN_NUMBER_INT, TOKEN_NONE, TOKEN_START_BRACKET, TOKEN_END_BRACKET, TOKEN_SEMICOLON,
               TOKEN_COMMA, TOKEN_COLON, TOKEN_KEYWORD, TOKEN_ERR} TOKEN_TYPES;
 
-#define NUMBER_OF_KEYWORDS 15
+#define NUMBER_OF_KEYWORDS 16
 
 /**
  * Typy atributů tokenů
@@ -59,7 +59,7 @@ typedef struct {
     int actualState; /**< Aktuální stav scanneru */
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
     Token tokens[2];    /**< Uložené tokeny ve scanneru */
-    bool recursiveCall;
+    bool errorMalloc;       /**< Pokud nastala chyba, zda to je chyba mallocu */
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
     BinaryTree *kw;
@@ -107,8 +107,16 @@ Token GetNextToken(ScannerContext *sc);
 /**
  * Inicializuje ScannerContext
  * @param sc ScannerContext, který se má inicializovat
+ * @return Vrací 0 v případě úspěchu, -1 v případě neúspěchu
  */
-void ScannerContextInit(ScannerContext *sc);
+int ScannerContextInit(ScannerContext *sc);
+
+/**
+ * Korektně uvolní ScannerContext
+ * 
+ * @param sc ScannerContext, který má být uvolněn
+ */ 
+void ScannerContextDelete(ScannerContext *sc);
 
 /**
  * prevedie typ tokenu na reťazec čitaetľný pre človeka
@@ -161,6 +169,7 @@ int StringsArrayPush(StringsArray *strArr, char c);
 /**
  * Zvětší kapacitu strArr o dvojnásobek
  * @param strArr StringsArray, kterému se má zvětšit kapacita
+ * @return Vrací -1 v případě neúspěchu, cokoliv jiného v případě úspěchu
  */
 int StringsArrayExtend(StringsArray *strArr);
 
@@ -170,6 +179,12 @@ int StringsArrayExtend(StringsArray *strArr);
  * @return Vrací NULL v případě neúspěchu, jinak ukazatel na vytvořený StringsArray
  */
 StringsArray* StringsArrayCreate(char separator);
+
+/**
+ * Korektně uvolní StringsArray
+ * @param strArr StringsArray, který má být uvolněn
+ */ 
+void StringsArrayDelete(StringsArray **strArr);
 
 /**
  * Updatuje pozici scanneru = řádek a sloupec vstupu
@@ -182,5 +197,13 @@ void updateScannerPosition(char c, ScannerContext *sc);
  * Zjistí zda se scanner nachází ve stavu, kdy má ukládat do pole řetězců
  */
 bool statePushChar(ScannerContext *sc);
+
+/**
+ * Provede scanner operaci nad znakem, který byl již jednou zpracován
+ * Tj. zavolá FSM a v případě potřeby vloží znak do pole řetězců
+ * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
+ */ 
+Token processOnceReadedChar(ScannerContext *sc);
+
 
 #endif

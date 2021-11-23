@@ -11,7 +11,7 @@
 /**
  * Struktura uzlu binárního stromu.
  * @param hashVal Hodnota uzlu, pomocí které se v stromu vyhledává
- * @param data Data v uzlu
+ * @param data Data v uzlu. Požadavek na data je, aby na první pozici byl vždy datový typ: char * (V případě struktury)
  * @param lPtr Ukazatel na levý uzel binárního stromu od tohoto uzlu
  * @param rPtr Ukazatel na pravý uzel binárního stromu od tohoto uzlu
  */
@@ -38,10 +38,11 @@ typedef TreeNode BinaryTree;
 int BinaryTreeInsertNode(BinaryTree **tree, int hashVal, void *data);
 
 /**
- * Zničí (dealokuje) celý binární strom
+ * Zničí (dealokuje) celý binární strom popřípadě i jeho data
  * @param tree Binární strom, který má být zničen
+ * @param dataDestroyHandler funkce, která bude volána, pokud se mají uvolnit data, pokud se data uvolnit nemají, očekává NULL
  */
-void BinaryTreeDestroy(BinaryTree *tree);
+void BinaryTreeDestroy(BinaryTree *tree, void *dataDestroyHandler(void *));
 
 /**
  * Vyhledá v binárním stromu za pomocí řetězce
@@ -71,5 +72,6 @@ TreeNode *BinaryTreeFind(BinaryTree *tree, int hashVal);
  * @return Vrací Ukazatel na vytvořený uzel nebo NULL v případě že se uzel nepodaří vytvořit
  */
 TreeNode *TreeNodeCreate();
+
 
 #endif
