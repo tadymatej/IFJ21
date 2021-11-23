@@ -108,32 +108,3 @@ int BinaryTreeInsertNode(BinaryTree **tree, int hashVal, void *data) {
     }
     return 0;
 }
-
-/*
-int main() {
-    BinaryTree *tree = NULL;
-    BinaryTreeInsertNode(&tree, 0, NULL);
-    assert(tree->hashVal == 0);
-
-    BinaryTreeInsertNode(&tree, 5, NULL);
-    assert(tree->rPtr->hashVal == 5);
-
-    BinaryTreeInsertNode(&tree, 10, NULL);
-    assert(tree->rPtr->rPtr->hashVal == 10);
-
-    BinaryTreeInsertNode(&tree, 2, NULL);
-    assert(tree->rPtr->lPtr->hashVal == 2);
-
-    BinaryTreeInsertNode(&tree, -5, "nazdar");
-    assert(tree->lPtr->hashVal == -5);
-
-    BinaryTreeInsertNode(&tree, -5, "Ahoj");
-    assert(tree->lPtr->hashVal == -5);
-
-    TreeNode *node = BinaryTreeFindByStr(tree, "nazdar");
-
-    BinaryTreeDestroy(tree);
-
-    return 0;
-}
-*/

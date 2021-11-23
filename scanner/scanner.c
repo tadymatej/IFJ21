@@ -20,6 +20,14 @@ StringsArray* StringsArrayCreate(char separator) {
     return strArr;
 }
 
+void StringsArrayDelete(StringsArray **strArr) {
+    if(*strArr != NULL) {
+        free((*strArr)->arr);
+        free(*strArr);
+        *strArr = NULL;
+    }
+}
+
 int StringsArrayExtend(StringsArray *strArr) {
     void *tmp = realloc(strArr->arr, sizeof(char) * strArr->cap * 2);
     if(tmp != NULL) {
@@ -595,7 +603,7 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
-#define __STANDALONE__ 1    //TODO Remove.. pro visual studio jenom
+//#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {

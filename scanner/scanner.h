@@ -172,6 +172,12 @@ int StringsArrayExtend(StringsArray *strArr);
 StringsArray* StringsArrayCreate(char separator);
 
 /**
+ * Korektně uvolní StringsArray
+ * @param strArr StringsArray, který má být uvolněn
+ */ 
+void StringsArrayDelete(StringsArray **strArr);
+
+/**
  * Updatuje pozici scanneru = řádek a sloupec vstupu
  * @param c Znak, který scanner právě čte
  * @param sc ScannerContext, který má být aktualizován
@@ -189,5 +195,6 @@ bool statePushChar(ScannerContext *sc);
  * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
  */ 
 Token processOnceReadedChar(ScannerContext *sc);
+
 
 #endif

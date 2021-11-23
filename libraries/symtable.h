@@ -11,7 +11,7 @@
 /**
  * Struktura uzlu binárního stromu.
  * @param hashVal Hodnota uzlu, pomocí které se v stromu vyhledává
- * @param data Data v uzlu
+ * @param data Data v uzlu. Požadavek na data je, aby na první pozici byl vždy datový typ: char * (V případě struktury)
  * @param lPtr Ukazatel na levý uzel binárního stromu od tohoto uzlu
  * @param rPtr Ukazatel na pravý uzel binárního stromu od tohoto uzlu
  */
@@ -71,5 +71,6 @@ TreeNode *BinaryTreeFind(BinaryTree *tree, int hashVal);
  * @return Vrací Ukazatel na vytvořený uzel nebo NULL v případě že se uzel nepodaří vytvořit
  */
 TreeNode *TreeNodeCreate();
+
 
 #endif
