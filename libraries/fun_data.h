@@ -5,10 +5,10 @@
 #include "symtable.h"
 
 typedef struct Fun_data{
+  char *name;
   Array_t *ret_vals;
   Array_t *params;
   bool isCalledBeforeDefinition;
-  char *name;
 }Fun_data_t;
 
 Fun_data_t* init_fun_data(char *name);
