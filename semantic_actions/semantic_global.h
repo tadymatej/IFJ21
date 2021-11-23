@@ -8,4 +8,6 @@ typedef struct SemanticGlobals{
     Fun_data_t *cur_function;
 }SemanticGlobals_t;
 
+SemanticGlobals_t SemanticGlobals;
+
 #endif
