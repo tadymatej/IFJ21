@@ -19,5 +19,6 @@ typedef struct SemanticGlobals{
 
 int init_sem_globals();
 
+extern SemanticGlobals globals;
 
 #endif
