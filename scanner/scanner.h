@@ -59,7 +59,7 @@ typedef struct {
     int actualState; /**< Aktuální stav scanneru */
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
     Token tokens[2];    /**< Uložené tokeny ve scanneru */
-    bool recursiveCall;
+    bool errorMalloc;       /**< Pokud nastala chyba, zda to je chyba mallocu */
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
     BinaryTree *kw;
@@ -107,8 +107,16 @@ Token GetNextToken(ScannerContext *sc);
 /**
  * Inicializuje ScannerContext
  * @param sc ScannerContext, který se má inicializovat
+ * @return Vrací 0 v případě úspěchu, -1 v případě neúspěchu
  */
-void ScannerContextInit(ScannerContext *sc);
+int ScannerContextInit(ScannerContext *sc);
+
+/**
+ * Korektně uvolní ScannerContext
+ * 
+ * @param sc ScannerContext, který má být uvolněn
+ */ 
+void ScannerContextDelete(ScannerContext *sc);
 
 /**
  * prevedie typ tokenu na reťazec čitaetľný pre človeka
@@ -161,6 +169,7 @@ int StringsArrayPush(StringsArray *strArr, char c);
 /**
  * Zvětší kapacitu strArr o dvojnásobek
  * @param strArr StringsArray, kterému se má zvětšit kapacita
+ * @return Vrací -1 v případě neúspěchu, cokoliv jiného v případě úspěchu
  */
 int StringsArrayExtend(StringsArray *strArr);
 
