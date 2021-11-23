@@ -15,11 +15,11 @@
 
 #include"scanner.h"
 #include"stack.h"
-//#include"symtable.c"
+#include"symtable.h"
 
 typedef struct exp_node_s{
   TreeNode *data;
-  ATTRIBUTE_TYPES ret_type;
+  DataTypes_t ret_type;
   TOKEN_TYPES type;
   struct exp_node_s *right;
   struct exp_node_s *left;
@@ -45,19 +45,19 @@ Stack *exp_tree_init();
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
  * @param ret_type akú návratovú hodnotu má daný uzol
  */
-void add_id_node(Stack *stack, TreeNode *data, ATTRIBUTE_TYPES ret_type, TOKEN_TYPES type);
+void add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type);
 
 /*
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku
  * @param stack inicializovaný stack stromov
  */
-ATTRIBUTE_TYPES get_top_type(Stack *stack);
+DataTypes_t get_top_type(Stack *stack);
 
 /*
  * Vráti dátový typ stromu druhého od vrchu zásobníku
  * @param stack inicializovaný stack stromov
  */
-ATTRIBUTE_TYPES get_second_type(Stack *stack);
+DataTypes_t get_second_type(Stack *stack);
 
 /*
  * Vloží medziuzol reprezentujúci príkaz na explicitnú konverziu
@@ -72,7 +72,7 @@ void do_conversion(Stack *stack);
  * @param stack ukazateľ na inicializovaný stack
  * @param operator akým operátorom chceme spojiť operandy do stromu
  */
-void operator_merge(Stack *stack, TOKEN_TYPES operator, ATTRIBUTE_TYPES ret_type);
+void operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type);
 
 /*
  * Funkcia spracuje unárnu funkciu do stromu

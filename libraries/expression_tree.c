@@ -12,7 +12,7 @@ Stack *exp_tree_init(){
   return Stack_create();
 }
 
-void add_id_node(Stack *stack, TreeNode *data, ATTRIBUTE_TYPES ret_type, TOKEN_TYPES type){
+void add_id_node(Stack *stack, TreeNode *data, DataTypes_t ret_type, TOKEN_TYPES type){
   exp_node_t *temporary = malloc(sizeof(exp_node_t));
   if(temporary == NULL) return; //TODO error handling
   temporary->data = data;
@@ -23,27 +23,27 @@ void add_id_node(Stack *stack, TreeNode *data, ATTRIBUTE_TYPES ret_type, TOKEN_T
   Stack_push(stack, temporary, 1); //1 pretoze nie je dolezita ta polozka momentalne
 }
 
-ATTRIBUTE_TYPES get_top_type(Stack *stack){
-  if(Stack_empty(stack)) return ATTRIBUTE_NONE;
+DataTypes_t get_top_type(Stack *stack){
+  if(Stack_empty(stack)) return NO_TYPE;
   exp_node_t *temporary = exp_stack_top(stack);
   return temporary->ret_type;
 }
 
-ATTRIBUTE_TYPES get_second_type(Stack *stack){
-  if(Stack_empty(stack)) return ATTRIBUTE_NONE;
+DataTypes_t get_second_type(Stack *stack){
+  if(Stack_empty(stack)) return NO_TYPE;
   if(stack->stackPointer >= 2) {
     exp_node_t *temp = stack->stack[stack->stackPointer-2]->value;
     return temp->ret_type; //zavisle na implenetacii stack TODO
   }
-  return ATTRIBUTE_NONE;
+  return NO_TYPE;
 }
 
 void do_conversion(Stack *stack){
   ;
 }
 
-void operator_merge(Stack *stack, TOKEN_TYPES operator, ATTRIBUTE_TYPES ret_type){
-  if (get_second_type(stack) == ATTRIBUTE_NONE) {
+void operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type){
+  if (get_second_type(stack) == NO_TYPE) {
     return; //TODO error handling
   }
   exp_node_t *right_side = exp_stack_top(stack);
@@ -66,7 +66,7 @@ void unary_operator(Stack *stack){
   Stack_pop(stack);
   exp_node_t *root = malloc(sizeof(exp_node_t));
   root->data = NULL;
-  root->ret_type = ATTRIBUTE_INTEGER;
+  root->ret_type = INTEGER;
   root->type = TOKEN_LEN;
   root->left = temp;
   root->right = NULL;
