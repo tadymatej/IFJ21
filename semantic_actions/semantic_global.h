@@ -6,6 +6,7 @@
 typedef struct SemanticGlobals{
     int nested_count;
     Fun_data_t *cur_function;
+    Sym_table_t *TS;
 }SemanticGlobals_t;
 
 SemanticGlobals_t SemanticGlobals;
