@@ -15,27 +15,27 @@
  * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
  * returns Ukazateľ na koreň stack framu
  */
-TS_root_t *TS_init();
+Sym_table_t *TS_init(); // prepsat
 
 /*
- * Alokuje dalšiu položku TS_root_t  a zreťazí to
+ * Alokuje dalšiu položku Sym_table_t  a zreťazí to
  * params table Ukazatel na alokovanú tabuľku symbolov
  * returns vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
  */
-int new_stack_frame(TS_root_t *table);
+int new_stack_frame(Sym_table_t *table);
 
 /*
  * Korektne uvoľní celú tabuľku z pamaťe
  * params table Ukazateľ na alokovanú tabuľku symbolov
  */
-void dispose_table(TS_root_t **table);
+void dispose_table(Sym_table_t **table);
 
 /*
  * Korektne uvoľní strom na najvyššej úrovni a aj najvyššǐ koreň
  * params table Ukazateľ na alokovanú tabuľku symbolov
  */
-#define dispose_upper(name) do{BinaryTreeDestroy(name->tree); \
-  TS_root_t *temp = name->upper; free(name); name = temp }while(0);
+#define dispose_current(name) do{BinaryTreeDestroy(name->tree); \
+  Sym_table_t *temp = name->upper; free(name); name = temp }while(0);
 
 
 /*
@@ -45,7 +45,7 @@ void dispose_table(TS_root_t **table);
  * params name reťazec obsahujúci meno vyhľadávanej premennej
  * returns ukazateľ na dáta premennej, NULL ak je nedefinovaná
  */
-TS_data_t *find_variable(TS_root_t *table, char *name);
+TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
 
 /*
  * Pridá premennú s parametrami do najvrchnejšieho stromu
@@ -55,10 +55,10 @@ TS_data_t *find_variable(TS_root_t *table, char *name);
  * params value východzia hodnota pri deklarácii
  * returns 0 ak sa podaŕi alokovať nový uzol, 1 ak sa nepodarí alokácia
  */
-int add_variable(TS_root_t *table, ATTRIBUTE_TYPES type, char *name, char *value);
+int add_variable(Sym_table_t *table, TS_data_t *data);
 
 
-void print_TS_var(TS_root_t *table);
+void print_TS_var(Sym_table_t *table);
 #endif
 
 //koniec suboru TS_handler,h
