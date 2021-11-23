@@ -309,7 +309,11 @@ int precedence_analyzer(ScannerContext *sc) {
       case '>':
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
         prev_token = make_fake_token(prev_token, top_stack_operand);
-        do_action(exp_stack, &prev_token, 1);
+        error_code = do_action(exp_stack, &prev_token);
+        if (error_code != 0) {
+          done = 1;
+          break;
+        }
         print_exp_stack(exp_stack);
         break;
       case '=':
