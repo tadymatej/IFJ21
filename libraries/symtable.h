@@ -33,7 +33,7 @@ typedef struct Sym_table{
 }Sym_table_t;
 
 typedef struct TS_data{
-  DataTypes_t type; //!!!!!!!!!!!!!!!!!!!!!!
+  DataTypes_t type;
   char *name;
   char *value;
 }TS_data_t;
