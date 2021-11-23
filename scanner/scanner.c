@@ -20,6 +20,14 @@ StringsArray* StringsArrayCreate(char separator) {
     return strArr;
 }
 
+void StringsArrayDelete(StringsArray **strArr) {
+    if(*strArr != NULL) {
+        free((*strArr)->arr);
+        free(*strArr);
+        *strArr = NULL;
+    }
+}
+
 int StringsArrayExtend(StringsArray *strArr) {
     void *tmp = realloc(strArr->arr, sizeof(char) * strArr->cap * 2);
     if(tmp != NULL) {
@@ -111,7 +119,7 @@ void ScannerContextInit(ScannerContext *sc) {
     sc->col = 0;
     sc->recursiveCall = false;
     sc->kw = NULL;
-    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "then", "while", "require"};
+    char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "elseif", "then", "while", "require"};
     for(int i = 0; i < NUMBER_OF_KEYWORDS; ++i) {
         BinaryTreeInsertNode(&sc->kw, charSumHash(kw[i]), kw[i]);
     }
@@ -595,7 +603,7 @@ void TokenStore(Token token, ScannerContext *sc) {
     }
 }
 
-#define __STANDALONE__ 1    //TODO Remove.. pro visual studio jenom
+//#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #ifdef __STANDALONE__
 int main(int argc, char **argv) {
