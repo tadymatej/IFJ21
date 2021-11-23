@@ -10,6 +10,7 @@
 
 #include"stack.h"
 #include"symtable.h"
+#include"semantic_global.h"
 
 /*
  * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
@@ -43,6 +44,7 @@ void dispose_table(Sym_table_t **table);
  * Hľadá od najvyššieho stack framu po najnižši, definovaný ako prvý
  * params table Ukazateľ na alokovanú tabuľku symbolov
  * params name reťazec obsahujúci meno vyhľadávanej premennej
+ * params foundIn v ktorom strome na sa nasla premenna
  * returns ukazateľ na dáta premennej, NULL ak je nedefinovaná
  */
 TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
@@ -57,6 +59,7 @@ TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
  */
 int add_variable(Sym_table_t *table, TS_data_t *data);
 
+TS_data_t *make_var_data(DataTypes_t type, char *name, char *value);
 
 void print_TS_var(Sym_table_t *table);
 #endif

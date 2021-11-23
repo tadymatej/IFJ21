@@ -7,12 +7,13 @@ Sym_table_t *TS_init(){
   if(temp == NULL) return NULL;
   temp->upper = NULL;
   temp->tree = NULL;
+  temp->nested_identifier = SemanticGlobals.nested_count;
   return temp;
 }
 
 int new_stack_frame(Sym_table_t *table){
   Sym_table_t *temp = TS_init();
-  if (temp == NULL) return 1;
+  if (temp == NULL) return 99;
   temp->upper = table;
   table = temp;
   return 0;
@@ -47,9 +48,18 @@ int add_variable(Sym_table_t *table, TS_data_t *data){
   int hash = charSumHash(data->name);
   if ((BinaryTreeInsertNode(&(table->tree), hash, data)) == -1) {
     free(data);
-    return 1;
+    return 99;
   }
   return 0;
+}
+
+TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){
+  TS_data_t *temp = malloc(sizeof(TS_data_t));
+  if(temp == NULL) return NULL;
+  temp->type = type;
+  temp->name = name;
+  temp->value = value;
+  return temp;
 }
 
 // //kod pozicany zo zadania projektu v predmete IAL
