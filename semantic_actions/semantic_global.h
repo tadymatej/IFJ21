@@ -1,14 +1,24 @@
 #ifndef __SEM_GLOBALS_H_
 #define __SEM_GLOBALS_H_ 1
 
+#include "symtable.h"
+#include "TS_handler.h"
+#include "fun_table.h"
 #include "fun_data.h"
+#include "queue.h"
 
 typedef struct SemanticGlobals{
     int nested_count;
     Fun_data_t *cur_function;
-    Sym_table_t *TS;
-}SemanticGlobals_t;
+    TS_data_t *var;
+    int tmp;
+    Queue_t *q_assignments;
+    Sym_table_t *ts;
+    Fun_table_t *ft;
+}SemanticGlobals;
 
-SemanticGlobals_t SemanticGlobals;
+int init_sem_globals();
+
+extern SemanticGlobals globals;
 
 #endif

@@ -8,21 +8,26 @@
 */
 
 #ifndef __QUEUE_H_
-#define __QUEUE_H_
+#define __QUEUE_H_ 1
 
 #define DEFAULT_QUEUE_SIZE 10
 
 #include "symtable.h"
 
+typedef struct Q_Elem {
+    void *data;
+    struct Q_Elem *next;
+}Q_elem_t;
+
 typedef struct Queue {
-    void **arr;
-    int size_mul; // nasobek standardni velikosti
-    int size;
+    Q_elem_t *first;
+    Q_elem_t *last;
 }Queue_t;
 
 Queue_t* init_queue();
 int q_push(Queue_t *q, void *elem);
-void q_pop(Queue_t *q);
+void* q_top(Queue_t *q);
+void* q_pop(Queue_t *q);
 void dispose_queue(Queue_t **q);
 
 #endif
