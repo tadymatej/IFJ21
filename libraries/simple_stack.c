@@ -129,5 +129,16 @@ void stack_print(simp_stack_t *stack, int wide){
     putchar(' ');
   }
 }
+ /*
+  * Funkcia korektne uvoľní všetky zdroje alokované stackom a zapíše do premennej NULL
+  * @param **stack ukazateľ na ukazateľ na štruktúru stacku
+  */
+void stack_destroy(simp_stack_t **stack){
+  if(stack == NULL || *stack == NULL) return;
+  free((*stack)->array);
+  free(*stack);
+  *stack = NULL;
+  return;
+}
 
 //koniec súboru extended_stack.c

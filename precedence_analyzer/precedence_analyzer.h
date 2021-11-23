@@ -15,6 +15,7 @@
 
 #include "simple_stack.h"
 #include "scanner.h"
+#include "semantic_bottom_up.h"
 
 #ifdef OLD_TABLE
 #define PRECEDENCE_TABLE_SIZE 6

@@ -42,6 +42,8 @@ void stack_pop(simp_stack_t *stack);
 
 char stack_top(simp_stack_t *stack);
 
+void stack_destroy(simp_stack_t **stack);
+
 void stack_push_word(simp_stack_t *stack, const char *source);
 
 void sack_pop_word(simp_stack_t *stack, char *dest);
