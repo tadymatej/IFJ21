@@ -1,21 +1,21 @@
 
 
-#include"TS_handler.h"
+#include "TS_handler.h"
 
 Sym_table_t *TS_init(){
   Sym_table_t *temp = malloc(sizeof(Sym_table_t));
   if(temp == NULL) return NULL;
   temp->upper = NULL;
   temp->tree = NULL;
-  temp->nested_identifier = SemanticGlobals.nested_count;
+  temp->nested_identifier = globals.nested_count;
   return temp;
 }
 
-int new_stack_frame(Sym_table_t *table){
+int new_stack_frame(Sym_table_t **table){
   Sym_table_t *temp = TS_init();
   if (temp == NULL) return 99;
-  temp->upper = table;
-  table = temp;
+  temp->upper = *table;
+  *table = temp;
   return 0;
 }
 
@@ -33,7 +33,7 @@ TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn){
   Sym_table_t *temp = table;
   TreeNode *retNode;
   while (temp != NULL){
-    retNode = (BinaryTreeFindByStr(temp->tree, name));
+    retNode = (BinaryTreeFindStruct(temp->tree, name));
     if(retNode != NULL)
     {
       *foundIn = temp;
@@ -60,6 +60,16 @@ TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){
   temp->name = name;
   temp->value = value;
   return temp;
+}
+
+DataTypes_t string_to_data_type(char *str){
+  char *arr[] = { "number", "integer", "string", "boolean"};
+  for(int i=0; i < DATA_TYPES_COUNT; i++){
+    if(strcmp(str, arr[i]) == 0){
+      return (DataTypes_t)i;
+    }
+  }
+  return NO_TYPE;
 }
 
 // //kod pozicany zo zadania projektu v predmete IAL

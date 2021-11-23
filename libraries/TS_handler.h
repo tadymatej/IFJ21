@@ -23,7 +23,7 @@ Sym_table_t *TS_init(); // prepsat
  * params table Ukazatel na alokovanú tabuľku symbolov
  * returns vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
  */
-int new_stack_frame(Sym_table_t *table);
+int new_stack_frame(Sym_table_t **table);
 
 /*
  * Korektne uvoľní celú tabuľku z pamaťe
@@ -49,24 +49,31 @@ void dispose_table(Sym_table_t **table);
  */
 TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
 
-/*
+/**
  * Pridá premennú s parametrami do najvrchnejšieho stromu
- * params table Ukazateľ na alokovanú tabuľku symbolov
- * params type dátový typ premennej
- * params name meno premennej
- * params value východzia hodnota pri deklarácii
- * returns 0 ak sa podaŕi alokovať nový uzol, 1 ak sa nepodarí alokácia
+ * @param table Ukazateľ na alokovanú tabuľku symbolov
+ * @param type dátový typ premennej
+ * @param name meno premennej
+ * @param value východzia hodnota pri deklarácii
+ * @return 0 ak sa podaŕi alokovať nový uzol, 1 ak sa nepodarí alokácia
  */
 int add_variable(Sym_table_t *table, TS_data_t *data);
 
-/*
+/**
  * Funkcia inicializuje štruktúru TS_data_t
  * @param type Typ novej datovej premennej
  * @param name Meno novej premennej
  * @param value Priapdná inicializaǚná hodnota
- * @returns ukazateľ na inicializovnanú štruktúru alebo NULL, ak sa nepodarilo
+ * @return ukazateľ na inicializovnanú štruktúru alebo NULL, ak sa nepodarilo
  */
 TS_data_t *make_var_data(DataTypes_t type, char *name, char *value);
+
+/**
+ * Prevadi retezec str na DataTypes_t
+ * @param str Retezec reprezentujici datovy typ
+ * @return odpovidajici hodnota Data_types_t
+ */
+DataTypes_t string_to_data_type(char *str);
 
 void print_TS_var(Sym_table_t *table);
 #endif

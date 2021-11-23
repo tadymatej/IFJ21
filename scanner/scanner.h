@@ -23,7 +23,7 @@ typedef enum {TOKEN_LEN, TOKEN_ID, TOKEN_ID_F, TOKEN_MOD, TOKEN_DIV, TOKEN_CONCA
               TOKEN_EQ, TOKEN_SET, TOKEN_STRING, TOKEN_NUMBER, TOKEN_NUMBER_INT, TOKEN_NONE, TOKEN_START_BRACKET, TOKEN_END_BRACKET, TOKEN_SEMICOLON,
               TOKEN_COMMA, TOKEN_COLON, TOKEN_KEYWORD, TOKEN_ERR} TOKEN_TYPES;
 
-#define NUMBER_OF_KEYWORDS 15
+#define NUMBER_OF_KEYWORDS 16
 
 /**
  * Typy atributů tokenů
@@ -172,6 +172,12 @@ int StringsArrayExtend(StringsArray *strArr);
 StringsArray* StringsArrayCreate(char separator);
 
 /**
+ * Korektně uvolní StringsArray
+ * @param strArr StringsArray, který má být uvolněn
+ */ 
+void StringsArrayDelete(StringsArray **strArr);
+
+/**
  * Updatuje pozici scanneru = řádek a sloupec vstupu
  * @param c Znak, který scanner právě čte
  * @param sc ScannerContext, který má být aktualizován
@@ -182,5 +188,13 @@ void updateScannerPosition(char c, ScannerContext *sc);
  * Zjistí zda se scanner nachází ve stavu, kdy má ukládat do pole řetězců
  */
 bool statePushChar(ScannerContext *sc);
+
+/**
+ * Provede scanner operaci nad znakem, který byl již jednou zpracován
+ * Tj. zavolá FSM a v případě potřeby vloží znak do pole řetězců
+ * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
+ */ 
+Token processOnceReadedChar(ScannerContext *sc);
+
 
 #endif

@@ -8,9 +8,23 @@ int init_sem_globals() {
     globals.q_assignments = init_queue();
     globals.cur_function = NULL;
     globals.tmp = 0;
-    globals.ts = TS_init();
+    globals.inside_while = 0;
     globals.ft = init_fun_table();
-    if (globals.q_assignments == NULL || globals.ts == NULL || globals.ft == NULL)
-        return 1;
+    globals.blockStack = stack_init();
+    globals.q_command = init_queue();
+    if (globals.q_assignments == NULL || globals.ts == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL) {
+        
+        return 99;
+    }
     return 0;
+}
+
+void dispose_sem_globals() {
+    dispose_fun_data(globals.cur_function);
+    dispose_queue(globals.q_assignments);
+    dispose_queue(globals.q_command);
+    free(globals.var);
+    dispose_fun_table(&globals.ft);
+    dispose_table(&globals.ts);
+    stack_destroy(&globals.blockStack);
 }

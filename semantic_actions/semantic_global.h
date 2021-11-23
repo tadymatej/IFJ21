@@ -5,6 +5,7 @@
 #include "TS_handler.h"
 #include "fun_table.h"
 #include "fun_data.h"
+#include "simple_stack.h"
 #include "queue.h"
 
 typedef struct SemanticGlobals{
@@ -15,9 +16,13 @@ typedef struct SemanticGlobals{
     Queue_t *q_assignments;
     Sym_table_t *ts;
     Fun_table_t *ft;
+    int inside_while;
+    simp_stack_t *blockStack;
+    Queue_t *q_command;
 }SemanticGlobals;
 
 int init_sem_globals();
+void dispose_sem_globals();
 
 extern SemanticGlobals globals;
 

@@ -6,6 +6,7 @@ Fun_table_t *init_fun_table() {
         return NULL;
     table->decFunTree = NULL;
     table->defFunTree = NULL;
+    table->builtinFunTree = NULL; //Pridat definice vestavenych funkce
     return table;
 }
 
@@ -20,18 +21,28 @@ void add_function_def(Fun_table_t *table, Fun_data_t *fun) {
     BinaryTreeInsertNode(&(table->defFunTree), charSumHash(fun->name), (void *)fun);
 }
 
-Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared) {
-    Fun_data_t *fun = BinaryTreeFindByStr(table->defFunTree, fun_name)->data;
+Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared, bool *isBuiltIn) {
+    Fun_data_t *fun = BinaryTreeFindStruct(table->defFunTree, fun_name)->data;
+    if(isOnlyDeclared != NULL)
+        *isOnlyDeclared = false;
+    if(isBuiltIn != NULL)
+        *isBuiltIn = false;
     if (fun == NULL) {
-        fun = BinaryTreeFindByStr(table->decFunTree, fun_name)->data;
+        fun = BinaryTreeFindStruct(table->decFunTree, fun_name)->data;
         if (fun != NULL && isOnlyDeclared != NULL)
             *isOnlyDeclared = true;
+        if(fun == NULL)
+        {
+            fun = BinaryTreeFindStruct(table->builtinFunTree, fun_name)->data;
+            if(isBuiltIn != NULL)
+                *isBuiltIn = true;
+        }
     }
     return fun;
 }
 
 bool is_dec_and_def_equal(Fun_table_t *table, Fun_data_t *fun) {
-    Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name)->data;
+    Fun_data_t *dec = BinaryTreeFindStruct(table->decFunTree, fun->name)->data;
     if (dec == NULL)
         return true;
     return fun_is_equal(fun, dec);

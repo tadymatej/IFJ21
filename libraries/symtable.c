@@ -54,6 +54,27 @@ TreeNode *BinaryTreeFindByStr(BinaryTree *tree, char *str) {
 
 }
 
+TreeNode *BinaryTreeFindStruct(BinaryTree *tree, char *str) {
+    int hash = charSumHash(str);
+    TreeNode *node = BinaryTreeFind(tree, hash);
+    if(node == NULL) return NULL;
+    if(strcmp(*((void**)node->data), str) != 0) {
+        int found = 0;
+        while(!found) {
+            node = node->lPtr;
+            if(node == NULL) break;
+            if(node->hashVal % SAME_HASH_LEFT_STEP == 0) {
+                if(strcmp(*((void**)node->data), str) == 0) {
+                    found = 1;
+                }
+            }
+        }
+        return node;
+    }
+    else return node;
+
+}
+
 void BinaryTreeDestroy(BinaryTree *tree) {
     Stack *stack = Stack_create();
     if(tree->rPtr != NULL) Stack_push(stack, (void *) tree->rPtr, 0);
@@ -109,32 +130,3 @@ int BinaryTreeInsertNode(BinaryTree **tree, int hashVal, void *data) {
     }
     return 0;
 }
-
-/*
-int main() {
-    BinaryTree *tree = NULL;
-    BinaryTreeInsertNode(&tree, 0, NULL);
-    assert(tree->hashVal == 0);
-
-    BinaryTreeInsertNode(&tree, 5, NULL);
-    assert(tree->rPtr->hashVal == 5);
-
-    BinaryTreeInsertNode(&tree, 10, NULL);
-    assert(tree->rPtr->rPtr->hashVal == 10);
-
-    BinaryTreeInsertNode(&tree, 2, NULL);
-    assert(tree->rPtr->lPtr->hashVal == 2);
-
-    BinaryTreeInsertNode(&tree, -5, "nazdar");
-    assert(tree->lPtr->hashVal == -5);
-
-    BinaryTreeInsertNode(&tree, -5, "Ahoj");
-    assert(tree->lPtr->hashVal == -5);
-
-    TreeNode *node = BinaryTreeFindByStr(tree, "nazdar");
-
-    BinaryTreeDestroy(tree);
-
-    return 0;
-}
-*/

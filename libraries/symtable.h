@@ -12,7 +12,7 @@
 /**
  * Struktura uzlu binárního stromu.
  * @param hashVal Hodnota uzlu, pomocí které se v stromu vyhledává
- * @param data Data v uzlu
+ * @param data Data v uzlu. Požadavek na data je, aby na první pozici byl vždy datový typ: char * (V případě struktury)
  * @param lPtr Ukazatel na levý uzel binárního stromu od tohoto uzlu
  * @param rPtr Ukazatel na pravý uzel binárního stromu od tohoto uzlu
  */
@@ -23,18 +23,19 @@
      struct TreeNode *rPtr;
  } TreeNode;
 
+#define DATA_TYPES_COUNT 3  // pocet datovych typu v prog. jazyce
+
 typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
 
 typedef struct Sym_table{
   TreeNode *tree;
   int nested_identifier;
-  //Fun_data_t *fce_parent;
   struct Sym_table *upper;
 }Sym_table_t;
 
 typedef struct TS_data{
-  DataTypes_t type;
   char *name;
+  DataTypes_t type;
   char *value;
 }TS_data_t;
 
@@ -68,6 +69,14 @@ void BinaryTreeDestroy(BinaryTree *tree);
 TreeNode *BinaryTreeFindByStr(BinaryTree *tree, char *str);
 
 /**
+ * Vyhledá v binárním stromu za pomocí řetězce, ktery nachazi na adrese, na kterou odkazuji data
+ * @param tree Binární strom, uvnitř kterého se má vyhledávat
+ * @param str Řetězec, který má být nalezen uvnitř nějakého uzlu binárního stromu
+ * @return Vrací ukazatel na Uzel stromu, který obsahuje daný řetěřec. Popřípadě vrací NULL, pokud se řetěřec ve stromě nepodaří nalést
+ */
+TreeNode *BinaryTreeFindStruct(BinaryTree *tree, char *str);
+
+/**
  * Pomocí váhovací funkce, kdy vyšší pozice v řetězci označuje větší váhu spočítá hash řetězce.
  * @param str Řetězec, pro který se má hash spočítat
  * @return Vrací vypočtený hash
@@ -87,5 +96,6 @@ TreeNode *BinaryTreeFind(BinaryTree *tree, int hashVal);
  * @return Vrací Ukazatel na vytvořený uzel nebo NULL v případě že se uzel nepodaří vytvořit
  */
 TreeNode *TreeNodeCreate();
+
 
 #endif
