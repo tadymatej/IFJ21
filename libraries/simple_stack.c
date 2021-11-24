@@ -141,4 +141,4 @@ void stack_destroy(simp_stack_t **stack){
   return;
 }
 
-//koniec súboru extended_stack.c
+//koniec súboru simple_stack.c
