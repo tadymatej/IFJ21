@@ -13,7 +13,9 @@ typedef struct Fun_data{
 
 Fun_data_t* init_fun_data(char *name);
 int fun_add_param(Fun_data_t *data, TS_data_t *param);
+TS_data_t* fun_get_param(Fun_data_t *data, int idx);
 int fun_add_ret_val(Fun_data_t *data, TS_data_t *param);
+TS_data_t* fun_get_ret(Fun_data_t *data, int idx);
 void dispose_fun_data(void *data);
 bool fun_is_equal(Fun_data_t *first, Fun_data_t *second);
 
