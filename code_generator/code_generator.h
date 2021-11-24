@@ -48,13 +48,17 @@ char *cg_label(char *label);
 
 char *cg_push_frame();
 
+char *cg_pop_frame();
+
 char *cg_define_var(Variable var);
 
-/**
- * dest = src
- */
-#define CG_Move(dest, src) \
-    (printf("MOVE %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
+char *cg_create_frame();
+
+char *cg_call_fun(char *fun_name);
+
+char *cg_move(Variable dest, Variable src);
+
+char *cg_return();
 
 /**
  * dest = a * b
@@ -205,18 +209,6 @@ char *cg_define_var(Variable var);
 
 #define CG_Jump(label) \
     (printf("JUMP $%s\n", label))
-
-#define CG_CallFunction(functionName) \
-    (printf("CALL $%s\n", functionName))
-
-#define CG_CreateFrame() \
-    (printf("CREATEFRAME\n"))
-
-#define CG_PopFrame() \
-    (printf("POPFRAME\n"))
-
-#define CG_Return() \
-    (printf("RETURN\n"))
 
 #define CG_ExitStr(exitVal) \
     (printf("EXIT %s@%s\n", "int", exitVal))
