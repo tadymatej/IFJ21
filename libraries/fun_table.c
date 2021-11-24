@@ -6,7 +6,7 @@ Fun_table_t *init_fun_table() {
         return NULL;
     table->decFunTree = NULL;
     table->defFunTree = NULL;
-    table->builtinFunTree = NULL; //Pridat definice vestavenych funkce
+    table->builtinFunTree = NULL;  //Pridat definice vestavenych funkce
     return table;
 }
 
@@ -23,18 +23,20 @@ void add_function_def(Fun_table_t *table, Fun_data_t *fun) {
 
 Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared, bool *isBuiltIn) {
     Fun_data_t *fun = BinaryTreeFindStruct(table->defFunTree, fun_name)->data;
-    if(isOnlyDeclared != NULL)
+    if (isOnlyDeclared != NULL)
         *isOnlyDeclared = false;
-    if(isBuiltIn != NULL)
+    if (isBuiltIn != NULL)
         *isBuiltIn = false;
+    if (fun != NULL && fun->isCalledBeforeDefinition) {
+        fun = BinaryTreeFindStruct(table->decFunTree, fun_name)->data;
+    }
     if (fun == NULL) {
         fun = BinaryTreeFindStruct(table->decFunTree, fun_name)->data;
         if (fun != NULL && isOnlyDeclared != NULL)
             *isOnlyDeclared = true;
-        if(fun == NULL)
-        {
+        if (fun == NULL) {
             fun = BinaryTreeFindStruct(table->builtinFunTree, fun_name)->data;
-            if(isBuiltIn != NULL)
+            if (isBuiltIn != NULL)
                 *isBuiltIn = true;
         }
     }
