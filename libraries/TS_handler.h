@@ -16,14 +16,15 @@
  * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
  * returns Ukazateľ na koreň stack framu
  */
-Sym_table_t *TS_init(); // prepsat
+Sym_table_t *TS_init(char *prefix);
 
 /*
  * Alokuje dalšiu položku Sym_table_t  a zreťazí to
- * params table Ukazatel na alokovanú tabuľku symbolov
- * returns vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
+ * @param table Ukazatel na alokovanú tabuľku symbolov
+ * @param prefix retazec ktory ukazuje ci je to v TF alebo LF
+ * @return vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
  */
-int new_stack_frame(Sym_table_t **table);
+int new_stack_frame(Sym_table_t **table, char *prefix);
 
 /*
  * Korektne uvoľní celú tabuľku z pamaťe

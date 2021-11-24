@@ -2,17 +2,18 @@
 
 #include "TS_handler.h"
 
-Sym_table_t *TS_init(){
+Sym_table_t *TS_init(char *prefix){
   Sym_table_t *temp = malloc(sizeof(Sym_table_t));
   if(temp == NULL) return NULL;
   temp->upper = NULL;
   temp->tree = NULL;
+  strcpy(temp->prefix, prefix);
   temp->nested_identifier = globals.nested_count;
   return temp;
 }
 
-int new_stack_frame(Sym_table_t **table){
-  Sym_table_t *temp = TS_init();
+int new_stack_frame(Sym_table_t **table, char *prefix){
+  Sym_table_t *temp = TS_init(prefix);
   if (temp == NULL) return 99;
   temp->upper = *table;
   *table = temp;
@@ -22,7 +23,7 @@ int new_stack_frame(Sym_table_t **table){
 void dispose_table(Sym_table_t **table){
   Sym_table_t **temp = NULL;
   while (*table != NULL){
-    BinaryTreeDestroy((*table)->tree);
+    BinaryTreeDestroy((*table)->tree, NULL); //TODO dorobit destroyer pre dealokovanie pamate
     *temp = (*table)->upper;
     free(*table);
     *table = *temp;

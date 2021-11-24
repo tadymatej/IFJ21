@@ -23,6 +23,8 @@
      struct TreeNode *rPtr;
  } TreeNode;
 
+#define TF_LF_LEN 3
+
 #define DATA_TYPES_COUNT 3  // pocet datovych typu v prog. jazyce
 
 typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
@@ -30,6 +32,7 @@ typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
 typedef struct Sym_table{
   TreeNode *tree;
   int nested_identifier;
+  char prefix[TF_LF_LEN];
   struct Sym_table *upper;
 }Sym_table_t;
 
