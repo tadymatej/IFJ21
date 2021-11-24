@@ -11,6 +11,7 @@ ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
 SCANNER_PATH=scanner/
 PARSER_PATH=parser/
+CODE_GEN_PATH=code_generator/
 SEMANTIC_BOTTOM_PATH=semantic_bottom_up/
 SEMANTIC_ACTIONS=semantic_actions/
 
@@ -18,7 +19,7 @@ SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)s
 PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
 
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS) -I$(PARSER_PATH) -fcommon -g
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS) -I$(PARSER_PATH) -I$(CODE_GEN_PATH) -fcommon -g
 
 .PHONY: run_stack run_analyzer run_bottom_up run_parser clean
 
