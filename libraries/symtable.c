@@ -32,6 +32,7 @@ int charSumHash(char *str) {
     return sum;
 }
 
+// node->data nebude obsahovat priamo string, ale ukzatel na data a v tych to bude
 TreeNode *BinaryTreeFindByStr(BinaryTree *tree, char *str) {
     int hash = charSumHash(str);
     TreeNode *node = BinaryTreeFind(tree, hash);

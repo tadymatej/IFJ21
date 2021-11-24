@@ -1,0 +1,74 @@
+/*
+ * Knižnica je nadstavbou nad symtable.h. Poskytuje podporné funkcia na praácu s premennými
+ */
+#ifndef _TS_HANDLER_
+#define _TS_HANDLER_
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#include"stack.h"
+#include"symtable.h"
+#include"semantic_global.h"
+
+/*
+ * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
+ * returns Ukazateľ na koreň stack framu
+ */
+Sym_table_t *TS_init(); // prepsat
+
+/*
+ * Alokuje dalšiu položku Sym_table_t  a zreťazí to
+ * params table Ukazatel na alokovanú tabuľku symbolov
+ * returns vráti 0 ak sa alokácia podarila, 1 ak sa nepodarila
+ */
+int new_stack_frame(Sym_table_t *table);
+
+/*
+ * Korektne uvoľní celú tabuľku z pamaťe
+ * params table Ukazateľ na alokovanú tabuľku symbolov
+ */
+void dispose_table(Sym_table_t **table);
+
+/*
+ * Korektne uvoľní strom na najvyššej úrovni a aj najvyššǐ koreň
+ * params table Ukazateľ na alokovanú tabuľku symbolov
+ */
+#define dispose_current(name) do{BinaryTreeDestroy(name->tree); \
+  Sym_table_t *temp = name->upper; free(name); name = temp }while(0);
+
+
+/*
+ * Nájde premennú podľa zadného kľúča, mena premennej
+ * Hľadá od najvyššieho stack framu po najnižši, definovaný ako prvý
+ * params table Ukazateľ na alokovanú tabuľku symbolov
+ * params name reťazec obsahujúci meno vyhľadávanej premennej
+ * params foundIn v ktorom strome na sa nasla premenna
+ * returns ukazateľ na dáta premennej, NULL ak je nedefinovaná
+ */
+TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn);
+
+/*
+ * Pridá premennú s parametrami do najvrchnejšieho stromu
+ * params table Ukazateľ na alokovanú tabuľku symbolov
+ * params type dátový typ premennej
+ * params name meno premennej
+ * params value východzia hodnota pri deklarácii
+ * returns 0 ak sa podaŕi alokovať nový uzol, 1 ak sa nepodarí alokácia
+ */
+int add_variable(Sym_table_t *table, TS_data_t *data);
+
+/*
+ * Funkcia inicializuje štruktúru TS_data_t
+ * @param type Typ novej datovej premennej
+ * @param name Meno novej premennej
+ * @param value Priapdná inicializaǚná hodnota
+ * @returns ukazateľ na inicializovnanú štruktúru alebo NULL, ak sa nepodarilo
+ */
+TS_data_t *make_var_data(DataTypes_t type, char *name, char *value);
+
+void print_TS_var(Sym_table_t *table);
+#endif
+
+//koniec suboru TS_handler,h

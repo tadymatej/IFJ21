@@ -1,1 +1,2 @@
 1. Rozpoznat chybejii end?? Jak to udelat?
+2. Odstranit exit()
