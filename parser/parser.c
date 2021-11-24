@@ -23,7 +23,7 @@ void ErrMessagePossition(Token *ptr, ScannerContext *sc){
     //Obsluha chyby mimo lexikalni analyzu
     int len = strlen(ptr->attribute);
     sc->col -= len;
-        
+
     //Vypis chybu
     //sc->col += len;
 
@@ -37,7 +37,7 @@ Token Next(ScannerContext *sc){
     if(sc->actualState == STATE_ERR){
         if(sc->errorMalloc == true){
             // chyba alokace pameti
-            ErrMessage(COMPILER_ERR); 
+            ErrMessage(COMPILER_ERR);
             fprintf(stderr, "Chyba alokace pameti!\n");
             exit(EXIT_FAILURE); // TODO odstranit exit
 
@@ -75,7 +75,7 @@ bool Req(Token *ptr, ScannerContext *sc){
 
         // TODO CG_PROLOG();
 
-    } 
+    }
 
     return req;
 }
@@ -83,9 +83,9 @@ bool Req(Token *ptr, ScannerContext *sc){
 
 bool NNext_params(Token *ptr, ScannerContext *sc){
     bool next_params = true;
-    
+
     while(ptr->token_type != TOKEN_NONE && sc->actualState != STATE_ERR){
-        
+
         // $10 <next_params> => <param> <next_params>
         if(ptr->token_type == TOKEN_COMMA){
             *ptr = Next(sc);
@@ -94,7 +94,7 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
                 printf("$10 <next_params> => <param> <next_params>\n");
                 printf("---------------------------\n");
             #endif
-            
+
             if(ptr->token_type == TOKEN_ID){
                 // $18 <param> => id : <type>
 
@@ -109,14 +109,14 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
                     next_params = NType(ptr, sc);
                 } else {
                     next_params = false;
-                    #ifdef DEBUG_ERROR 
-                        printf("ERROR || $18\n"); 
+                    #ifdef DEBUG_ERROR
+                        printf("ERROR || $18\n");
                     #endif
                 }
             } else {
                 next_params = false;
-                #ifdef DEBUG_ERROR 
-                    printf("ERROR || $18\n"); 
+                #ifdef DEBUG_ERROR
+                    printf("ERROR || $18\n");
                 #endif
             }
         }
@@ -136,7 +136,7 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
 
     *ptr = Next(sc);
 
-    
+
     return next_params;
 }
 
@@ -173,8 +173,8 @@ bool NType(Token *ptr, ScannerContext *sc){
                 printf("---------------------------\n");
             #endif
         }
-    }     
-        
+    }
+
     return type;
 }
 
@@ -185,7 +185,7 @@ bool NParam(Token *ptr, ScannerContext *sc){
     // $18 <param> => id : <type>
     *ptr = Next(sc);
 
-        
+
     if(ptr->token_type == TOKEN_COLON){
         #ifdef DEBUG_USED_RULE
             printf("$18 <param> => id : <type>\n");
@@ -197,8 +197,8 @@ bool NParam(Token *ptr, ScannerContext *sc){
         param = NType(ptr, sc);
     } else {
         param = false;
-        #ifdef DEBUG_ERROR 
-            printf("ERROR || $18\n"); 
+        #ifdef DEBUG_ERROR
+            printf("ERROR || $18\n");
         #endif
     }
 
@@ -216,16 +216,16 @@ bool NParams_list(Token *ptr, ScannerContext *sc){
             printf("$6 <params_list> => )\n");
             printf("---------------------------\n");
         #endif
-        
+
         params_list = true;
-        
+
 
         *ptr = Next(sc);
 
         return params_list;
     }
 
-    
+
 
     while(ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR){
 
@@ -254,7 +254,7 @@ bool NParams_list(Token *ptr, ScannerContext *sc){
 
                 *ptr = Next(sc);
                 params_list = NType(ptr, sc);
-            
+
             }
             *ptr = Next(sc);
 
@@ -327,7 +327,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
             printf("$34 <args_list> => )\n");
             printf("---------------------------\n");
         #endif
-        
+
         function_call = true;
     }
 
@@ -350,12 +350,12 @@ bool NExp(Token *ptr, ScannerContext *sc){
 
     // TODO call PSA
     //TokenStore(*ptr, sc);
-    
+
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-    psa = precedence_analyzer(&sc);
+    psa = precedence_analyzer(sc);
     printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     printf("\nPSA = %d\n", psa);
-    
+
 
 
     exp = true;
@@ -394,7 +394,7 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
     bool assignment = true;
 
     *ptr = Next(sc);
-    
+
     if(ptr->token_type == TOKEN_NONE){
         while(ptr->token_type == TOKEN_NONE){
             *ptr = Next(sc);
@@ -414,14 +414,14 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 
     }
 
-    
+
     // $58 <assignment> => <function_body>
     #ifdef DEBUG_USED_RULE
         printf("$58 <assignment> => <function_body>\n");
         printf("---------------------------\n");
     #endif
     assignment = assignment && true;
-    
+
     return assignment;
 }
 
@@ -436,7 +436,7 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         *ptr = Next(sc);
 
     }
-    
+
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
         printf("$68 <exp_cond> => call PSA\n");
@@ -470,16 +470,16 @@ bool NElseif(Token *ptr, ScannerContext *sc){
                     break;
                 }
             } else {
-                elseif = false; 
-                #ifdef DEBUG_ERROR 
-                    printf("ERROR || $64\n"); 
+                elseif = false;
+                #ifdef DEBUG_ERROR
+                    printf("ERROR || $64\n");
                 #endif
                 break;
             }
         } else {
-            elseif = false; 
-            #ifdef DEBUG_ERROR 
-                printf("ERROR || $64\n"); 
+            elseif = false;
+            #ifdef DEBUG_ERROR
+                printf("ERROR || $64\n");
             #endif
             break;
         }
@@ -536,15 +536,15 @@ bool NIf(Token *ptr, ScannerContext *sc){
 
             fi = fi && NFunction_body(ptr, sc) && NElseif(ptr, sc);
         } else {
-            fi = false; 
-            #ifdef DEBUG_ERROR 
-                printf("ERROR || $63\n"); 
+            fi = false;
+            #ifdef DEBUG_ERROR
+                printf("ERROR || $63\n");
             #endif
         }
     } else {
-        fi = false; 
-        #ifdef DEBUG_ERROR 
-            printf("ERROR || $63\n"); 
+        fi = false;
+        #ifdef DEBUG_ERROR
+            printf("ERROR || $63\n");
         #endif
     }
 
@@ -637,11 +637,11 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
         printf("$51 <exp_first> => <expression>\n");
         printf("---------------------------\n");
     #endif
-                
+
     expressions = NExpression(ptr, sc);
-                
+
     *ptr = Next(sc);
-    
+
     //printf("NExpressions accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
     if(ptr->token_type == TOKEN_COMMA){
@@ -660,7 +660,7 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
     } else {
         TokenStore(*ptr, sc);
     }
-                
+
     // $53 <next_exp> => <function_body>
     #ifdef DEBUG_USED_RULE
         printf("$53 <next_exp> => <function_body>\n");
@@ -698,16 +698,16 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                             TokenStore(*ptr, sc);
 
                         } else {
-                            function_body = false; 
-                            #ifdef DEBUG_ERROR 
-                                printf("ERROR || $41\n"); 
+                            function_body = false;
+                            #ifdef DEBUG_ERROR
+                                printf("ERROR || $41\n");
                             #endif
                             break;
                         }
                     } else {
-                        function_body = false; 
-                        #ifdef DEBUG_ERROR 
-                            printf("ERROR || $41\n"); 
+                        function_body = false;
+                        #ifdef DEBUG_ERROR
+                            printf("ERROR || $41\n");
                         #endif
                         break;
                     }
@@ -729,7 +729,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     function_body = function_body && true;
                     break_from_while++;
                     break;
-                
+
                 } else if(strcmp(ptr->attribute, "else") == 0){
                     function_body = function_body && true;
                     break_from_while++;
@@ -752,14 +752,14 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     #endif
 
                     function_body = function_body && NRet(ptr, sc);
-                
-                } else { 
+
+                } else {
 
                     /*if(strcmp(ptr->attribute, "end") != 0){
 
-                        function_body = false; 
-                        #ifdef DEBUG_ERROR 
-                            printf("ERROR || In Function_body recieved keyword, but it doesnt match\n"); 
+                        function_body = false;
+                        #ifdef DEBUG_ERROR
+                            printf("ERROR || In Function_body recieved keyword, but it doesnt match\n");
                             printf("*********%s %s\n", lex2String(ptr->token_type), ptr->attribute);
                         #endif
                         break;
@@ -788,7 +788,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
 
 
                 *ptr = Next(sc);
-                
+
                 while(ptr->token_type != TOKEN_SET){
                     if(ptr->token_type == TOKEN_COMMA){
                         *ptr = Next(sc);
@@ -814,11 +814,11 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                         printf("---------------------------\n");
                     #endif
                     function_body = function_body && true;
-                
+
                 } else {
-                    function_body = false; 
-                    #ifdef DEBUG_ERROR 
-                        printf("ERROR || $48\n"); 
+                    function_body = false;
+                    #ifdef DEBUG_ERROR
+                        printf("ERROR || $48\n");
                     #endif
                     break;
                 }
@@ -827,7 +827,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                 function_body = function_body && NExpressions(ptr, sc);
 
                 break;
-            
+
             case TOKEN_ID_F:
                 // $42 <function_body> => <function_call> <function_body>
                 #ifdef DEBUG_USED_RULE
@@ -865,12 +865,12 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("$22 <return_fc> => : <first_ret> <next_rets>\n");
             printf("---------------------------\n");
         #endif
-        
+
 
         if(sc->actualState == STATE_ERR){
             printf("@@ STATE_ERR\n");
         }
-        
+
         *ptr = Next(sc);
 
         if(sc->actualState == STATE_ERR){
@@ -883,7 +883,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("$24 <first_ret> => <type>\n");
             printf("---------------------------\n");
         #endif
-        
+
         return_fc = NType(ptr, sc);
 
         *ptr = Next(sc);
@@ -951,15 +951,15 @@ bool NProg(Token *ptr, ScannerContext *sc){
                 printf("---------------------------\n");
             #endif
         } else {
-            prog = false; 
-            #ifdef DEBUG_ERROR 
-                printf("ERROR || $1\n"); 
-            #endif 
+            prog = false;
+            #ifdef DEBUG_ERROR
+                printf("ERROR || $1\n");
+            #endif
         }
     } else {
-        prog = false; 
-        #ifdef DEBUG_ERROR 
-            printf("ERROR || $1\n"); 
+        prog = false;
+        #ifdef DEBUG_ERROR
+            printf("ERROR || $1\n");
         #endif
     }
 
@@ -980,23 +980,23 @@ bool NProg(Token *ptr, ScannerContext *sc){
                         prog = NParams_list(ptr, sc);
                         prog = prog && NReturn_fc(ptr, sc);
 
-                        //printf("%s\n", ptr->attribute); 
+                        //printf("%s\n", ptr->attribute);
 
                         if(strcmp(ptr->attribute, "end") == 0){
                             //prog = false;
                             //printf("%s\n", ptr->attribute);
                         } else {
-                            prog = false; 
-                            #ifdef DEBUG_ERROR 
-                                printf("ERROR || $2\n"); 
+                            prog = false;
+                            #ifdef DEBUG_ERROR
+                                printf("ERROR || $2\n");
                             #endif
                             break;
                         }
 
                     } else {
-                        prog = false; 
-                        #ifdef DEBUG_ERROR 
-                            printf("ERROR || $2\n"); 
+                        prog = false;
+                        #ifdef DEBUG_ERROR
+                            printf("ERROR || $2\n");
                         #endif
                         break;
                     }
@@ -1060,14 +1060,14 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                 printf("---------------------------\n");
                                             #endif
                                         } else {
-                                            prog = false; 
-                                            #ifdef DEBUG_ERROR 
-                                                printf("ERROR || $14\n"); 
+                                            prog = false;
+                                            #ifdef DEBUG_ERROR
+                                                printf("ERROR || $14\n");
                                             #endif
                                             break;
                                         }
                                     }
-                                        
+
                                     *ptr = Next(sc);
                                     if(ptr->token_type == TOKEN_COLON){
                                             // $28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
@@ -1101,7 +1101,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                 printf("$31 <fc_ret_next_types> => <prog>\n");
                                                 printf("---------------------------\n");
                                             #endif
-                                            
+
                                     } else {
                                             // $32 <fc_decl_ret> => <prog>
                                             //TokenStore(*ptr, sc);
@@ -1114,36 +1114,36 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
                                 }
                             } else {
-                                prog = false; 
-                                #ifdef DEBUG_ERROR 
-                                    printf("ERROR || $3\n"); 
+                                prog = false;
+                                #ifdef DEBUG_ERROR
+                                    printf("ERROR || $3\n");
                                 #endif
                                 break;
                             }
                         } else{
-                            prog = false; 
-                            #ifdef DEBUG_ERROR 
-                                printf("ERROR || $3\n"); 
+                            prog = false;
+                            #ifdef DEBUG_ERROR
+                                printf("ERROR || $3\n");
                             #endif
                             break;
                         }
                     } else {
-                        prog = false; 
-                        #ifdef DEBUG_ERROR 
-                            printf("ERROR || $3\n"); 
+                        prog = false;
+                        #ifdef DEBUG_ERROR
+                            printf("ERROR || $3\n");
                         #endif
                         break;
                     }
                 } else {
-                    prog = false; 
-                    #ifdef DEBUG_ERROR 
-                        printf("ERROR || $3\n"); 
+                    prog = false;
+                    #ifdef DEBUG_ERROR
+                        printf("ERROR || $3\n");
                     #endif
                     break;
                 }
                 break;
-            
-            case TOKEN_ID_F: 
+
+            case TOKEN_ID_F:
                 #ifdef DEBUG_USED_RULE
                     printf("$5 <prog> => <function_call>\n");
                     printf("---------------------------\n");
@@ -1165,7 +1165,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
         exit(EXIT_FAILURE);
 
     }
-    
+
     // $4 <prog> => EOF
     #ifdef DEBUG_USED_RULE
         printf("$4 <prog> => EOF\n");
@@ -1179,7 +1179,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
 bool Begin(ScannerContext *sc){
 
     //Token token;
-    
+
     Token *token;
     token = (Token*)malloc(sizeof(Token));
 
@@ -1192,10 +1192,10 @@ bool Begin(ScannerContext *sc){
         return false;
     }
 
-    Token *ptr = token;  
+    Token *ptr = token;
 
     bool OK;
-    
+
     OK = NProg(ptr, sc);
 
     // LEX
@@ -1205,7 +1205,7 @@ bool Begin(ScannerContext *sc){
     }
     */
 
-    
+
 
     printf("RESULT: %d\n", OK);
     free(token);

@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../scanner/scanner.h"
+#include "scanner.h"
+#include "semantic_bottom_up.h"
 
 
 #define LEX_ERR 1 // chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému)
@@ -9,7 +10,7 @@
 #define SEMANTIC_PROG_ERR 3 // sémantická chyba v programu – nedefinovaná funkce/proměnná, pokus o redefinici proměnné, atp.
 #define SEMANTIC_TYPE_ERR 4 // sémantická chyba v příkazu přiřazení (typová nekompatibilita)
 #define SEMANTIC_FUNCTION_ERR 5 // sémantická chyba v programu – špatný počet/typ parametrů či návratových hodnot u volání funkce či návratu z funkce
-#define SEMANTIC_PSA_ERR 6 // sémantická chyba typové kompatibility v aritmetických, řetězcových a relačních výrazech 
+#define SEMANTIC_PSA_ERR 6 // sémantická chyba typové kompatibility v aritmetických, řetězcových a relačních výrazech
 #define SEMANTIC_OTHER_ERR 7 // ostatní sémantické chyby
 #define RUN_NIL_ERR 8 // běhová chyba při práci s neočekávanou hodnotou nil
 #define DIV_BY_ZERO 9 // běhová chyba celočíselného dělení nulovou konstantou
@@ -24,7 +25,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc);
 bool NParam(Token *ptr, ScannerContext *sc);
 bool NType(Token *ptr, ScannerContext *sc);
 bool NAssignment(Token *ptr, ScannerContext *sc);
-bool NExpr(Token *ptr, ScannerContext *sc); 
+bool NExpr(Token *ptr, ScannerContext *sc);
 bool NNext_params(Token *ptr, ScannerContext *sc);
 bool NIf(Token *ptr, ScannerContext *sc);
 bool NElseif(Token *ptr, ScannerContext *sc);
