@@ -8,11 +8,12 @@ int init_sem_globals() {
     globals.q_assignments = init_queue();
     globals.cur_function = NULL;
     globals.tmp = 0;
+    globals.ts = NULL; 
     globals.inside_while = 0;
     globals.ft = init_fun_table();
     globals.blockStack = stack_init();
     globals.q_command = init_queue();
-    if (globals.q_assignments == NULL || globals.ts == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL) {
+    if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL) {
 
         return 99;
     }
