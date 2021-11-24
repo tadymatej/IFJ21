@@ -20,7 +20,7 @@ int new_stack_frame(Sym_table_t **table){
 }
 
 void dispose_table(Sym_table_t **table){
-  Sym_table_t **temp;
+  Sym_table_t **temp = NULL;
   while (*table != NULL){
     BinaryTreeDestroy((*table)->tree);
     *temp = (*table)->upper;
