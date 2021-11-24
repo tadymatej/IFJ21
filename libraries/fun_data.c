@@ -25,8 +25,8 @@ int fun_add_ret_val(Fun_data_t *data, TS_data_t *retval) {
 
 void dispose_fun_data(void *data) {
     if (data != NULL) {
-        dispose_array(((Fun_data_t*)data)->params, true);
-        dispose_array(((Fun_data_t*)data)->ret_vals, true);
+        dispose_array(&((Fun_data_t*)data)->params, true);
+        dispose_array(&((Fun_data_t*)data)->ret_vals, true);
         free(data);
         data = NULL;
     }
