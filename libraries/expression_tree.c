@@ -12,12 +12,12 @@ Stack *exp_tree_init(){
   return Stack_create();
 }
 
-int add_id_node(Stack *stack, TS_data_t *data, DataTypes_t ret_type, TOKEN_TYPES type){
+int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type){
   exp_node_t *temporary = malloc(sizeof(exp_node_t));
   if(temporary == NULL) return 99; //TODO error handling
   temporary->data = data;
-  temporary->ret_type = ret_type;
-  temporary->type = type;  //TODO rozoznavanie typov
+  temporary->nested_identifier = nested_identifier;
+  temporary->type = type;
   temporary->left = NULL;
   temporary->right = NULL;
   Stack_push(stack, temporary, 1); //1 pretoze nie je dolezita ta polozka momentalne
@@ -27,23 +27,19 @@ int add_id_node(Stack *stack, TS_data_t *data, DataTypes_t ret_type, TOKEN_TYPES
 DataTypes_t get_top_type(Stack *stack){
   if(Stack_empty(stack)) return NO_TYPE;
   exp_node_t *temporary = exp_stack_top(stack);
-  return temporary->ret_type;
+  return temporary->data->type;
 }
 
 DataTypes_t get_second_type(Stack *stack){
   if(Stack_empty(stack)) return NO_TYPE;
   if(stack->stackPointer >= 2) {
     exp_node_t *temp = stack->stack[stack->stackPointer-2]->value;
-    return temp->ret_type; //zavisle na implenetacii stack TODO
+    return temp->data->type; //zavisle na implenetacii stack TODO
   }
   return NO_TYPE;
 }
 
-void do_conversion(Stack *stack){
-  ;
-}
-
-int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_data_t *data){
+int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier){
   if (get_second_type(stack) == NO_TYPE) {
     return 99;
   }
@@ -54,7 +50,7 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_
   exp_node_t *root = malloc(sizeof(exp_node_t)); //kontrolovat ci ssa podaril
   if (root == NULL) return 99; //TODO error handling
   root->data = data;
-  root->ret_type = ret_type;
+  root->nested_identifier = nested_identifier;
   root->type = operator;
   root->left = left_side;
   root->right = right_side;
@@ -62,17 +58,22 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_
   return 0;
 }
 
-void unary_operator(Stack *stack){
+int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier){
   exp_node_t *temp = exp_stack_top(stack);
-  if(temp == NULL) return; //TODO error handling
+  if(temp == NULL) return 99; //TODO error handling
   Stack_pop(stack);
   exp_node_t *root = malloc(sizeof(exp_node_t));
-  root->data = NULL;
-  root->ret_type = INTEGER;
+  if(root == NULL){
+    Stack_push(stack, temp, 1);
+    return 99;
+  }
+  root->data = data;
   root->type = TOKEN_LEN;
+  root->nested_identifier = nested_identifier;
   root->left = temp;
   root->right = NULL;
   Stack_push(stack, root, 1);
+  return 0;
 }
 
 //kod pozicany zo zadania projektu v predmete IAL
@@ -80,7 +81,7 @@ const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
 
 void print_exp_node(exp_node_t *node){
-  printf("[%s|%s]\n", lex2String(node->type), node->data->name);
+  printf("[%s|%s_%d]\n", lex2String(node->type), node->data->name, node->nested_identifier);
 }
 
 char *make_prefix(char *prefix, const char *suffix) {
@@ -148,6 +149,7 @@ exp_node_t *exp_stack_top(Stack *stack){
 
 void destroy_tree(exp_node_t *tree){
   if(tree == NULL) return;
+  if(tree->type != TOKEN_ID) free(tree->data); //uvolnit kompilatorove premenne ktore su len v expression tree
   destroy_tree(tree->left);
   destroy_tree(tree->right);
   free(tree);

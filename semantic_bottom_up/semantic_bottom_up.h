@@ -51,8 +51,8 @@
           /* # */               /* num |  int  |   str   |  bool  |  NIL*/     \
                     /* num */{{ NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
                     /* int */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, INTEGER, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
+                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, INTEGER},  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
                    /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
           /* # */                                                              \
           /* > < >= <= */       /* num |  int  |   str   |  bool  |  NIL*/     \
@@ -75,13 +75,39 @@
 
 //char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
 
-#define RET_NAME "%cc_"
+#define RET_NAME "%cc"
 
 #define RET_NAME_LEN 20
 
+/**
+ * Vykoná sémantickú operáciu podľa zadaného tokenu.
+ * Generuje kód do obálky pre generáciu kódu TODO
+ * @param stack ukazatel na inicilizovaný stack sxpression stromov
+ * @param token token, ktorý je aktuálne v postfixovom poradí na spracovanie
+ * @return návratová hodnota podľa zadania IFJ
+ */
 int do_action(exp_tree_stack_t *stack, Token *token);
 
+/**
+ * @Korektne uvoľní stromy na expression tree
+ * @param stack ukazatel na ukazatel na stack stromov
+ */
 void end_bottom_up(exp_tree_stack_t **stack);
+
+/**
+ * Funkcia vráti prvý index do RET_TYPES_TABLE_t podľa tokenu
+ * Pracuje len s aritmetickými tokenmi, ak je zadaný iný vráti 99
+ * @param token_type token na prevedenie do indexu
+ * @return vráti index do tabuľky
+ */
+int map_token_types(TOKEN_TYPES token_type);
+
+#define check_name(name)                                                  \
+  if(name == NO_TYPE){                                                    \
+    fprintf(stderr, "Error: wrong data types in arithmetic operation\n"); \
+    return 6;                                                             \
+  }                                                                       \
+
 
 #endif
 

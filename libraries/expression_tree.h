@@ -19,7 +19,7 @@
 
 typedef struct exp_node_s{
   TS_data_t *data;
-  DataTypes_t ret_type;
+  int nested_identifier;
   TOKEN_TYPES type;
   struct exp_node_s *right;
   struct exp_node_s *left;
@@ -45,7 +45,7 @@ Stack *exp_tree_init();
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
  * @param ret_type akú návratovú hodnotu má daný uzol
  */
-int add_id_node(Stack *stack, TS_data_t *data, DataTypes_t ret_type, TOKEN_TYPES type);
+int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type);
 
 /*
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku
@@ -72,14 +72,14 @@ void do_conversion(Stack *stack);
  * @param stack ukazateľ na inicializovaný stack
  * @param operator akým operátorom chceme spojiť operandy do stromu
  */
-int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_data_t *data);
+int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_indentifier);
 
 /*
  * Funkcia spracuje unárnu funkciu do stromu
  * Funguje podobne ako operator operator_merge
  * @param stack ukazateľ na inicializovaný stack
  */
-void unary_operator(Stack *stack);
+int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier);
 
 /*
  * Funkcia vypíše stromy výrazov na konzolu

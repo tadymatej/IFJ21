@@ -8,8 +8,8 @@
 
 #include"semantic_bottom_up.h"
 
-int __map_token_types(TOKEN_TYPES type){
-  int index;
+int map_token_types(TOKEN_TYPES type){
+  int index = 99;
   switch (type) {
     case TOKEN_ADD: case TOKEN_SUB: case TOKEN_MUL:
       index = 0;
@@ -49,7 +49,6 @@ DataTypes_t __token_type_to_ts_data(TOKEN_TYPES type){
 
 int do_action(exp_tree_stack_t *stack, Token *token){
   int retval = 0;
-  char *ret_name_acc = NULL;
   TS_data_t *temp;
   Sym_table_t *temp_table;
   DataTypes_t ret_types_table[7][5][5] = RET_TYPES_TABLE_t;
@@ -62,45 +61,37 @@ int do_action(exp_tree_stack_t *stack, Token *token){
     case TOKEN_ID:
       temp = find_variable(globals.ts, token->attribute, &temp_table);
       if(temp == NULL) return 1;
-      retval = add_id_node(stack, temp, temp->type, token->token_type);
+      retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type);
       if(retval != 0) return retval;
       break;
 
     case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT:
       //skontroluj ci je definovana premenna
-      temp = find_variable(globals.ts, token->attribute, &temp_table);
-      if(temp == NULL){
-        temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
-        if(temp == NULL) return 99;
-        retval = add_variable(globals.ts, temp);
-        if(retval != 0) return retval;
-      }
-      retval = add_id_node(stack, temp, temp->type, token->token_type);
+      temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
+      if(temp == NULL) return 99;
+      retval = add_id_node(stack, temp, 0, token->token_type);
       if(retval != 0) return retval;
       break;
     case TOKEN_LEN:
       //ak je to na vrchole typu string
-      unary_operator(stack);
-      break;
-    case TOKEN_CONCAT:
+      right_type = get_top_type(stack);
+      ret_type = ret_types_table[map_token_types(token->token_type)][right_type][NIL];
+      check_name(ret_type);
+
+      temp = make_var_data(ret_type, RET_NAME, NULL);
+      unary_operator(stack, temp, var_count++);
+      if(retval != 0) return retval;
       break;
     case TOKEN_END_BRACKET:
       break;
-    case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV:
+    case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
       right_type = get_top_type(stack);
       left_type = get_second_type(stack);
-      ret_type = ret_types_table[__map_token_types(token->token_type)][left_type][right_type];
-      if(ret_type == NO_TYPE){
-        fprintf(stderr, "Error: wrong data types in arithmetic operation\n");
-        return 6;
-      }
+      ret_type = ret_types_table[map_token_types(token->token_type)][left_type][right_type];
+      check_name(ret_type);
 
-      ret_name_acc = calloc(RET_NAME_LEN ,1);
-      if (ret_name_acc == NULL) return 99;
-      snprintf(ret_name_acc, RET_NAME_LEN, "%s%d", RET_NAME, var_count++);
-      temp = make_var_data(ret_type, ret_name_acc, NULL);
-
-      retval = operator_merge(stack, token->token_type, ret_type, temp);
+      temp = make_var_data(ret_type, RET_NAME, NULL);
+      retval = operator_merge(stack, token->token_type, temp, var_count++);
       if(retval != 0) return retval;
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G:
@@ -123,7 +114,6 @@ void __choose_instruction(TOKEN_TYPES type){
 }
 
 void end_bottom_up(exp_tree_stack_t **stack){
-    print_exp_stack(*stack);
     destroy_stack(stack);
 }
 
