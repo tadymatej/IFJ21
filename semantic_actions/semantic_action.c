@@ -42,7 +42,7 @@ int ret_val_dec(Token *token) {
 }
 
 // 23/26 token - cokoliv. neni pouzit slo by odstranit(je tady stale pro pripadnou podporu ukazatelu na semanticke akce)
-int is_dec_eq_to_def(Token *token) {
+int is_dec_eq_to_def() {
     globals.tmp = 0;
     if (!is_dec_and_def_equal(globals.ft, globals.cur_function))
         return 3;
@@ -64,8 +64,7 @@ int define_local_var(Token *token) {
 }
 
 // 57 - =
-int prepare_assignment(Token *token) {
+int prepare_assignment() {
     q_push(globals.q_assignments, globals.var);
     return 0;
 }
-

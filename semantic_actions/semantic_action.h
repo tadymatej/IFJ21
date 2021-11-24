@@ -14,8 +14,8 @@ int function_definition(Token *token);
 int init_function_argument(Token *token);
 int var_type_assignment(Token *token);
 int ret_val_dec(Token *token);
-int is_dec_eq_to_def(Token *token);
+int is_dec_eq_to_def();
 int define_local_var(Token *token);
-int prepare_assignment(Token *token);
+int prepare_assignment();
 
 #endif
