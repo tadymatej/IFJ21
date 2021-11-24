@@ -360,7 +360,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
     //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
@@ -996,7 +996,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
     }
 
 
-    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && prog == true && isEnd == 0) {
+    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && prog == true) {
         switch(ptr->token_type){
             case TOKEN_KEYWORD:
                 if(strcmp(ptr->attribute, "function") == 0){
@@ -1009,13 +1009,13 @@ bool NProg(Token *ptr, ScannerContext *sc){
                             printf("---------------------------\n");
                         #endif
                         *ptr = Next(sc);
-                        prog = NParams_list(ptr, sc);
+                        prog = prog && NParams_list(ptr, sc);
                         prog = prog && NReturn_fc(ptr, sc);
 
                         //printf("%s\n", ptr->attribute);
 
                         if(strcmp(ptr->attribute, "end") == 0){
-                            //prog = false;
+                            prog = prog && true;
                             //printf("%s\n", ptr->attribute);
                         } else {
                             prog = false;
@@ -1039,9 +1039,8 @@ bool NProg(Token *ptr, ScannerContext *sc){
                         printf("---------------------------\n");
                     #endif
 
-
                     *ptr = Next(sc);
-                    if(ptr->token_type == TOKEN_ID){ // TODO opravit na TOKEN_ID_F
+                    if(ptr->token_type == TOKEN_ID){
                         *ptr = Next(sc);
                         if(ptr->token_type == TOKEN_COLON){
                             *ptr = Next(sc);
@@ -1054,10 +1053,8 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                     printf("---------------------------\n");
                                 #endif
 
-                                //printf("%s\n", lex2String(ptr->token_type));
                                 if(ptr->token_type == TOKEN_START_BRACKET){
                                     *ptr = Next(sc);
-                                    //printf("%s\n", lex2String(ptr->token_type));
                                     if(ptr->token_type == TOKEN_END_BRACKET){
                                         // $13 <types_list> => )
                                         #ifdef DEBUG_USED_RULE
@@ -1073,7 +1070,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                             printf("---------------------------\n");
                                         #endif
                                         //*ptr = Next(sc);
-                                        prog = NType(ptr, sc);
+                                        prog = prog && NType(ptr, sc);
                                         *ptr = Next(sc);
                                         while(ptr->token_type == TOKEN_COMMA){
                                             // $15 <next_types> => , <type> <next_types>
@@ -1113,7 +1110,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                 printf("$29 <fc_ret_first_type> => <type>\n");
                                                 printf("---------------------------\n");
                                             #endif
-                                            prog = NType(ptr, sc);
+                                            prog = prog && NType(ptr, sc);
                                             *ptr = Next(sc);
                                             if(ptr->token_type == TOKEN_COMMA){
                                                 while(ptr->token_type == TOKEN_COMMA){
