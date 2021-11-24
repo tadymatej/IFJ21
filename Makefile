@@ -8,6 +8,7 @@ LIB_PATH=libraries/
 ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
 SCANNER_PATH=scanner/
+PARSER_PATH=parser/
 SEMANTIC_BOTTOM_PATH=semantic_bottom_up/
 SEMANTIC_ACTIONS=semantic_actions/
 CC=gcc
@@ -16,6 +17,9 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 .PHONY: run_stack run_analyzer run_bottom_up clean
 
 all: $(PROGS)
+
+parser: $(PARSER_PATH)parser.c $(PARSER_PATH)parser.h main.c $(ANALYZER_PATH)$(ANALYZER).c $(SCANNER_PATH)scanner.c $(LIB_PATH)array.c $(LIB_PATH)expression_tree.c $(LIB_PATH)fun_data.c $(LIB_PATH)fun_table.c $(LIB_PATH)queue.c $(LIB_PATH)simple_stack.c $(LIB_PATH)stack.c $(LIB_PATH)stack.c $(LIB_PATH)symtable.c $(LIB_PATH)TS_handler.c $(SEMANTIC_BOTTOM_PATH)$(SEMANTIC_BOTTOM_UP).c  
+		$(CC) $(CFLAGS) -o build/$@ $^
 
 run_stack: $(SIMPLE_STACK)-test
 	build/$(SIMPLE_STACK)-test
