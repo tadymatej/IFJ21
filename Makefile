@@ -30,7 +30,7 @@ run_parser: parser
 parser:   $(PARSER)-test
 
 $(PARSER)-test: $(PARSER_DEPS)
-		$(CC) $(CFLAGS) -o build/parser $^
+		$(CC) $(CFLAGS) -o parser/parser $^
 
 run_stack: $(SIMPLE_STACK)-test
 	build/$(SIMPLE_STACK)-test
