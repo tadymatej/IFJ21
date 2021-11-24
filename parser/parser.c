@@ -346,15 +346,16 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
     // TODO call PSA
     //TokenStore(*ptr, sc);
-    /*
+    
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(&sc);
+    printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     printf("\nPSA = %d\n", psa);
-    */
+    
 
 
     exp = true;
@@ -366,15 +367,15 @@ bool NExp(Token *ptr, ScannerContext *sc){
 bool NExpression(Token *ptr, ScannerContext *sc){
     bool expression = false;
 
-    *ptr = Next(sc);
-    if(ptr->token_type == TOKEN_ID_F){
+    //*ptr = Next(sc);
+    /*if(ptr->token_type == TOKEN_ID_F){
         // $56 <expression> => <function_call>
         #ifdef DEBUG_USED_RULE
             printf("$56 <expression> => <function_call>\n");
             printf("---------------------------\n");
         #endif
         expression = NFunction_call(ptr, sc);
-    } else {
+    } else {*/
         // TODO store token pro PSA
         //TokenStore(*ptr, sc);
 
@@ -384,7 +385,7 @@ bool NExpression(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
         expression = NExp(ptr, sc);
-    }
+    //}
 
     return expression;
 }
