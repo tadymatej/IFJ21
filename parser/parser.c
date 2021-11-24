@@ -176,8 +176,18 @@ bool NType(Token *ptr, ScannerContext *sc){
                 printf("$21 <type> => number\n");
                 printf("---------------------------\n");
             #endif
-        }
+        }   
     }
+    
+    // TODO TOKEN_NIL jako datovy typ
+    /*else if(ptr->token_type == TOKEN_NIL){
+        // $17 <type> => nil
+        type = true;
+        #ifdef DEBUG_USED_RULE
+            printf("$17 <type> => nil\n");
+            printf("---------------------------\n");
+        #endif
+    }*/
 
     return type;
 }
@@ -436,7 +446,9 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     int psa = 0;
 
     *ptr = Next(sc);
-    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+
+    // TODO
+    /*printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
 
@@ -447,14 +459,14 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         ErrMessage(SYNTAX_ERR);
         exit(EXIT_FAILURE);
     }
+    */
 
     //TokenStore(*ptr, sc);
-    /*while(ptr->token_type != TOKEN_KEYWORD){
+    while(ptr->token_type != TOKEN_KEYWORD){
         // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
-
-    }*/
+    }
 
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
