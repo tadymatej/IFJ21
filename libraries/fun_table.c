@@ -48,12 +48,11 @@ bool is_dec_and_def_equal(Fun_table_t *table, Fun_data_t *fun) {
     return fun_is_equal(fun, dec);
 }
 
-//cekam na opravu BinaryTreeDestroy
-// void dispose_fun_table(Fun_table_t **table) {
-//     if (table != NULL && *table != NULL) {
-//         //BinaryTreeDestroy((*table)->decFunTree);
-//         //BinaryTreeDestroy((*table)->defFunTree);
-//         free(*table);
-//         *table = NULL;
-//     }
-// }
+void dispose_fun_table(Fun_table_t **table) {
+    if (table != NULL && *table != NULL) {
+        BinaryTreeDestroy((*table)->decFunTree, dispose_fun_data);
+        BinaryTreeDestroy((*table)->defFunTree, dispose_fun_data);
+        free(*table);
+        *table = NULL;
+    }
+}
