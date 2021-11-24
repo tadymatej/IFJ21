@@ -31,7 +31,7 @@ typedef struct {
         char *str = (char *)malloc(DEF_COM_SIZE);                    \
         if (str == NULL)                                             \
             return NULL;                                             \
-        int tmp = command; \
+        size_t tmp = command; \
         if (tmp > strlen(str)) {                                     \
             char *nStr = (char *)realloc(str, tmp + 1);              \
             if (nStr == NULL) {                                      \

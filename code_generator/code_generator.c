@@ -18,10 +18,10 @@ int cg_envelope(char *str) {
     if (!globals.inside_while || strncmp(str, "DEFVAR", 6) == 0) {
         while (q_top(globals.q_command) != NULL) {
             char *tmp = (char *)q_pop(globals.q_command);
-            printf(tmp);
+            printf("%s",tmp);
             free(tmp);
         }
-        printf(str);
+        printf("%s",str);
         free(str);
     } else {
         q_push(globals.q_command, str);
