@@ -282,10 +282,14 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int done = 0;     //značí, keď je celý výraz spracovaný
   char operator = '<';
+  #ifdef __DEBUG__
   printf("Stack                         | op | Token           | top | output    \n" );
+  #endif
   while(!done){
+    #ifdef __DEBUG__
     decode_stack_print(stack, 30);
     printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression);
+    #endif
     //first index is operand at the top of stack, second operator is from token on input
     token_operator = token_to_symb(&token);
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(token_operator)];
@@ -314,7 +318,10 @@ int precedence_analyzer(ScannerContext *sc) {
           done = 1;
           break;
         }
+        #ifdef __DEBUG__
         print_exp_stack(exp_stack);
+        #endif
+
         break;
       case '=':
         stack_push(stack, token_operator);
@@ -337,6 +344,7 @@ int precedence_analyzer(ScannerContext *sc) {
         TokenStore(token, sc);
         postfixExpression[postfixExpressionLength] = '\0';
         truncate_array(postfixExpression, MAX_LEN);
+        print_exp_stack(exp_stack);
         break;
     }
     top_stack_operand = get_stack_operand(stack);
