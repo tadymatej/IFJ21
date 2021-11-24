@@ -12,15 +12,16 @@ Stack *exp_tree_init(){
   return Stack_create();
 }
 
-int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type){
-  exp_node_t *temporary = malloc(sizeof(exp_node_t));
-  if(temporary == NULL) return 99; //TODO error handling
-  temporary->data = data;
-  temporary->nested_identifier = nested_identifier;
-  temporary->type = type;
-  temporary->left = NULL;
-  temporary->right = NULL;
-  Stack_push(stack, temporary, 1); //1 pretoze nie je dolezita ta polozka momentalne
+int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type, char *prefix){
+  exp_node_t *temp = malloc(sizeof(exp_node_t));
+  if(temp == NULL) return 99; //TODO error handling
+  temp->data = data;
+  temp->nested_identifier = nested_identifier;
+  temp->type = type;
+  temp->left = NULL;
+  temp->right = NULL;
+  strcpy(temp->prefix, prefix);
+  Stack_push(stack, temp, 1); //1 pretoze nie je dolezita ta polozka momentalne
   return 0;
 }
 
@@ -39,7 +40,7 @@ DataTypes_t get_second_type(Stack *stack){
   return NO_TYPE;
 }
 
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier){
+int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix){
   if (get_second_type(stack) == NO_TYPE) {
     return 99;
   }
@@ -52,13 +53,14 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nest
   root->data = data;
   root->nested_identifier = nested_identifier;
   root->type = operator;
+  strcpy(root->prefix, prefix);
   root->left = left_side;
   root->right = right_side;
   Stack_push(stack, root, 1);
   return 0;
 }
 
-int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier){
+int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix){
   exp_node_t *temp = exp_stack_top(stack);
   if(temp == NULL) return 99; //TODO error handling
   Stack_pop(stack);
@@ -70,6 +72,7 @@ int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier){
   root->data = data;
   root->type = TOKEN_LEN;
   root->nested_identifier = nested_identifier;
+  strcpy(root->prefix, prefix);
   root->left = temp;
   root->right = NULL;
   Stack_push(stack, root, 1);
@@ -81,7 +84,7 @@ const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
 
 void print_exp_node(exp_node_t *node){
-  printf("[%s|%s_%d]\n", lex2String(node->type), node->data->name, node->nested_identifier);
+  printf("[%s|%s@%s_%d]\n", lex2String(node->type), node->prefix, node->data->name, node->nested_identifier);
 }
 
 char *make_prefix(char *prefix, const char *suffix) {

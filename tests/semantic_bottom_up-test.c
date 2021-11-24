@@ -29,7 +29,7 @@ int main() {
   add_variable(globals.ts, temp_data);
 
   globals.nested_count++;
-  new_stack_frame(&(globals.ts), "TF");
+  new_stack_frame(&(globals.ts), "LF");
   temp_data = make_var_data(STRING, "str1", "ine");
   add_variable(globals.ts, temp_data);
   temp_data = make_var_data(STRING, "var3", "456");

@@ -17,10 +17,13 @@
 #include"stack.h"
 #include"symtable.h"
 
+#define DATA_TYPE_LEN 8
+
 typedef struct exp_node_s{
   TS_data_t *data;
   int nested_identifier;
   TOKEN_TYPES type;
+  char prefix[DATA_TYPE_LEN];
   struct exp_node_s *right;
   struct exp_node_s *left;
 }exp_node_t;
@@ -43,9 +46,10 @@ Stack *exp_tree_init();
  * Pridá nový strom na vsrchol zásobníku, zatiaľ obsahujúci len uzol identifikátora
  * @param stack ukazateľ na inicializovaný stack
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
- * @param ret_type akú návratovú hodnotu má daný uzol
+ * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
+ * @param prefix ci je premenna v TF alebo LF
  */
-int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type);
+int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type, char *prefix);
 
 /*
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku
@@ -71,15 +75,20 @@ void do_conversion(Stack *stack);
  * Novovzniknutý strom uloži na vrchol zásobníku
  * @param stack ukazateľ na inicializovaný stack
  * @param operator akým operátorom chceme spojiť operandy do stromu
+ * @param data data premennej ktora bude drzat hodnotu operacie
+ * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
+ * @param prefix ci je premenna v TF alebo LF
  */
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_indentifier);
+int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_indentifier, char *prefix);
 
 /*
  * Funkcia spracuje unárnu funkciu do stromu
  * Funguje podobne ako operator operator_merge
  * @param stack ukazateľ na inicializovaný stack
+ * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
+ * @param prefix ci je premenna v TF alebo LF
  */
-int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier);
+int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix);
 
 /*
  * Funkcia vypíše stromy výrazov na konzolu

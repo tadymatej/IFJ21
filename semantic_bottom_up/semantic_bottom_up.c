@@ -62,7 +62,18 @@ void __choose_instruction(TOKEN_TYPES type){
   }
 }
 
-int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_count){
+char *__token_type_2_string(TOKEN_TYPES type){
+  switch(type){
+    case TOKEN_NUMBER: return "float";
+    case TOKEN_NUMBER_INT: return "int";
+    case TOKEN_STRING: return "string";
+//    case TOKEN_NIL: return "nil";
+    default: break;
+  }
+  return NULL;
+}
+
+int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_count, char *prefix){
   int retval;
   DataTypes_t right_type;
   DataTypes_t left_type;
@@ -76,7 +87,7 @@ int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_co
 
   temp = make_var_data(ret_type, RET_NAME, NULL);
   if(temp == NULL) return 99;
-  retval = operator_merge(stack, type, temp, (*var_count)++);
+  retval = operator_merge(stack, type, temp, (*var_count)++, prefix);
   return retval;
 }
 
@@ -94,7 +105,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
     case TOKEN_ID:
       temp = find_variable(globals.ts, token->attribute, &temp_table);
       if(temp == NULL) return 3;
-      retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type);
+      retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type, temp_table->prefix);
       if(retval != 0) return retval;
       break;
 
@@ -102,7 +113,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       //skontroluj ci je definovana premenna
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
       if(temp == NULL) return 99;
-      retval = add_id_node(stack, temp, 0, token->token_type);
+      retval = add_id_node(stack, temp, 0, token->token_type, __token_type_2_string(token->token_type));
       if(retval != 0) return retval;
       break;
     case TOKEN_LEN:
@@ -112,17 +123,17 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       check_name(ret_type);
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
-      unary_operator(stack, temp, var_count++);
+      unary_operator(stack, temp, var_count++, "LF");
       if(retval != 0) return retval;
       break;
     case TOKEN_END_BRACKET:
       break;
     case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
-      retval = __handle_bin_operator(stack, token->token_type, &var_count);
+      retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
       if(retval != 0) return retval;
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
-      retval = __handle_bin_operator(stack, token->token_type, &var_count);
+      retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
       if(retval != 0) return retval;
       break;
     default:
