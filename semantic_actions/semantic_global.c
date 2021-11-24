@@ -7,6 +7,7 @@ int init_sem_globals() {
     globals.nested_count = 0;
     globals.q_assignments = init_queue();
     globals.cur_function = NULL;
+    globals.calling_fun = NULL;
     globals.tmp = 0;
     globals.inside_while = 0;
     globals.ft = init_fun_table();
