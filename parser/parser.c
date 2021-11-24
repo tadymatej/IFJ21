@@ -353,6 +353,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
 
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
+    *ptr = GetNextToken(sc);
     printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     printf("\nPSA = %d\n", psa);
 
