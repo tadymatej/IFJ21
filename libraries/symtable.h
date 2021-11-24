@@ -62,7 +62,7 @@ int BinaryTreeInsertNode(BinaryTree **tree, int hashVal, void *data);
  * @param tree Binární strom, který má být zničen
  * @param dataDestroyHandler funkce, která bude volána, pokud se mají uvolnit data, pokud se data uvolnit nemají, očekává NULL
  */
-void BinaryTreeDestroy(BinaryTree *tree, void *dataDestroyHandler(void *));
+void BinaryTreeDestroy(BinaryTree *tree, void (*dataDestroyHandler)(void *));
 
 /**
  * Vyhledá v binárním stromu za pomocí řetězce
