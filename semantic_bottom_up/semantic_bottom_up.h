@@ -9,13 +9,15 @@
 #ifndef __SEMANTIC_BOTTOM_UP__
 #define __SEMANTIC_BOTTOM_UP__ 1
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include"scanner.h"
-#include"expression_tree.h"
-#include"TS_HANDLER.h"
+#include "symtable.h"
+#include "scanner.h"
+#include "expression_tree.h"
+#include "TS_HANDLER.h"
+#include "precedence_analyzer.h"
 
 #define RET_TYPES_TABLE_t {                                                    \
            /* + - * */          /* num |  int  |   str   |  bool  |  NIL*/     \
@@ -71,7 +73,11 @@
 
 #define bottom_up_init exp_tree_init()
 
-char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
+//char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
+
+#define RET_NAME "%cc_"
+
+#define RET_NAME_LEN 20
 
 int do_action(exp_tree_stack_t *stack, Token *token);
 
