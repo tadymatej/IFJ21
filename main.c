@@ -8,4 +8,6 @@
 int main(){
     bool syntaxOK = Parse();
     printf("syntax OK: %d\n", syntaxOK);
+
+    return 0;
 }

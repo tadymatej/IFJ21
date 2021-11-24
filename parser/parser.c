@@ -11,7 +11,15 @@
 
 int isEnd = 0;
 
-void ErrMessage(Token *ptr, ScannerContext *sc){
+void ErrMessage(int errType){
+    if(errType == COMPILER_ERR){
+        fprintf(stderr, "%d\n", COMPILER_ERR);
+        fprintf(stderr, "Interni chyba prekladace: \n");
+        return;
+    }
+}
+
+void ErrMessagePossition(Token *ptr, ScannerContext *sc){
     //Obsluha chyby mimo lexikalni analyzu
     int len = strlen(ptr->attribute);
     sc->col -= len;
@@ -26,17 +34,26 @@ void ErrMessage(Token *ptr, ScannerContext *sc){
 
 Token Next(ScannerContext *sc){
     Token token = GetNextToken(sc);
-    if(token.token_type != TOKEN_NONE && sc->actualState == STATE_ERR){
-        // lexikalni chyba
-        fprintf(stderr, "%d\n", LEX_ERR);
+    if(sc->actualState == STATE_ERR){
+        if(sc->errorMalloc == true){
+            // chyba alokace pameti
+            ErrMessage(COMPILER_ERR);
+            fprintf(stderr, "Chyba alokace pameti!\n");
+            exit(EXIT_FAILURE); // TODO odstranit exit
 
-        fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
-        //sc->actualState = STATE_START;
+        } else if (token.token_type != TOKEN_NONE){
+            // lexikalni chyba
+            fprintf(stderr, "%d\n", LEX_ERR);
 
-        exit(LEX_ERR);
+            fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
+            //sc->actualState = STATE_START;
+
+            exit(EXIT_FAILURE); // TODO odstranit exit
+        }
     }
 
     else if(token.token_type == TOKEN_NONE){
+        // TODO
         // doceten vstup do konce
 
         //TokenStore(token, sc);
@@ -56,12 +73,10 @@ bool Req(Token *ptr, ScannerContext *sc){
     if((strcmp(ptr->attribute, "\"ifj21\"") == 0) && (ptr->token_type != TOKEN_NONE)){
         req = true;
 
-        // TODO call CG_PROLOG()
+        // TODO CG_PROLOG();
 
-    } else {
-        // chyba
+    } 
 
-    }
     return req;
 }
 
@@ -1145,8 +1160,8 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
     if(prog != true){
         fprintf(stderr, "%d\n", SYNTAX_ERR);
-        //ErrMessage(ptr, sc);
-        exit(SYNTAX_ERR);
+        //ErrMessagePossition(ptr, sc);
+        exit(EXIT_FAILURE);
 
     }
     
@@ -1171,6 +1186,9 @@ bool Begin(ScannerContext *sc){
     if(token == NULL){
         free(token);
         token = NULL;
+        ErrMessage(COMPILER_ERR);
+        fprintf(stderr, "Chyba alokace pameti!\n");
+        return false;
     }
 
     Token *ptr = token;  
@@ -1190,6 +1208,7 @@ bool Begin(ScannerContext *sc){
 
     printf("RESULT: %d\n", OK);
     free(token);
+
     return OK;
 }
 
@@ -1197,7 +1216,12 @@ bool Parse(){
     ScannerContext sc;
     sc.lastReadedChar = -1;
 
-    ScannerContextInit(&sc);    
+    if(ScannerContextInit(&sc) == -1){
+        ScannerContextDelete(&sc);
+        ErrMessage(COMPILER_ERR);
+        fprintf(stderr, "Chyba alokace pameti!\n");
+        return false;
+    }
 
     strArr = StringsArrayCreate('\0');
 
