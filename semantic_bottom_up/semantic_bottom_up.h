@@ -63,21 +63,29 @@
                    /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
           /* > < >= <= */                                                      \
           /* ~= == */           /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* int */ { BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN, NO_TYPE}}, \
+                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
+                    /* int */ { BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
+                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE, BOOLEAN},  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN},  \
+                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
           /* ~= == */                                                          \
+          /* = */               /* num |  int  |   str   |  bool  |  NIL*/     \
+                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
+                    /* int */ { NO_TYPE, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
+                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE, BOOLEAN},  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN},  \
+                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+          /* = */                                                              \
                         }
 
 #define bottom_up_init exp_tree_init()
 
 //char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
 
-#define RET_NAME "%cc"
+#define RET_TABLE_SIZE_Y 8
+#define RET_TABLE_SIZE_X 5
 
-#define RET_NAME_LEN 20
+#define RET_NAME "%cc"
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
@@ -89,7 +97,15 @@
 int do_action(exp_tree_stack_t *stack, Token *token);
 
 /**
- * @Korektne uvoľní stromy na expression tree
+ * Skontroluje či výsledný dátový typ na vrchole q_assignments sedí s typom aktuálneho výrazu
+ * ak je fronta prázdna vie že namé nič kontrolovať
+ * @param stack ukazatel na inicilizovaný stack sxpression stromov
+ * @return návratová hodnota podľa zadania IFJ
+ */
+int check_assignment(exp_tree_stack_t *stack);
+
+/**
+ * Korektne uvoľní stromy na expression tree
  * @param stack ukazatel na ukazatel na stack stromov
  */
 void end_bottom_up(exp_tree_stack_t **stack);

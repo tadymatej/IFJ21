@@ -343,7 +343,7 @@ int precedence_analyzer(ScannerContext *sc) {
         }
         TokenStore(token, sc);
         postfixExpression[postfixExpressionLength] = '\0';
-        truncate_array(postfixExpression, MAX_LEN);
+        error_code = check_assignment(exp_stack);
         print_exp_stack(exp_stack);
         break;
     }
