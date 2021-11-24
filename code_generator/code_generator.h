@@ -7,6 +7,7 @@
 typedef struct {
     char *frame;
     char *name;
+    char *postfix;
 } Variable;
 
 #define DEF_COM_SIZE 128
@@ -43,19 +44,11 @@ typedef struct {
         return str;                                                  \
     } while (0)
 
-char *cg_label(char *label) {
-    function_templ(snprintf(str, DEF_COM_SIZE, "LABEL $%s\n", label));
-}
+char *cg_label(char *label);
 
-char *cg_push_frame() {
-    function_templ(snprintf(str, DEF_COM_SIZE, "PUSHFRAME\n"));
-}
+char *cg_push_frame();
 
-/**
- * data_type var;
- */
-#define CG_DefineVar(var) \
-    (printf("DEFVAR %s@%s\n", var.frame, var.name))
+char *cg_define_var(Variable var);
 
 /**
  * dest = src
