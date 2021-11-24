@@ -23,12 +23,12 @@ int fun_add_ret_val(Fun_data_t *data, TS_data_t *retval) {
     return arr_add(data->ret_vals, (void *)retval);
 }
 
-void dispose_fun_data(Fun_data_t **data) {
-    if (data != NULL && *data != NULL) {
-        dispose_array(&((*data)->params), true);
-        dispose_array(&((*data)->ret_vals), true);
-        free(*data);
-        *data = NULL;
+void dispose_fun_data(void *data) {
+    if (data != NULL) {
+        dispose_array(((Fun_data_t*)data)->params, true);
+        dispose_array(((Fun_data_t*)data)->ret_vals, true);
+        free(data);
+        data = NULL;
     }
 }
 
