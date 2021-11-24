@@ -72,7 +72,7 @@ void do_conversion(Stack *stack);
  * @param stack ukazateľ na inicializovaný stack
  * @param operator akým operátorom chceme spojiť operandy do stromu
  */
-int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type);
+int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_data_t *data);
 
 /*
  * Funkcia spracuje unárnu funkciu do stromu

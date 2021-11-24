@@ -43,7 +43,7 @@ void do_conversion(Stack *stack){
   ;
 }
 
-int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type){
+int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type, TS_data_t *data){
   if (get_second_type(stack) == NO_TYPE) {
     return 99;
   }
@@ -53,7 +53,7 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, DataTypes_t ret_type){
   Stack_pop(stack);
   exp_node_t *root = malloc(sizeof(exp_node_t)); //kontrolovat ci ssa podaril
   if (root == NULL) return 99; //TODO error handling
-  root->data = NULL;
+  root->data = data;
   root->ret_type = ret_type;
   root->type = operator;
   root->left = left_side;
@@ -80,7 +80,7 @@ const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
 
 void print_exp_node(exp_node_t *node){
-  printf("[%s]\n", lex2String(node->type));
+  printf("[%s|%s]\n", lex2String(node->type), node->data->name);
 }
 
 char *make_prefix(char *prefix, const char *suffix) {
