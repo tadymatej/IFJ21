@@ -18,11 +18,14 @@ SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)s
 PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
 
 CC=gcc
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS) -fcommon -g
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS) -I$(PARSER_PATH) -fcommon -g
 
-.PHONY: run_stack run_analyzer run_bottom_up clean
+.PHONY: run_stack run_analyzer run_bottom_up run_parser clean
 
 all: $(PROGS)
+
+run_parser: parser
+	cat parser/tests/$(TEST_NAME) | build/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
 
 parser:   $(PARSER)-test
 
