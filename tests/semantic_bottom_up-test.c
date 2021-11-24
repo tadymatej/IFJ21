@@ -16,7 +16,7 @@ int main() {
 	strArr = StringsArrayCreate('\0');
 
   init_sem_globals();
-  globals.ts = TS_init();
+  globals.ts = TS_init("LF");
 	printf("po inite\n");
   TS_data_t *temp_data;
   temp_data = make_var_data(INTEGER, "var1", "7");
@@ -27,8 +27,9 @@ int main() {
   add_variable(globals.ts, temp_data);
   temp_data = make_var_data(NUMBER, "num1", "7.85");
   add_variable(globals.ts, temp_data);
+
   globals.nested_count++;
-  new_stack_frame(&(globals.ts));
+  new_stack_frame(&(globals.ts), "TF");
   temp_data = make_var_data(STRING, "str1", "ine");
   add_variable(globals.ts, temp_data);
   temp_data = make_var_data(STRING, "var3", "456");
