@@ -21,11 +21,11 @@ int init_sem_globals() {
 }
 
 void dispose_sem_globals() {
-    dispose_fun_data(globals.cur_function); //tu by malo byt &globals.cur_function
-    dispose_queue(globals.q_assignments); //aj tu
-    dispose_queue(globals.q_command);      // aj tu
+    dispose_fun_data(globals.cur_function); 
+    dispose_queue(&globals.q_assignments);
+    dispose_queue(&globals.q_command);      
     free(globals.var);
-  //  dispose_fun_table(&globals.ft);  //TODO vyhadzuje to undefined reference
+    dispose_fun_table(&globals.ft);
     dispose_table(&globals.ts);
     stack_destroy(&globals.blockStack);
 }
