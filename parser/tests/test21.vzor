@@ -1,0 +1,132 @@
+$1 <prog> => require
+---------------------------
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+$7 <params_list> => <first_param> <next_params>
+---------------------------
+$8 <first_param> => <param>
+---------------------------
+$18 <param> => id : <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+$10 <next_params> => <param> <next_params>
+---------------------------
+$18 <param> => id : <type>
+---------------------------
+$21 <type> => number
+---------------------------
+$10 <next_params> => <param> <next_params>
+---------------------------
+$18 <param> => id : <type>
+---------------------------
+$20 <type> => string
+---------------------------
+$9 <next_params> => )
+---------------------------
+$23 <return_fc> => <function_body>
+---------------------------
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+$6 <params_list> => )
+---------------------------
+$22 <return_fc> => : <first_ret> <next_rets>
+---------------------------
+$24 <first_ret> => <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+$25 <next_rets> => , <type> <next_rets>
+---------------------------
+$21 <type> => number
+---------------------------
+$26 <next_rets> => <function_body>
+---------------------------
+$41 <function_body> => local id : <type> <assignment>
+---------------------------
+$19 <type> => integer
+---------------------------
+$57 <assignment> => = <expression>
+---------------------------
+$54 <expression> => <exp>
+---------------------------
+$55 <exp> => call PSA
+---------------------------
+$58 <assignment> => <function_body>
+---------------------------
+$41 <function_body> => local id : <type> <assignment>
+---------------------------
+$21 <type> => number
+---------------------------
+$57 <assignment> => = <expression>
+---------------------------
+$54 <expression> => <exp>
+---------------------------
+$55 <exp> => call PSA
+---------------------------
+$58 <assignment> => <function_body>
+---------------------------
+$41 <function_body> => local id : <type> <assignment>
+---------------------------
+$20 <type> => string
+---------------------------
+$57 <assignment> => = <expression>
+---------------------------
+$54 <expression> => <exp>
+---------------------------
+$55 <exp> => call PSA
+---------------------------
+$58 <assignment> => <function_body>
+---------------------------
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+$68 <exp_cond> => call PSA
+---------------------------
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$35 <first_arg> => id
+---------------------------
+$36 <next_args> => , id <next_args>
+---------------------------
+$36 <next_args> => , id <next_args>
+---------------------------
+$38 <next_args> => )
+---------------------------
+$66 <elseif> => <end>
+---------------------------
+$67 <end> => end <function_body>
+---------------------------
+$40 <function_body> => <return>
+---------------------------
+$59 <return> => return <list>
+---------------------------
+$60 <list> => <expressions>
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+$54 <expression> => <exp>
+---------------------------
+$55 <exp> => call PSA
+---------------------------
+$52 <next_exp> => , <expression> <next_expr>
+---------------------------
+$54 <expression> => <exp>
+---------------------------
+$55 <exp> => call PSA
+---------------------------
+$53 <next_exp> => <function_body>
+---------------------------
+$61 <list> => <function_body>
+---------------------------
+$4 <prog> => EOF
+---------------------------
+RESULT: 1
+syntax OK: 1

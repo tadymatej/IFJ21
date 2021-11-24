@@ -3,16 +3,19 @@ ANALYZER=precedence_analyzer
 SCANNER_PRECEDENCE=scanner_precedence
 SEMANTIC_BOTTOM_UP=semantic_bottom_up
 SEMANTIC_GLOBAL=semantic_global
+PARSER=parser
 #
 PROGS=$(SIMPLE_STACK)-test $(ANALYZER)-test
 LIB_PATH=libraries/
 ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
 SCANNER_PATH=scanner/
+PARSER_PATH=parser/
 SEMANTIC_BOTTOM_PATH=semantic_bottom_up/
 SEMANTIC_ACTIONS=semantic_actions/
 
 SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
+PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
 
 CC=gcc
 CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS) -fcommon -g
@@ -20,6 +23,11 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 .PHONY: run_stack run_analyzer run_bottom_up clean
 
 all: $(PROGS)
+
+parser:   $(PARSER)-test
+
+$(PARSER)-test: $(PARSER_DEPS)
+		$(CC) $(CFLAGS) -o build/parser $^
 
 run_stack: $(SIMPLE_STACK)-test
 	build/$(SIMPLE_STACK)-test
