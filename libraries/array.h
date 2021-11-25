@@ -1,7 +1,7 @@
 #ifndef __INFLATABLE_ARRAY_H_
 #define __INFLATABLE_ARRAY_H_ 1
 
-#define DEFAULT_ARRAY_SIZE 5
+#define DEFAULT_ARRAY_SIZE 4
 
 #include <stdlib.h>
 #include <stdbool.h>
