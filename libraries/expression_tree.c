@@ -150,18 +150,18 @@ exp_node_t *exp_stack_top(Stack *stack){
   return NULL;
 }
 
-void __destroy_tree(exp_node_t *tree){
+void destroy_tree(exp_node_t *tree){
   if(tree == NULL) return;
   if(tree->type != TOKEN_ID) free(tree->data); //uvolnit kompilatorove premenne ktore su len v expression tree
-  __destroy_tree(tree->left);
-  __destroy_tree(tree->right);
+  destroy_tree(tree->left);
+  destroy_tree(tree->right);
   free(tree);
 }
 
 void destroy_top_tree(Stack *stack){
   exp_node_t *temp = exp_stack_top(stack);
   Stack_pop(stack);
-  __destroy_tree(temp);
+  destroy_tree(temp);
 }
 
 void destroy_stack(Stack **stack){
