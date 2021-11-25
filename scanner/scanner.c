@@ -739,8 +739,6 @@ int main(int argc, char **argv) {
     Token token;
     int i = 0;
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
-        if(i == 0)TokenStore(token, &sc);
-        ++i;
         if(token.token_type == TOKEN_ERR) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
                 sc.actualState = STATE_START;
