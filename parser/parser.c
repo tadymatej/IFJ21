@@ -179,16 +179,15 @@ bool NType(Token *ptr, ScannerContext *sc){
         }   
     }
     
-    // TODO TOKEN_NIL jako datovy typ
-    /*else if(ptr->token_type == TOKEN_NIL){
+    else if(ptr->token_type == TOKEN_NULL){
         // $17 <type> => nil
         type = true;
         #ifdef DEBUG_USED_RULE
             printf("$17 <type> => nil\n");
             printf("---------------------------\n");
         #endif
-    }*/
-
+    }
+    
     return type;
 }
 
@@ -366,8 +365,8 @@ bool NExp(Token *ptr, ScannerContext *sc){
     //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     //printf("\nPSA = %d\n", psa);
 
-    if(psa == 2){
-        ErrMessage(SYNTAX_ERR);
+    if(psa != 0){
+        ErrMessage(psa);
         exit(EXIT_FAILURE);
     }
 
