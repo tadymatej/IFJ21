@@ -9,28 +9,28 @@
 #define DEBUG_ERROR
 
 
-int isEnd = 0;
+bool isEnd = false;
+bool err = false;
 
-void ErrMessage(int errType){
-    if(errType == COMPILER_ERR){
-        fprintf(stderr, "%d\n", COMPILER_ERR);
-        fprintf(stderr, "Interni chyba prekladace: \n");
-    } else if(errType == SYNTAX_ERR){
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
-        fprintf(stderr, "Syntakticka chyba: \n");
-    }
+void ErrMessagePossition(Token *ptr, ScannerContext *sc){
+    fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
     return;
 }
 
-void ErrMessagePossition(Token *ptr, ScannerContext *sc){
-    //Obsluha chyby mimo lexikalni analyzu
-    int len = strlen(ptr->attribute);
-    sc->col -= len;
+void ErrMessage(int errType){
+    if(errType == LEX_ERR){
+        fprintf(stderr, "%d\n", LEX_ERR);
+        fprintf(stderr, "Lexikalni chyba: ");
 
-    //Vypis chybu
-    //sc->col += len;
+    } else if(errType == COMPILER_ERR){
+        fprintf(stderr, "%d\n", COMPILER_ERR);
+        fprintf(stderr, "Interni chyba prekladace: ");
+    } else if(errType == SYNTAX_ERR){
 
-    fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
+        fprintf(stderr, "%d\n", SYNTAX_ERR);
+        fprintf(stderr, "Syntakticka chyba: ");
+    }
+
     return;
 }
 
@@ -47,26 +47,23 @@ Token Next(ScannerContext *sc){
 
         } else if (token.token_type == TOKEN_ERR){
             // lexikalni chyba
-            fprintf(stderr, "%d\n", LEX_ERR);
-
-            fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", sc->row, sc->col);
-            //sc->actualState = STATE_START;
+            ErrMessage(LEX_ERR);
+            fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
+            
+            err = true;
 
             exit(EXIT_FAILURE); // TODO odstranit exit
         }
     }
 
     else if(token.token_type == TOKEN_NONE){
-        // TODO
         // doceten vstup do konce
 
-        //TokenStore(token, sc);
-        //printf("konec\n");
-        //isEnd++;
+        // TODO
+        isEnd = true;
     }
 
     return token;
-
 }
 
 // ------------------------------------------------------------------
@@ -179,16 +176,15 @@ bool NType(Token *ptr, ScannerContext *sc){
         }   
     }
     
-    // TODO TOKEN_NIL jako datovy typ
-    /*else if(ptr->token_type == TOKEN_NIL){
+    else if(ptr->token_type == TOKEN_NULL){
         // $17 <type> => nil
         type = true;
         #ifdef DEBUG_USED_RULE
             printf("$17 <type> => nil\n");
             printf("---------------------------\n");
         #endif
-    }*/
-
+    }
+    
     return type;
 }
 
@@ -366,8 +362,9 @@ bool NExp(Token *ptr, ScannerContext *sc){
     //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     //printf("\nPSA = %d\n", psa);
 
-    if(psa == 2){
-        ErrMessage(SYNTAX_ERR);
+    if(psa != 0){
+        ErrMessage(psa);
+        ErrMessagePossition(ptr, sc);
         exit(EXIT_FAILURE);
     }
 
@@ -380,17 +377,24 @@ bool NExp(Token *ptr, ScannerContext *sc){
 bool NExpression(Token *ptr, ScannerContext *sc){
     bool expression = false;
 
-    // TODO PSA nesmi dostat fc_call!
+    TokenStore(*ptr, sc);
+    sc->tokenLookAhead = true; // podivam se o token dopredu
+    *ptr = Next(sc);
+    //printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
-    //*ptr = Next(sc);
-    /*if(ptr->token_type == TOKEN_ID_F){
+    if(ptr->token_type == TOKEN_ID_F){
+        *ptr = Next(sc);
+        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+        *ptr = Next(sc);
+        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+
         // $56 <expression> => <function_call>
         #ifdef DEBUG_USED_RULE
             printf("$56 <expression> => <function_call>\n");
             printf("---------------------------\n");
         #endif
         expression = NFunction_call(ptr, sc);
-    } else {*/
+    } else {
         // TODO store token pro PSA
         //TokenStore(*ptr, sc);
 
@@ -399,8 +403,9 @@ bool NExpression(Token *ptr, ScannerContext *sc){
             printf("$54 <expression> => <exp>\n");
             printf("---------------------------\n");
         #endif
+        *ptr = Next(sc);
         expression = NExp(ptr, sc);
-    //}
+    }
 
     return expression;
 }
@@ -413,7 +418,6 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
     if(ptr->token_type == TOKEN_NONE){
         while(ptr->token_type == TOKEN_NONE){
             *ptr = Next(sc);
-
         }
     }
 
@@ -424,9 +428,7 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
-
         assignment = NExpression(ptr, sc);
-
     }
 
 
@@ -457,16 +459,17 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
 
     if(psa != 0){
         ErrMessage(psa);
+        ErrMessagePossition(ptr, sc);
         exit(EXIT_FAILURE);
     }
     
 
     //TokenStore(*ptr, sc);
-    while(ptr->token_type != TOKEN_KEYWORD){
+    /*while(ptr->token_type != TOKEN_KEYWORD){
         // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
-    }
+    }*/
 
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
@@ -705,7 +708,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
     bool function_body = true;
     int break_from_while = 0;
 
-    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && function_body == true && isEnd == 0){
+    while((ptr->token_type != TOKEN_NONE || sc->actualState == STATE_ERR) && function_body == true){
         //printf("NFunction_body accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
         //function_body = true;
