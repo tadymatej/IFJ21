@@ -87,7 +87,7 @@ int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_co
   check_name(ret_type);
 
   temp = make_var_data(ret_type, RET_NAME, NULL);
-  if(temp == NULL) return 99;
+  if(temp == NULL) return COMPILER_ERR;
   retval = operator_merge(stack, type, temp, (*var_count)++, prefix);
   return retval;
 }
@@ -105,17 +105,17 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   switch (token->token_type) {
     case TOKEN_ID:
       temp = find_variable(globals.ts, token->attribute, &temp_table);
-      if(temp == NULL) return 3;
+      if(temp == NULL) return SEMANTIC_PROG_ERR;
       retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type, temp_table->prefix);
-      if(retval != 0) return retval;
+      if(retval != 0) return COMPILER_ERR;
       break;
 
     case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT: case TOKEN_NULL:
       //skontroluj ci je definovana premenna
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
-      if(temp == NULL) return 99;
+      if(temp == NULL) return COMPILER_ERR;
       retval = add_id_node(stack, temp, 0, token->token_type, __token_type_2_string(token->token_type));
-      if(retval != 0) return retval;
+      if(retval != 0) return COMPILER_ERR;
       break;
     case TOKEN_LEN:
       //ak je to na vrchole typu string
@@ -125,7 +125,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       unary_operator(stack, temp, var_count++, "LF");
-      if(retval != 0) return retval;
+      if(retval != 0) return COMPILER_ERR;
       break;
     case TOKEN_END_BRACKET:
       break;
@@ -150,9 +150,9 @@ int check_assignment(exp_tree_stack_t *stack){
   TS_data_t *left_side = q_pop(globals.q_assignments);
   if(left_side != NULL){
     right_side = get_top_type(stack);
-    if(right_side == NO_TYPE) return 4; //ak je na pravej strane od priradenia nic, respektive keyword a podobne
+    if(right_side == NO_TYPE) return SEMANTIC_TYPE_ERR; //ak je na pravej strane od priradenia nic, respektive keyword a podobne
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side];
-    if(ret_type == NO_TYPE) retval = 4; // ak nie su typovo kompatibilne
+    if(ret_type == NO_TYPE) retval = SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
   }
   return retval;
 }
