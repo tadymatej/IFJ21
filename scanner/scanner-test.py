@@ -433,10 +433,23 @@ def test15():
 
 def test16():
     expected_lines = [
-        ["", "", True]
+        ["keyword", "require", True],
+        ["string", r'"ifj21"', True],
+        ["keyword", "function", True],
+        ["id_f", "main", True],
+        ["end bracket", "(null)", True],
+        ["keyword", "end", True]
     ]
     commands = [
-        "",]
+        r"""
+        -- Hello World example in IFJ21
+        -- run it on Merlin by: tl run hello.tl
+
+        require \"ifj21\"
+
+        function main()
+        end
+        """,]
     tests(commands, expected_lines, "test16")
 
 
@@ -460,4 +473,5 @@ test13()
 test14()
 
 test15()
+test16()
 
