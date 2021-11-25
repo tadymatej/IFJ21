@@ -18,6 +18,7 @@
 #include"symtable.h"
 
 #define DATA_TYPE_LEN 8
+#define COMPILER_ERR 99
 
 typedef struct exp_node_s{
   TS_data_t *data;

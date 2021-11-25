@@ -8,9 +8,9 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include"stack.h"
-#include"symtable.h"
-#include"semantic_global.h"
+#include "stack.h"
+#include "symtable.h"
+#include "semantic_global.h"
 
 /*
  * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
