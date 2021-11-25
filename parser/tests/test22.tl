@@ -18,5 +18,6 @@ function main() : integer, number
         fc( a, b, c)
     end
 
-    return a, b
+    return 10, 10
+    
 end
