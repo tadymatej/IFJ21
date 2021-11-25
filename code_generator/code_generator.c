@@ -47,7 +47,7 @@ char *cg_call_fun(char *fun_name) {
 }
 
 char *cg_move(char *dst, char *src) {
-    function_templ(strlen(dst) + strlen(src) + strlen("MOVE %s %s\n")-3, sprintf(str, "MOVE %s %s\n", dst, src));
+    function_templ(strlen(dst) + strlen(src) + strlen("MOVE %s %s\n")-3, (sprintf(str, "MOVE %s %s\n", dst, src), free(dst), free(src)));
 }
 
 char *cg_return() {
@@ -55,11 +55,11 @@ char *cg_return() {
 }
 
 char *cg_stack_push(char *var) {
-    function_templ(strlen(var) + strlen("PUSHS %s\n")-1, sprintf(str, "PUSHS %s\n", var));
+    function_templ(strlen(var) + strlen("PUSHS %s\n")-1, (sprintf(str, "PUSHS %s\n", var), free(var)));
 }
 
 char *cg_stack_pop(char *var) {
-    function_templ(strlen(var) + strlen("POPS %s\n")-1, sprintf(str, "POPS %s\n", var));
+    function_templ(strlen(var) + strlen("POPS %s\n")-1, (sprintf(str, "POPS %s\n", var), free(var)));
 }
 
 char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op){
@@ -75,7 +75,7 @@ char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op){
       operation = NULL;
       return NULL;
   }
-  function_templ(strlen(dest) + strlen(f_op) + strlen(s_op) + strlen(operation)-1, sprintf(str, operation, dest, f_op, s_op));
+  function_templ(strlen(dest) + strlen(f_op) + strlen(s_op) + strlen(operation)-1, (sprintf(str, operation, dest, f_op, s_op), free(dest), free(f_op), free(s_op)));
 }
 
 int cg_envelope(char *str) {
