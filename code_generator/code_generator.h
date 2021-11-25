@@ -27,6 +27,10 @@ typedef struct {
 
 #define CG_Prolog() printf(".IFJcode21\n")
 
+#define ITOA(bufName, num) \
+    char bufName[256];     \
+    snprintf(bufName, 256, "%d", num)
+
 #define function_templ(size, command)     \
     do {                                  \
         char *str = (char *)malloc(size); \
@@ -37,6 +41,8 @@ typedef struct {
     } while (0)
 
 char *cg_format_var(char *prefix, char *name, char *suffix);
+
+char *cg_format_label(char *fun_name, char *name, int n_id, int idx);
 
 char *cg_label(char *label);
 
@@ -57,6 +63,8 @@ char *cg_return();
 char *cg_stack_push(char *var);
 
 char *cg_stack_pop(char *var);
+
+char *cg_jump(char *label);
 
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
@@ -176,9 +184,6 @@ char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
  */
 #define CG_Read(dest, type) \
     (printf("READ %s@%s %s\n", dest.frame, dest.name, type))
-
-#define CG_Jump(label) \
-    (printf("JUMP $%s\n", label))
 
 #define CG_ExitStr(exitVal) \
     (printf("EXIT %s@%s\n", "int", exitVal))
