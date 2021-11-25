@@ -538,7 +538,7 @@ bool statePushChar(ScannerContext *sc) {
 Token processOnceReadedChar(ScannerContext *sc) {
         char tmp = (char) sc->lastReadedChar;
         Token token = FSM(tmp, sc, NULL, NULL);
-        if(statePushChar(sc)) { 
+        if(statePushChar(sc)) {
             if(StringsArrayPush(strArr, tmp) == -1) {
                 token.token_type = TOKEN_ERR;
                 sc->actualState = STATE_ERR;
@@ -571,7 +571,7 @@ Token nextToken(ScannerContext *sc) {
 
     while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
         if(token.token_type == TOKEN_NONE) updateScannerPosition(c, sc);
-        
+
         token = FSM(c, sc, &row, &col);
         if(sc->actualState == STATE_ERR) {
             token.token_type = TOKEN_ERR;
@@ -614,7 +614,7 @@ void NextTokens(ScannerContext *sc) {
             strArr->lastValid++;
     if(sc->actualState == STATE_ERR) {
         __TokenStore(token, sc);
-        return;    
+        return;
     }
 
     Token token2 = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
@@ -645,7 +645,7 @@ void NextTokens(ScannerContext *sc) {
                 token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
                 if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
                 __TokenStore(token2, sc);
-                return;    
+                return;
             }
 
             if(token2.token_type == TOKEN_START_BRACKET)
@@ -722,9 +722,9 @@ int TokenStore(Token token, ScannerContext *sc) {
     return 0;
 }
 
-#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
+#define __STANDALONE__ 0  //TODO Remove.. pro visual studio jenom
 
-#ifdef __STANDALONE__
+#if __STANDALONE__==1
 int main(int argc, char **argv) {
     ScannerContext sc;
     sc.lastReadedChar = -1;
