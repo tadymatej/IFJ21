@@ -2,7 +2,7 @@
 #define __SEM_GLOBALS_H_ 1
 
 #include "symtable.h"
-#include "TS_handler.h"
+#include "ts_handler.h"
 #include "fun_table.h"
 #include "fun_data.h"
 #include "simple_stack.h"

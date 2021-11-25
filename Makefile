@@ -9,7 +9,7 @@ CODE_GEN=code_generator
 SEMANTIC_ACTION=semantic_action
 PARSER=parser
 #
-PROGS=$(SIMPLE_STACK)-test $(ANALYZER)-test
+PROGS=$(PARSER)
 LIB_PATH=libraries/
 ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
@@ -18,6 +18,21 @@ PARSER_PATH=parser/
 CODE_GEN_PATH=code_generator/
 SEMANTIC_BOTTOM_PATH=semantic_bottom_up/
 SEMANTIC_ACTIONS_PATH=semantic_actions/
+
+DIR_BEFORE_REPO = ../
+FILES_TO_PACK = ./Makefile ./main.c ${SCANNER_PATH}scanner.c ${SCANNER_PATH}scanner.h ${PARSER_PATH}parser.c ${PARSER_PATH}parser.h \
+				${ANALYZER_PATH}precedence_analyzer.c ${ANALYZER_PATH}precedence_analyzer.h ${SEMANTIC_ACTIONS_PATH}semantic_action.c \
+				${SEMANTIC_ACTIONS_PATH}semantic_action.h ${SEMANTIC_ACTIONS_PATH}semantic_global.c ${SEMANTIC_ACTIONS_PATH}semantic_global.h \
+				${SEMANTIC_BOTTOM_PATH}semantic_bottom_up.c ${SEMANTIC_BOTTOM_PATH}semantic_bottom_up.h ${CODE_GEN_PATH}code_generator.c \
+				${CODE_GEN_PATH}code_generator.h ${LIB_PATH}array.c ${LIB_PATH}array.h ${LIB_PATH}expression_tree.c ${LIB_PATH}expression_tree.h \
+				${LIB_PATH}fun_data.c ${LIB_PATH}fun_data.h ${LIB_PATH}fun_table.c ${LIB_PATH}fun_table.h ${LIB_PATH}queue.c ${LIB_PATH}queue.h \
+				${LIB_PATH}simple_stack.c ${LIB_PATH}simple_stack.h ${LIB_PATH}stack.c ${LIB_PATH}stack.h ${LIB_PATH}symtable.c ${LIB_PATH}symtable.h \
+				${LIB_PATH}ts_handler.c ${LIB_PATH}ts_handler.h
+	
+FILES_TO_PACK_REMOVE = ./Makefile ./main.c scanner.c scanner.h parser.c parser.h precedence_analyzer.c precedence_analyzer.h semantic_action.c \
+						semantic_action.h semantic_global.c semantic_global.h semantic_bottom_up.c semantic_bottom_up.h code_generator.c \
+						code_generator.h array.c array.h expression_tree.c expression_tree.h fun_data.c fun_data.h fun_table.c fun_table.h \
+						queue.c queue.h simple_stack.c simple_stack.h stack.c stack.h symtable.c symtable.h ts_handler.c ts_handler.h
 
 SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
 PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
@@ -57,6 +72,12 @@ $(SCANNER_PRECEDENCE)-test: $(TEST_PATH)$(SCANNER_PRECEDENCE)-test.c $(ANALYZER_
 $(SEMANTIC_BOTTOM_UP)-test: $(TEST_PATH)$(SEMANTIC_BOTTOM_UP)-test.c $(SEMANTIC_BOTTOM_UP_DEPS)
 	mkdir -p build/
 	$(CC) $(CFLAGS) -o build/$@ $^
+
+pack:
+	if [ -s "${DIR_BEFORE_REPO}xzalma00.zip" ]; then rm -rf ${DIR_BEFORE_REPO}xzalma00.zip; fi
+	cp ${FILES_TO_PACK} ${DIR_BEFORE_REPO}
+	python3 makefile_changes.py > ${DIR_BEFORE_REPO}Makefile
+	cd ${DIR_BEFORE_REPO} && zip xzalma00.zip ${FILES_TO_PACK_REMOVE} && rm ${FILES_TO_PACK_REMOVE}
 
 clean:
 	rm -f *.o build/$(PROGS)

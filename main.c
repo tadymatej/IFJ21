@@ -1,6 +1,6 @@
-#include "./scanner/scanner.h"
-#include "./parser/parser.h"
-#include "./semantic_actions/semantic_global.h"
+#include "scanner.h"
+#include "parser.h"
+#include "semantic_global.h"
 //#include "scanner.c"
 #include <stdio.h>
 #include <stdlib.h>

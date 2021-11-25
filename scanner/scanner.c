@@ -673,7 +673,7 @@ Token GetNextToken(ScannerContext *sc) {
             void *tmp = q_top(sc->tokens);
             TokenStore(token, sc);
             if(tmp != NULL) token = *((Token *) tmp);
-            else token.token_type = TOKEN_NONE;
+            else token.token_type = TOKEN_NONE; //Pokud si uložili token a za uloženým tokenem nic není => byl tam EOF, vrátím TOKEN_NONE
             sc->tokenLookAhead = false;
         }
         sc->getStoredToken = true;
@@ -728,7 +728,7 @@ int TokenStore(Token token, ScannerContext *sc) {
     return 0;
 }
 
-#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
+//#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #if __STANDALONE__
 int main(int argc, char **argv) {
