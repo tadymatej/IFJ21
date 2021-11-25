@@ -55,6 +55,7 @@
 #define IMOD -7 // //
 
 #define DEBUG_MACRO(command) if(_DEBUG_PSA_) {command;}
+#define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
 
 int precedence_analyzer(ScannerContext *sc);
 

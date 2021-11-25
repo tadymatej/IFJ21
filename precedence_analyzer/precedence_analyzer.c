@@ -9,7 +9,6 @@
 #include "precedence_analyzer.h"
 
 #define MAX_LEN 128
-#define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
 
 #define _DEBUG_PSA_ 0
 
