@@ -379,17 +379,24 @@ bool NExp(Token *ptr, ScannerContext *sc){
 bool NExpression(Token *ptr, ScannerContext *sc){
     bool expression = false;
 
-    // TODO PSA nesmi dostat fc_call!
+    TokenStore(*ptr, sc);
+    sc->tokenLookAhead = true; // podivam se o token dopredu
+    *ptr = Next(sc);
+    //printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
-    //*ptr = Next(sc);
-    /*if(ptr->token_type == TOKEN_ID_F){
+    if(ptr->token_type == TOKEN_ID_F){
+        *ptr = Next(sc);
+        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+        *ptr = Next(sc);
+        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+
         // $56 <expression> => <function_call>
         #ifdef DEBUG_USED_RULE
             printf("$56 <expression> => <function_call>\n");
             printf("---------------------------\n");
         #endif
         expression = NFunction_call(ptr, sc);
-    } else {*/
+    } else {
         // TODO store token pro PSA
         //TokenStore(*ptr, sc);
 
@@ -398,8 +405,9 @@ bool NExpression(Token *ptr, ScannerContext *sc){
             printf("$54 <expression> => <exp>\n");
             printf("---------------------------\n");
         #endif
+        *ptr = Next(sc);
         expression = NExp(ptr, sc);
-    //}
+    }
 
     return expression;
 }
@@ -412,7 +420,6 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
     if(ptr->token_type == TOKEN_NONE){
         while(ptr->token_type == TOKEN_NONE){
             *ptr = Next(sc);
-
         }
     }
 
@@ -423,9 +430,7 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
-
         assignment = NExpression(ptr, sc);
-
     }
 
 
@@ -461,11 +466,11 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     
 
     //TokenStore(*ptr, sc);
-    while(ptr->token_type != TOKEN_KEYWORD){
+    /*while(ptr->token_type != TOKEN_KEYWORD){
         // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
-    }
+    }*/
 
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
