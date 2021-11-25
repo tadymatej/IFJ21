@@ -633,8 +633,8 @@ bool NRet(Token *ptr, ScannerContext *sc){
     #endif
 
 
-    *ptr = Next(sc);
-    if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_ID_F || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
+    //*ptr = Next(sc);
+    //if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_ID_F || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
         // $60 <list> => <expressions>
         #ifdef DEBUG_USED_RULE
             printf("$60 <list> => <expressions>\n");
@@ -642,7 +642,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
         #endif
         TokenStore(*ptr, sc);
         ret = NExpressions(ptr, sc);
-    }
+    //}
 
     // $61 <list> => <function_body>
     #ifdef DEBUG_USED_RULE
