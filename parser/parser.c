@@ -450,6 +450,7 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     *ptr = Next(sc);
 
     // TODO
+    /*
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
@@ -462,14 +463,15 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         ErrMessagePossition(ptr, sc);
         exit(EXIT_FAILURE);
     }
+    */
     
 
     //TokenStore(*ptr, sc);
-    /*while(ptr->token_type != TOKEN_KEYWORD){
+    while(ptr->token_type != TOKEN_KEYWORD){
         // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
-    }*/
+    }
 
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
