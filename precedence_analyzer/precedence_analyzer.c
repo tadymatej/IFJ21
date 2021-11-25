@@ -10,8 +10,8 @@
 
 #define MAX_LEN 128
 #define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
-#define __DEBUG__ 1
 
+#define __DEBUG__ 1
 
 void truncate_array(char *array, int length){
   for (int i = 0; i < length; i++) {
@@ -317,14 +317,14 @@ int precedence_analyzer(ScannerContext *sc) {
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
         prev_token = make_fake_token(prev_token, top_stack_operand);
         error_code = do_action(exp_stack, &prev_token);
+
+        #if __DEBUG__==1
+          print_exp_stack(exp_stack);
+        #endif
         if (error_code != 0) {
           done = 1;
           break;
         }
-        #if __DEBUG__==1
-        //print_exp_stack(exp_stack);
-        #endif
-
         break;
       case '=':
         stack_push(stack, token_operator);
@@ -340,13 +340,12 @@ int precedence_analyzer(ScannerContext *sc) {
       case '&':
         done = 1;
         stack_pop(stack);
-        TokenStore(token, sc);
-        postfixExpression[postfixExpressionLength] = '\0';
         if (stack_top(stack) != STACK_END) {
           error_code = 2;
           fprintf(stderr, "Error: Submitted expression is not syntactically correct\n");
-          break;
         }
+        TokenStore(token, sc);
+        postfixExpression[postfixExpressionLength] = '\0';
         error_code = check_assignment(exp_stack);
         print_exp_stack(exp_stack);
         break;
