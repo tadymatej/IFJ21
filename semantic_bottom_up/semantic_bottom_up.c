@@ -47,6 +47,7 @@ DataTypes_t __token_type_to_ts_data(TOKEN_TYPES type){
     case TOKEN_NUMBER_INT: return INTEGER;
     case TOKEN_NUMBER: return NUMBER;
     case TOKEN_STRING: return STRING;
+    case TOKEN_NULL: return NIL;
     default: return NO_TYPE;
   }
 }
@@ -67,7 +68,7 @@ char *__token_type_2_string(TOKEN_TYPES type){
     case TOKEN_NUMBER: return "float";
     case TOKEN_NUMBER_INT: return "int";
     case TOKEN_STRING: return "string";
-//    case TOKEN_NIL: return "nil";
+    case TOKEN_NULL: return "nil";
     default: break;
   }
   return NULL;
@@ -109,7 +110,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       if(retval != 0) return retval;
       break;
 
-    case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT:
+    case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT: case TOKEN_NULL:
       //skontroluj ci je definovana premenna
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
       if(temp == NULL) return 99;
