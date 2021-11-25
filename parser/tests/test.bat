@@ -78,7 +78,7 @@ echo Test 20
 cat test20.tl | ../parser > test20.txt
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-echo Test 21
+echo Test 21: return id
 cat test21.tl | ../parser > test21.txt
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
