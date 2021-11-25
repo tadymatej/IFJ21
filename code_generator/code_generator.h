@@ -3,6 +3,7 @@
 
 #include "semantic_global.h"
 #include <string.h>
+#include "scanner.h"
 
 typedef struct {
     char *frame;
@@ -26,23 +27,16 @@ typedef struct {
 
 #define CG_Prolog() printf(".IFJcode21\n")
 
-#define function_templ(command)                                      \
-    do {                                                             \
-        char *str = (char *)malloc(DEF_COM_SIZE);                    \
-        if (str == NULL)                                             \
-            return NULL;                                             \
-        size_t tmp = command; \
-        if (tmp > strlen(str)) {                                     \
-            char *nStr = (char *)realloc(str, tmp + 1);              \
-            if (nStr == NULL) {                                      \
-                free(str);                                           \
-                return NULL;                                         \
-            }                                                        \
-            command;      \
-            str = nStr;                                              \
-        }                                                            \
-        return str;                                                  \
+#define function_templ(size, command)     \
+    do {                                  \
+        char *str = (char *)malloc(size); \
+        if (str == NULL)                  \
+            return NULL;                  \
+        command;                          \
+        return str;                       \
     } while (0)
+
+char *CG_format_var(char *prefix, char *name, char *suffix);
 
 char *cg_label(char *label);
 
@@ -50,45 +44,21 @@ char *cg_push_frame();
 
 char *cg_pop_frame();
 
-char *cg_define_var(Variable var);
+char *cg_define_var(char *var);
 
 char *cg_create_frame();
 
 char *cg_call_fun(char *fun_name);
 
-char *cg_move(Variable dest, Variable src);
+char *cg_move(char *dst, char *src);
 
 char *cg_return();
 
-/**
- * dest = a * b
- */
-#define CG_Mul(dest, a, b) \
-    (printf("MUL %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *cg_stack_push(char *var);
 
-/**
- * dest = a / b
- */
-#define CG_Div(dest, a, b) \
-    (printf("DIV %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *cg_stack_pop(char *var);
 
-/**
- * dest = a / b
- */
-#define CG_Idiv(dest, a, b) \
-    (printf("IDIV %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
-
-/**
- * dest = a - b
- */
-#define CG_Sub(dest, a, b) \
-    (printf("SUB %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
-
-/**
- * dest = a + b
- */
-#define CG_Add(dest, a, b) \
-    (printf("ADD %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
 /**
  * dest = a .. b
@@ -137,7 +107,7 @@ char *cg_return();
  * @pre typeof(dest) == "bool"
  */
 #define CG_AND(dest, a, b) \
-    (printf("ADD %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+    (printf("AND %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
 
 /**
  * dest = a || b
@@ -218,12 +188,6 @@ char *cg_return();
 
 #define CG_StackClear() \
     (printf("CLEARS\n"))
-
-#define CG_StackPop(var) \
-    (printf("POPS %s@%s\n", var.frame, var.name))
-
-#define CG_StackPush(var) \
-    (printf("PUSHS %s@%s\n", var.frame, var.name))
 
 /**
  * a = Pop(Stack) + Pop(Stack)
