@@ -18,6 +18,7 @@
 #include "expression_tree.h"
 #include "TS_HANDLER.h"
 #include "precedence_analyzer.h"
+#include "semantic_global.h"
 
 #define RET_TYPES_TABLE_t {                                                    \
            /* + - * */          /* num |  int  |   str   |  bool  |  NIL*/     \
