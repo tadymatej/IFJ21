@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "symtable.h"
+#include "../libraries/queue.h"
 
 /**
  * Stavy automatu scanneru
@@ -39,6 +40,8 @@ typedef struct {
     TOKEN_TYPES token_type; /**< Typ tokenu */
     ATTRIBUTE_TYPES attributeType;  /**< Typ atributu tokenu */
     char *attribute;    /**< Ukazatel do pole řetězců na atribut */
+    int startPosRow;
+    int startPosCol;
 } Token;
 
 /**
@@ -58,7 +61,8 @@ typedef struct {
 typedef struct {
     int actualState; /**< Aktuální stav scanneru */
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
-    Token tokens[2];    /**< Uložené tokeny ve scanneru */
+    Queue_t *tokens;    /**< Uložené tokeny ve scanneru */
+    bool getStoredToken;
     bool errorMalloc;       /**< Pokud nastala chyba, zda to je chyba mallocu */
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
@@ -67,7 +71,7 @@ typedef struct {
 
 typedef unsigned long long ptrInt;
 
-#define DEFAULT_STRINGS_ARR_LEN 100
+#define DEFAULT_STRINGS_ARR_LEN 128
 
 StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
 
@@ -82,11 +86,21 @@ StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here 
 Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute);
 
 /**
+ * Uloží token dovnitř lexikální analýzy, vkládá na konec fronty narozdíl od TokenStore
+ * @param token Token, který má lexikální analýza uložit
+ * @param sc ScannerContext, do kterého se Token uloží
+ * @return Vrací 0 v případě úspěchu, jinak vrací -1
+ */
+int __TokenStore(Token token, ScannerContext *sc);
+
+
+/**
  * Uloží token dovnitř lexikální analýzy
  * @param token Token, který má lexikální analýza uložit
  * @param sc ScannerContext, do kterého se Token uloží
+ * @return Vrací 0 v případě úspěchu, jinak vrací -1
  */
-void TokenStore(Token token, ScannerContext *sc);
+int TokenStore(Token token, ScannerContext *sc);
 
 /**
  * Získá uložený token z ScannerContext
@@ -131,7 +145,7 @@ char *lex2String(int lex);
  * @param sc ScannerContext scanneru
  * @return Vrací vytvořený token. Pokud našel lexikální chybu, bude vracený token.token_type == TOKEN_NONE a sc.actualState == STATE_ERR
  */
-Token FSM(char actualChar, ScannerContext *sc);
+Token FSM(char actualChar, ScannerContext *sc, int *row, int *col);
 
 /**
  * Zjistí, zda je znak "bílý"

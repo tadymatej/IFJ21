@@ -58,7 +58,7 @@ def test1():
         "ahoj     nazdar  5   *   10",
         "ahoj     --[[komentar]]nazdar  5   *   10"
     ]
-    tests(commands, expected_lines, "test1")
+    #tests(commands, expected_lines, "test1")
 
 def test2():
     expected_lines = [
@@ -442,6 +442,7 @@ def test16():
 
 
 test1()
+
 test2()
 test3()
 test4()
@@ -453,10 +454,10 @@ test8()
 test9()
 test10()
 test11()
-
 test12()
 test13()
 
 test14()
 
 test15()
+
