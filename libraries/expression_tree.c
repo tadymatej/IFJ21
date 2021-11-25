@@ -42,14 +42,14 @@ DataTypes_t get_second_type(Stack *stack){
 
 int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix){
   if (get_second_type(stack) == NO_TYPE) {
-    return 99;
+    return COMPILER_ERR;
   }
   exp_node_t *right_side = exp_stack_top(stack);
   Stack_pop(stack);
   exp_node_t *left_side = exp_stack_top(stack);
   Stack_pop(stack);
   exp_node_t *root = malloc(sizeof(exp_node_t)); //kontrolovat ci ssa podaril
-  if (root == NULL) return 99; //TODO error handling
+  if (root == NULL) return COMPILER_ERR; //TODO error handling
   root->data = data;
   root->nested_identifier = nested_identifier;
   root->type = operator;
@@ -62,12 +62,12 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nest
 
 int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix){
   exp_node_t *temp = exp_stack_top(stack);
-  if(temp == NULL) return 99; //TODO error handling
+  if(temp == NULL) return COMPILER_ERR;
   Stack_pop(stack);
   exp_node_t *root = malloc(sizeof(exp_node_t));
   if(root == NULL){
     Stack_push(stack, temp, 1);
-    return 99;
+    return COMPILER_ERR;
   }
   root->data = data;
   root->type = TOKEN_LEN;
