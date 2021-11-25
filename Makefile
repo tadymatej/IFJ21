@@ -44,8 +44,8 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 
 all: $(PROGS)
 
-run_parser: parser
-	cat parser/tests/$(TEST_NAME) | build/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
+run_parser: $(PARSER)-test
+	cat parser/tests/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
 
 parser:   $(PARSER)-test
 

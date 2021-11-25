@@ -1,7 +1,7 @@
 #include "array.h"
 
 int __resize_array(Array_t *arr) {
-    arr->size += DEFAULT_ARRAY_SIZE;
+    arr->size *= 2;
     void **tmp = (void **)realloc(arr->arr, sizeof(void *) * arr->size);
     if (tmp == NULL)
         return 1;

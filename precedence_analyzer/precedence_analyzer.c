@@ -11,6 +11,8 @@
 #define MAX_LEN 128
 #define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
 
+#define _DEBUG_PSA_ 0
+
 void truncate_array(char *array, int length){
   for (int i = 0; i < length; i++) {
     array[i] = '\0';
@@ -108,6 +110,7 @@ char token_to_symb(Token *token){
     case TOKEN_LEQ: symbol = LTE; break;
     case TOKEN_GEQ: symbol = GTE; break;
     case TOKEN_ID: symbol = 'i'; break;
+    case TOKEN_NULL: symbol = 'i'; break;
     case TOKEN_NUMBER: symbol = 'n'; break;
     case TOKEN_NUMBER_INT: symbol = 'f'; break;
     case TOKEN_STRING: symbol = 's'; break;
@@ -271,7 +274,7 @@ int precedence_analyzer(ScannerContext *sc) {
   //token štartujúci expression
   Token token = GetNextToken(sc);
   Token prev_token = token;
-  if(token.token_type == TOKEN_NONE) return error_code;
+  if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
@@ -282,17 +285,14 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int done = 0;     //značí, keď je celý výraz spracovaný
   char operator = '<';
-  #ifdef __DEBUG__
-  printf("Stack                         | op | Token           | top | output    \n" );
-  #endif
+  DEBUG_MACRO(printf("Stack                         | op | Token           | top | output    \n" ))
+
   while(!done){
-    #ifdef __DEBUG__
-    decode_stack_print(stack, 30);
-    printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression);
-    #endif
     //first index is operand at the top of stack, second operator is from token on input
     token_operator = token_to_symb(&token);
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(token_operator)];
+
+    DEBUG_MACRO(decode_stack_print(stack, 30) ;printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression));
 
     //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, LTE, GTE, NEQ, EQ, CONCAT, identifier,
     switch (operator) {
@@ -314,14 +314,12 @@ int precedence_analyzer(ScannerContext *sc) {
         doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
         prev_token = make_fake_token(prev_token, top_stack_operand);
         error_code = do_action(exp_stack, &prev_token);
+
         if (error_code != 0) {
+          TokenStore(token, sc);
           done = 1;
           break;
         }
-        #ifdef __DEBUG__
-        print_exp_stack(exp_stack);
-        #endif
-
         break;
       case '=':
         stack_push(stack, token_operator);
@@ -329,22 +327,21 @@ int precedence_analyzer(ScannerContext *sc) {
         GET_VALID_TOKEN(token, sc);
         break;
       case '#':
-        fprintf(stderr, "Error: Submitted expression is not syntactically correct");
         TokenStore(token, sc);
-        error_code = 2;
+        error_code = SYNTAX_ERR;
         done = 1;
         break;
       case '&':
         done = 1;
         stack_pop(stack);
-        if (stack_top(stack) != STACK_END) {
-          error_code = 2;
-          fprintf(stderr, "Error: Submitted expression is not syntactically correct\n");
-        }
         TokenStore(token, sc);
         postfixExpression[postfixExpressionLength] = '\0';
-        error_code = check_assignment(exp_stack);
-        print_exp_stack(exp_stack);
+        if (stack_top(stack) != STACK_END) {
+          error_code = SYNTAX_ERR;
+        }else {
+          error_code = check_assignment(exp_stack);
+        }
+        DEBUG_MACRO(print_exp_stack(exp_stack);)
         break;
     }
     top_stack_operand = get_stack_operand(stack);

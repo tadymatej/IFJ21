@@ -10,15 +10,19 @@ Fun_table_t *init_fun_table() {
     return table;
 }
 
-void add_function_dec(Fun_table_t *table, Fun_data_t *fun) {
-    BinaryTreeInsertNode(&(table->decFunTree), charSumHash(fun->name), (void *)fun);
+int add_function_dec(Fun_table_t *table, Fun_data_t *fun) {
+    if (BinaryTreeInsertNode(&(table->decFunTree), charSumHash(fun->name), (void *)fun) == -1)
+        return 1;
+    return 0;
 }
 
-void add_function_def(Fun_table_t *table, Fun_data_t *fun) {
+int add_function_def(Fun_table_t *table, Fun_data_t *fun) {
     Fun_data_t *dec = BinaryTreeFindByStr(table->decFunTree, fun->name)->data;
     if (dec != NULL)
         fun->isCalledBeforeDefinition = dec->isCalledBeforeDefinition;
-    BinaryTreeInsertNode(&(table->defFunTree), charSumHash(fun->name), (void *)fun);
+    if (BinaryTreeInsertNode(&(table->defFunTree), charSumHash(fun->name), (void *)fun) == -1)
+        return 1;
+    return 0;
 }
 
 Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared, bool *isBuiltIn) {

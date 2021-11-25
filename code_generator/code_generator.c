@@ -1,6 +1,6 @@
 #include "code_generator.h"
 
-char *CG_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
+char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
     char *underscore = "_";
     if (suffix == NULL) {  //konstanty nemaju suffix
         suffix = "";
@@ -22,60 +22,137 @@ char *CG_format_var(char *prefix, char *name, char *suffix) {  //TODO function t
     return str;
 }
 
+/**
+ * Muze vygenerovat lably dvou druhu (fun_name)_(name)_(n_id) nebo (fun_name)_(n_id)_(idx)
+ * Kdyz name je zadano, tak vygeneruje (fun_name)_(name)_(n_id)  pro jump na konec ifu, zacatek/konec while
+ * Kdyz name == NULL pak v zavislosti na idx a n_id vygeneruje vygeneruji ruzne lably
+ *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy  
+ *      idx < 0 && n_id < 0 - (fun_name)    pro volani 
+ *      idx > 0 && n_id < 0 - (fun_name)_(idx) nevyuzito 
+ *      idx < 0 && n_id > 0 - (fun_name)_(n_id) nevyuzito
+ * @param fun_name - nazev funkce, ke ktere tento label patri
+ * @param name - nazev konstrukce, ke ktere label patri
+ * @param n_id - unikatni identifikator vnoreni konstrukce
+ * @param idx - poradove cislo, ktere je pouzito pro lably pro opakijici se konstrukce
+ * @return - vraci vygenerovani label. V pripade chyby NULL
+*/ 
+char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
+    char *underscore = "_";
+    char *id_str, *nid_str;
+    ITOA(tmpStr, idx);
+    id_str = tmpStr;
+    ITOA(tmpStr2, n_id);
+    nid_str = tmpStr2;
+    char *id_underscore = "_";
+    char *nid_underscore = "_";
+    if (name == NULL) {  
+        name = "";
+        underscore = "";
+        if (n_id < 0) {
+            nid_str = "";
+            nid_underscore = "";
+        }
+        if (idx < 0) {
+            id_str = "";
+            id_underscore = "";
+        }
+    } else {
+        id_str = "";
+        id_underscore = "";
+    }
+    char *str = (char *)malloc(DEF_COM_SIZE);
+    if (str == NULL)
+        return NULL;
+    size_t tmp = snprintf(str, DEF_COM_SIZE, "%s%s%s%s%s%s%s", fun_name, underscore, name, nid_underscore, nid_str, id_underscore, id_str);
+    if (tmp > strlen(str)) {
+        char *nStr = (char *)realloc(str, tmp + 1);
+        if (nStr == NULL) {
+            free(str);
+            return NULL;
+        }
+        snprintf(str, DEF_COM_SIZE, "%s%s%s%s%s%s%s", fun_name, underscore, name, nid_underscore, nid_str, id_underscore, id_str);
+        str = nStr;
+    }
+    return str;
+}
+
 char *cg_label(char *label) {
-    function_templ(strlen(label)+strlen("LABEL $%s\n")-1, sprintf(str, "LABEL $%s\n", label));
+    function_templ(strlen(label) + strlen("LABEL $%s\n") - 1, (sprintf(str, "LABEL $%s\n", label), free(label)));
 }
 
 char *cg_push_frame() {
-    function_templ(strlen("PUSHFRAME\n")+1, sprintf(str, "PUSHFRAME\n"));
+    function_templ(strlen("PUSHFRAME\n") + 1, sprintf(str, "PUSHFRAME\n"));
 }
 
 char *cg_pop_frame() {
-    function_templ(strlen("POPFRAME\n")+1, sprintf(str, "POPFRAME\n"));
+    function_templ(strlen("POPFRAME\n") + 1, sprintf(str, "POPFRAME\n"));
 }
 
 char *cg_define_var(char *var) {
+    if (var == NULL)
+        return NULL;
     function_templ((strlen(var) + strlen("DEFVAR %s\n") - 1), (sprintf(str, "DEFVAR %s\n", var), free(var)));
 }
 
 char *cg_create_frame() {
-    function_templ(strlen("CREATEFRAME\n")+1, sprintf(str, "CREATEFRAME\n"));
+    function_templ(strlen("CREATEFRAME\n") + 1, sprintf(str, "CREATEFRAME\n"));
 }
 
 char *cg_call_fun(char *fun_name) {
-    function_templ(strlen(fun_name)+strlen("CALL $%s\n")-1, sprintf(str, "CALL $%s\n", fun_name));
+    function_templ(strlen(fun_name) + strlen("CALL $%s\n") - 1, sprintf(str, "CALL $%s\n", fun_name));
 }
 
 char *cg_move(char *dst, char *src) {
-    function_templ(strlen(dst) + strlen(src) + strlen("MOVE %s %s\n")-3, (sprintf(str, "MOVE %s %s\n", dst, src), free(dst), free(src)));
+    if (dst == NULL || src == NULL)
+        return NULL;
+    function_templ(strlen(dst) + strlen(src) + strlen("MOVE %s %s\n") - 3, (sprintf(str, "MOVE %s %s\n", dst, src), free(dst), free(src)));
 }
 
 char *cg_return() {
-    function_templ(strlen("RETURN\n")+1, sprintf(str, "RETURN\n"));
+    function_templ(strlen("RETURN\n") + 1, sprintf(str, "RETURN\n"));
 }
 
 char *cg_stack_push(char *var) {
-    function_templ(strlen(var) + strlen("PUSHS %s\n")-1, (sprintf(str, "PUSHS %s\n", var), free(var)));
+    if (var == NULL)
+        return NULL;
+    function_templ(strlen(var) + strlen("PUSHS %s\n") - 1, (sprintf(str, "PUSHS %s\n", var), free(var)));
 }
 
 char *cg_stack_pop(char *var) {
-    function_templ(strlen(var) + strlen("POPS %s\n")-1, (sprintf(str, "POPS %s\n", var), free(var)));
+    if (var == NULL)
+        return NULL;
+    function_templ(strlen(var) + strlen("POPS %s\n") - 1, (sprintf(str, "POPS %s\n", var), free(var)));
 }
 
-char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op){
-  if(dest == NULL || f_op == NULL || s_op == NULL) return NULL;
-  char *operation;
-  switch(type){
-    case TOKEN_ADD: operation = "ADD %s %s %s\n"; break;
-    case TOKEN_SUB: operation = "SUB %s %s %s\n"; break;
-    case TOKEN_MUL: operation = "MUL %s %s %s\n"; break;
-    case TOKEN_DIV: operation = "DIV %s %s %s\n"; break;
-    case TOKEN_MOD: operation = "IDIV %s %s %s\n"; break;
+char *cg_jump(char *label) {
+    function_templ(strlen(label) + strlen("JUMP $%s\n") - 1, (sprintf(str, "JUMP $%s\n", label), free(label)));
+}
+
+char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op) {
+    if (dest == NULL || f_op == NULL || s_op == NULL)
+        return NULL;
+    char *operation;
+    switch (type) {
+    case TOKEN_ADD:
+        operation = "ADD %s %s %s\n";
+        break;
+    case TOKEN_SUB:
+        operation = "SUB %s %s %s\n";
+        break;
+    case TOKEN_MUL:
+        operation = "MUL %s %s %s\n";
+        break;
+    case TOKEN_DIV:
+        operation = "DIV %s %s %s\n";
+        break;
+    case TOKEN_MOD:
+        operation = "IDIV %s %s %s\n";
+        break;
     default:
-      operation = NULL;
-      return NULL;
-  }
-  function_templ(strlen(dest) + strlen(f_op) + strlen(s_op) + strlen(operation)-1, (sprintf(str, operation, dest, f_op, s_op), free(dest), free(f_op), free(s_op)));
+        operation = NULL;
+        return NULL;
+    }
+    function_templ(strlen(dest) + strlen(f_op) + strlen(s_op) + strlen(operation) - 1, (sprintf(str, operation, dest, f_op, s_op), free(dest), free(f_op), free(s_op)));
 }
 
 int cg_envelope(char *str) {

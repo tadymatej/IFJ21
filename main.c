@@ -9,6 +9,14 @@
 int main(){
     init_sem_globals();
     globals.ts = TS_init("TF");
+
+    TS_data_t *temp_data;
+    temp_data = make_var_data(NUMBER, "a", "7");
+    add_variable(globals.ts, temp_data);
+
     bool syntaxOK = Parse();
-    printf("syntax OK: %d\n", syntaxOK);
+    if(syntaxOK){
+        fprintf(stderr, "0\n");
+    }
+    //printf("syntax OK: %d\n", syntaxOK);
 }

@@ -14,6 +14,8 @@ typedef struct SemanticGlobals{
     Fun_data_t *calling_fun; // funkce ktera je ted volana
     TS_data_t *var;
     int tmp;
+    int label_idx;
+    int exec_point_id;
     Queue_t *q_assignments;
     Sym_table_t *ts;
     Fun_table_t *ft;

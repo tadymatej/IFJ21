@@ -13,7 +13,7 @@ end
 
 function fc() : integer
     local b : integer = 0
-    return b
+    return 10
 end
 
 main()

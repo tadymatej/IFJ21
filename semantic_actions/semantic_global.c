@@ -9,7 +9,9 @@ int init_sem_globals() {
     globals.cur_function = NULL;
     globals.calling_fun = NULL;
     globals.tmp = 0;
-    globals.ts = NULL; 
+    globals.ts = NULL;
+    globals.exec_point_id = 0;
+    globals.label_idx = 0;
     globals.inside_while = 0;
     globals.ft = init_fun_table();
     globals.blockStack = stack_init();
@@ -22,9 +24,9 @@ int init_sem_globals() {
 }
 
 void dispose_sem_globals() {
-    dispose_fun_data(globals.cur_function); 
+    dispose_fun_data(globals.cur_function);
     dispose_queue(&globals.q_assignments);
-    dispose_queue(&globals.q_command);      
+    dispose_queue(&globals.q_command);
     free(globals.var);
     dispose_fun_table(&globals.ft);
     dispose_table(&globals.ts);
