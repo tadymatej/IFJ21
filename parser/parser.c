@@ -449,7 +449,7 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
 
     *ptr = Next(sc);
 
-    // TODO
+    // TODO cekam na PSA
     /*
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
@@ -465,10 +465,8 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     }
     */
     
-
-    //TokenStore(*ptr, sc);
+    // zalozni reseni
     while(ptr->token_type != TOKEN_KEYWORD){
-        // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
     }
