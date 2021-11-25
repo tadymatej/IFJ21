@@ -2,6 +2,7 @@
 #define __CODE_GEN_H_ 1
 
 #include "semantic_global.h"
+#include "scanner.h"
 #include <string.h>
 
 typedef struct {
