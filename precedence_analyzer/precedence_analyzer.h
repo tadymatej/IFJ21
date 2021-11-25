@@ -29,7 +29,7 @@
 #endif
 
 #define PRECEDENCE_TABLE_SIZE 10
-                                /*  #  |* / //| +  - |  ..  |>< ~ =|  i   | f_id |   (  |   )  |  $  */
+                                /*  #  |* / //| +  - |  ..  |>< ~ =|  i   | f_id |   (  |   )  |  $  */ /*prichadzajuci token*/
 #define PRECEDENCE_TABLE /* # */{{ '#',   '>',   '>',  '>',   '>',   '<',   '<',    '#',   '>',  '>'},\
                       /* * / //*/{ '<',   '>',   '>',  '>',   '>',   '<',   '<',    '<',   '>',  '>'},\
                       /*   + - */{ '<',   '<',   '>',  '>',   '>',   '<',   '<',    '<',   '>',  '>'},\
@@ -40,6 +40,7 @@
                       /*   (   */{ '<',   '<',   '<',  '<',   '<',   '<',   '<',    '<',   '=',  '#'},\
                       /*   )   */{ '>',   '>',   '>',  '>',   '>',   '#',   '#',    '#',   '>',  '>'},\
                       /*   $   */{ '<',   '<',   '<',  '<',   '<',   '<',   '<',    '<',   '#',  '&'}}
+                  /*vrchol zasobnika*/
 
 #define STACK_END '$' //dno zásobníka. Ukončuje analýzu, ak sa dostane aj na vstup token, ktorý ukončuje expression
 #define NT '@' //this is substitution for nonterminal, as this character cannot be used in Expression
@@ -51,6 +52,8 @@
 #define EQ -5  // ==
 #define CONCAT -6 // ..
 #define IMOD -7 // //
+
+#define DEBUG_MACRO(command) if(_DEBUG_PSA_) {command;}
 
 int precedence_analyzer(ScannerContext *sc);
 
