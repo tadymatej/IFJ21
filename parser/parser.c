@@ -45,7 +45,7 @@ Token Next(ScannerContext *sc){
             fprintf(stderr, "Chyba alokace pameti!\n");
             exit(EXIT_FAILURE); // TODO odstranit exit
 
-        } else if (token.token_type != TOKEN_NONE){
+        } else if (token.token_type == TOKEN_ERR){
             // lexikalni chyba
             fprintf(stderr, "%d\n", LEX_ERR);
 
@@ -448,18 +448,18 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     *ptr = Next(sc);
 
     // TODO
-    /*printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
 
     printf("NExp_cond: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-    //printf("\nPSA = %d\n", psa);
+    printf("\nPSA = %d\n", psa);
 
-    if(psa == 2){
-        ErrMessage(SYNTAX_ERR);
+    if(psa != 0){
+        ErrMessage(psa);
         exit(EXIT_FAILURE);
     }
-    */
+    
 
     //TokenStore(*ptr, sc);
     while(ptr->token_type != TOKEN_KEYWORD){
@@ -966,12 +966,13 @@ bool NProg(Token *ptr, ScannerContext *sc){
     bool prog = false;
 
     *ptr = Next(sc);
-    while(ptr->token_type == TOKEN_NONE){
+    /*while(ptr->token_type == TOKEN_NONE){
         *ptr = Next(sc);
 
-    }
+    }*/
+    //printf("%s\n", ptr->attribute);
 
-    if(ptr->token_type == TOKEN_ID){
+    if(ptr->token_type == TOKEN_KEYWORD){
         if(strcmp(ptr->attribute, "require") == 0){
             // $1 <prog> => require
 

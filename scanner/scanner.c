@@ -726,7 +726,7 @@ int TokenStore(Token token, ScannerContext *sc) {
     q_push_front(sc->tokens, (void *) t);
     return 0;
 }
-
+/*
 #define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #if __STANDALONE__
@@ -749,3 +749,4 @@ int main(int argc, char **argv) {
     return 0;
 }
 #endif
+*/
