@@ -1,12 +1,12 @@
 #ifndef SCANNER_H
 #define SCANNER_H 1
-#include <assert.h> 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "symtable.h"
-#include "../libraries/queue.h"
+#include "queue.h"
 
 /**
  * Stavy automatu scanneru
@@ -127,9 +127,9 @@ int ScannerContextInit(ScannerContext *sc);
 
 /**
  * Korektně uvolní ScannerContext
- * 
+ *
  * @param sc ScannerContext, který má být uvolněn
- */ 
+ */
 void ScannerContextDelete(ScannerContext *sc);
 
 /**
@@ -197,7 +197,7 @@ StringsArray* StringsArrayCreate(char separator);
 /**
  * Korektně uvolní StringsArray
  * @param strArr StringsArray, který má být uvolněn
- */ 
+ */
 void StringsArrayDelete(StringsArray **strArr);
 
 /**
@@ -216,7 +216,7 @@ bool statePushChar(ScannerContext *sc);
  * Provede scanner operaci nad znakem, který byl již jednou zpracován
  * Tj. zavolá FSM a v případě potřeby vloží znak do pole řetězců
  * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
- */ 
+ */
 Token processOnceReadedChar(ScannerContext *sc);
 
 
