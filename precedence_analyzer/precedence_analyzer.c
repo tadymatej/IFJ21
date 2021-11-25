@@ -285,11 +285,11 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int done = 0;     //značí, keď je celý výraz spracovaný
   char operator = '<';
-  #if __DEBUG__=1
+  #if __DEBUG__==1
   printf("Stack                         | op | Token           | top | output    \n" );
   #endif
   while(!done){
-    #if __DEBUG__=1
+    #if __DEBUG__==1
     decode_stack_print(stack, 30);
     printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression);
     #endif
@@ -321,7 +321,7 @@ int precedence_analyzer(ScannerContext *sc) {
           done = 1;
           break;
         }
-        #if __DEBUG__=1
+        #if __DEBUG__==1
         //print_exp_stack(exp_stack);
         #endif
 
