@@ -74,6 +74,7 @@ char *lex2String(int lex) {
         case TOKEN_SEMICOLON: return "semicolon - strednik";
         case TOKEN_START_BRACKET: return "start bracket";
         case TOKEN_END_BRACKET: return "end bracket";
+        case TOKEN_NULL: return "null";
         case TOKEN_COMMA: return "comma";
         case COMMENT: return "comment";
         case TOKEN_ID_F: return "id_f";
@@ -626,7 +627,10 @@ void NextTokens(ScannerContext *sc) {
         }
         strArr->lastValid++;
 
-        if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) token.token_type = TOKEN_KEYWORD;
+        if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
+            if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
+            else token.token_type = TOKEN_KEYWORD;
+        }
         else {
             token2 = nextToken(sc);
             if(StringsArrayPush(strArr, '\0') == -1) {
