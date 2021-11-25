@@ -645,8 +645,8 @@ void NextTokens(ScannerContext *sc) {
             if(sc->actualState == STATE_ERR) {
                 sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
                 token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
-                __TokenStore(token, sc);
-                __TokenStore(token2, sc);
+                if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
+                if(token2.token_type != TOKEN_NONE) __TokenStore(token2, sc);
                 return;
             }
 
@@ -655,8 +655,8 @@ void NextTokens(ScannerContext *sc) {
         }
     }
 
-    __TokenStore(token, sc);
-    if(token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
+    if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
+    if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
 }
 
 Token GetNextToken(ScannerContext *sc) {
@@ -739,14 +739,14 @@ int main(int argc, char **argv) {
     Token token;
     int i = 0;
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
+        if(i == 0) TokenStore(token, &sc);
+        ++i;
         if(token.token_type == TOKEN_ERR) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
                 sc.actualState = STATE_START;
         }
-        else {
-            if(lex2String(token.token_type) != NULL)
+        else if(lex2String(token.token_type) != NULL)
                 printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
-        }
     }
     return 0;
 }
