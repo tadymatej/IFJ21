@@ -36,7 +36,7 @@ typedef struct {
         return str;                       \
     } while (0)
 
-char *CG_format_var(char *prefix, char *name, char *suffix);
+char *cg_format_var(char *prefix, char *name, char *suffix);
 
 char *cg_label(char *label);
 
@@ -58,7 +58,7 @@ char *cg_stack_push(char *var);
 
 char *cg_stack_pop(char *var);
 
-char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
+char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
 /**
  * dest = a .. b

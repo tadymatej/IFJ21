@@ -1,6 +1,6 @@
 #include "code_generator.h"
 
-char *CG_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
+char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
     char *underscore = "_";
     if (suffix == NULL) {  //konstanty nemaju suffix
         suffix = "";
@@ -62,7 +62,7 @@ char *cg_stack_pop(char *var) {
     function_templ(strlen(var) + strlen("POPS %s\n")-1, (sprintf(str, "POPS %s\n", var), free(var)));
 }
 
-char *CG_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op){
+char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op){
   if(dest == NULL || f_op == NULL || s_op == NULL) return NULL;
   char *operation;
   switch(type){
