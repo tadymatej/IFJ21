@@ -13,7 +13,7 @@ function main() : integer
         a = 0
     end
 
-    return a
+    return 10
 
 end
 

@@ -472,13 +472,13 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 
 
 bool NExp_cond(Token *ptr, ScannerContext *sc){
-    bool exp_cond = false;
+    bool exp_cond = true;
     int psa = 0;
 
-    *ptr = Next(sc);
+    //*ptr = Next(sc);
 
     // TODO cekam na PSA
-    /*
+    
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
@@ -491,13 +491,13 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         ErrMessagePossition(ptr, sc);
         exit(EXIT_FAILURE);
     }
-    */
+    
     
     // zalozni reseni
-    while(ptr->token_type != TOKEN_KEYWORD){
+    /*while(ptr->token_type != TOKEN_KEYWORD){
         exp_cond = true;
         *ptr = Next(sc);
-    }
+    }*/
 
     // $68 <exp_cond> => call PSA
     #ifdef DEBUG_USED_RULE
