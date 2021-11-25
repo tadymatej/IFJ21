@@ -123,8 +123,7 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
 
 #define check_name(name)                                                  \
   if(name == NO_TYPE){                                                    \
-    fprintf(stderr, "Error: wrong data types in arithmetic operation\n"); \
-    return SEMANTIC_PSA_ERR;                                                             \
+    return SEMANTIC_PSA_ERR;                                              \
   }                                                                       \
 
 
