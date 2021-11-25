@@ -10,6 +10,8 @@
 
 #define MAX_LEN 128
 #define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
+#define __DEBUG__ 1
+
 
 void truncate_array(char *array, int length){
   for (int i = 0; i < length; i++) {
@@ -108,6 +110,7 @@ char token_to_symb(Token *token){
     case TOKEN_LEQ: symbol = LTE; break;
     case TOKEN_GEQ: symbol = GTE; break;
     case TOKEN_ID: symbol = 'i'; break;
+    case TOKEN_NULL: symbol = 'i'; break;
     case TOKEN_NUMBER: symbol = 'n'; break;
     case TOKEN_NUMBER_INT: symbol = 'f'; break;
     case TOKEN_STRING: symbol = 's'; break;
@@ -282,11 +285,11 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int done = 0;     //značí, keď je celý výraz spracovaný
   char operator = '<';
-  #ifdef __DEBUG__
+  #if __DEBUG__=1
   printf("Stack                         | op | Token           | top | output    \n" );
   #endif
   while(!done){
-    #ifdef __DEBUG__
+    #if __DEBUG__=1
     decode_stack_print(stack, 30);
     printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression);
     #endif
@@ -318,8 +321,8 @@ int precedence_analyzer(ScannerContext *sc) {
           done = 1;
           break;
         }
-        #ifdef __DEBUG__
-        print_exp_stack(exp_stack);
+        #if __DEBUG__=1
+        //print_exp_stack(exp_stack);
         #endif
 
         break;
@@ -337,12 +340,13 @@ int precedence_analyzer(ScannerContext *sc) {
       case '&':
         done = 1;
         stack_pop(stack);
+        TokenStore(token, sc);
+        postfixExpression[postfixExpressionLength] = '\0';
         if (stack_top(stack) != STACK_END) {
           error_code = 2;
           fprintf(stderr, "Error: Submitted expression is not syntactically correct\n");
+          break;
         }
-        TokenStore(token, sc);
-        postfixExpression[postfixExpressionLength] = '\0';
         error_code = check_assignment(exp_stack);
         print_exp_stack(exp_stack);
         break;
