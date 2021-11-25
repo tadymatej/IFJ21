@@ -19,16 +19,28 @@ int fun_add_param(Fun_data_t *data, TS_data_t *param) {
     return arr_add(data->params, (void *)param);
 }
 
+TS_data_t *fun_get_param(Fun_data_t *data, int idx) {
+    if (idx < data->params->length)
+        return ((TS_data_t *)arr_get_element_at(data->params, idx));
+    return NULL;
+}
+
 int fun_add_ret_val(Fun_data_t *data, TS_data_t *retval) {
     return arr_add(data->ret_vals, (void *)retval);
 }
 
-void dispose_fun_data(Fun_data_t **data) {
-    if (data != NULL && *data != NULL) {
-        dispose_array(&((*data)->params), true);
-        dispose_array(&((*data)->ret_vals), true);
-        free(*data);
-        *data = NULL;
+TS_data_t* fun_get_ret(Fun_data_t *data, int idx){
+    if (idx < data->ret_vals->length)
+        return ((TS_data_t *)arr_get_element_at(data->ret_vals, idx));
+    return NULL;
+}
+
+void dispose_fun_data(void *data) {
+    if (data != NULL) {
+        dispose_array(&((Fun_data_t *)data)->params, true);
+        dispose_array(&((Fun_data_t *)data)->ret_vals, true);
+        free(data);
+        data = NULL;
     }
 }
 

@@ -35,7 +35,7 @@ TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn){
   TreeNode *retNode;
   while (temp != NULL){
     retNode = (BinaryTreeFindStruct(temp->tree, name));
-    if(retNode != NULL)
+    if(retNode != NULL && foundIn != NULL)
     {
       *foundIn = temp;
       break;

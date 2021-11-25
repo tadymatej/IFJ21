@@ -6,7 +6,7 @@ Fun_table_t *init_fun_table() {
         return NULL;
     table->decFunTree = NULL;
     table->defFunTree = NULL;
-    table->builtinFunTree = NULL; //Pridat definice vestavenych funkce
+    table->builtinFunTree = NULL;  //Pridat definice vestavenych funkce
     return table;
 }
 
@@ -23,18 +23,20 @@ void add_function_def(Fun_table_t *table, Fun_data_t *fun) {
 
 Fun_data_t *find_function(Fun_table_t *table, char *fun_name, bool *isOnlyDeclared, bool *isBuiltIn) {
     Fun_data_t *fun = BinaryTreeFindStruct(table->defFunTree, fun_name)->data;
-    if(isOnlyDeclared != NULL)
+    if (isOnlyDeclared != NULL)
         *isOnlyDeclared = false;
-    if(isBuiltIn != NULL)
+    if (isBuiltIn != NULL)
         *isBuiltIn = false;
+    if (fun != NULL && fun->isCalledBeforeDefinition) {
+        fun = BinaryTreeFindStruct(table->decFunTree, fun_name)->data;
+    }
     if (fun == NULL) {
         fun = BinaryTreeFindStruct(table->decFunTree, fun_name)->data;
         if (fun != NULL && isOnlyDeclared != NULL)
             *isOnlyDeclared = true;
-        if(fun == NULL)
-        {
+        if (fun == NULL) {
             fun = BinaryTreeFindStruct(table->builtinFunTree, fun_name)->data;
-            if(isBuiltIn != NULL)
+            if (isBuiltIn != NULL)
                 *isBuiltIn = true;
         }
     }
@@ -48,12 +50,11 @@ bool is_dec_and_def_equal(Fun_table_t *table, Fun_data_t *fun) {
     return fun_is_equal(fun, dec);
 }
 
-//cekam na opravu BinaryTreeDestroy
-// void dispose_fun_table(Fun_table_t **table) {
-//     if (table != NULL && *table != NULL) {
-//         //BinaryTreeDestroy((*table)->decFunTree);
-//         //BinaryTreeDestroy((*table)->defFunTree);
-//         free(*table);
-//         *table = NULL;
-//     }
-// }
+void dispose_fun_table(Fun_table_t **table) {
+    if (table != NULL && *table != NULL) {
+        BinaryTreeDestroy((*table)->decFunTree, dispose_fun_data);
+        BinaryTreeDestroy((*table)->defFunTree, dispose_fun_data);
+        free(*table);
+        *table = NULL;
+    }
+}

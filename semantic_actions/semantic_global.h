@@ -10,7 +10,8 @@
 
 typedef struct SemanticGlobals{
     int nested_count;
-    Fun_data_t *cur_function;
+    Fun_data_t *cur_function; // funkce uvnitr ktere ted nachazite
+    Fun_data_t *calling_fun; // funkce ktera je ted volana
     TS_data_t *var;
     int tmp;
     Queue_t *q_assignments;

@@ -16,7 +16,7 @@
 #include "symtable.h"
 #include "scanner.h"
 #include "expression_tree.h"
-#include "TS_HANDLER.h"
+#include "TS_handler.h"
 #include "precedence_analyzer.h"
 #include "semantic_global.h"
 
