@@ -45,7 +45,7 @@ run_analyzer: $(SCANNER_PRECEDENCE)-test
 	echo "((#a+8)/c)-(2*(a+9)) if" | build/$(SCANNER_PRECEDENCE)-test
 
 run_bottom_up: $(SEMANTIC_BOTTOM_UP)-test
-	echo "#str1 + var2*5 if" | build/$(SEMANTIC_BOTTOM_UP)-test
+	cat tests/bottom_up_test_code | build/$(SEMANTIC_BOTTOM_UP)-test
 
 $(SIMPLE_STACK)-test: $(TEST_PATH)$(SIMPLE_STACK)-test.c $(LIB_PATH)$(SIMPLE_STACK).c
 	mkdir -p build/

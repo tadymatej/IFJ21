@@ -1,0 +1,7 @@
+var1 + var2 then
+#str1 + var2 * var3 then
+str1 .. str1 then
+str1 .. "ohohho" .. "ine" then
+var1 < var2 then
+#"slovo" == var2 .. "ovo" then
+var3 == nil end

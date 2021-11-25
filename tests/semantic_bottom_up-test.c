@@ -10,10 +10,13 @@
 int error_flag;
 
 int main() {
+	int test_no = 1;
 	ScannerContext sc;
 	sc.lastReadedChar = -1;
   ScannerContextInit(&sc);
 	strArr = StringsArrayCreate('\0');
+
+	Token token;
 
   init_sem_globals();
   globals.ts = TS_init("TF");
@@ -51,8 +54,43 @@ int main() {
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
 
+	/* zaciatok testov */
+	printf("-- Test_%d -----\n", test_no);
 	error_flag = precedence_analyzer(&sc);
-	printf("ukoncene spracovanie textu, navratova hodnota: %d\n", error_flag);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+	/* koniec testov*/
+
 	dispose_sem_globals();
 	return 0;
 }
