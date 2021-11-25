@@ -9,6 +9,8 @@ int init_sem_globals() {
     globals.cur_function = NULL;
     globals.calling_fun = NULL;
     globals.tmp = 0;
+    globals.exec_point_id = 0;
+    globals.label_idx = 0;
     globals.inside_while = 0;
     globals.ft = init_fun_table();
     globals.blockStack = stack_init();
