@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "parser.h"
 #include "simple_stack.h"
 #include "scanner.h"
 #include "semantic_bottom_up.h"

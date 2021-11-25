@@ -274,7 +274,7 @@ int precedence_analyzer(ScannerContext *sc) {
   //token štartujúci expression
   Token token = GetNextToken(sc);
   Token prev_token = token;
-  if(token.token_type == TOKEN_NONE) return error_code;
+  if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
@@ -328,7 +328,7 @@ int precedence_analyzer(ScannerContext *sc) {
         break;
       case '#':
         TokenStore(token, sc);
-        error_code = 2;
+        error_code = SYNTAX_ERR;
         done = 1;
         break;
       case '&':
@@ -337,7 +337,7 @@ int precedence_analyzer(ScannerContext *sc) {
         TokenStore(token, sc);
         postfixExpression[postfixExpressionLength] = '\0';
         if (stack_top(stack) != STACK_END) {
-          error_code = 2;
+          error_code = SYNTAX_ERR;
         }else {
           error_code = check_assignment(exp_stack);
         }
