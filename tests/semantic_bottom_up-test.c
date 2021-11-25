@@ -35,7 +35,9 @@ int main() {
   new_stack_frame(&(globals.ts), "LF");
   temp_data = make_var_data(STRING, "str1", "ine");
   add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(STRING, "var3", "456");
+  temp_data = make_var_data(INTEGER, "var3", "456");
+  add_variable(globals.ts, temp_data);
+	temp_data = make_var_data(STRING, "str2", "ahoj");
   add_variable(globals.ts, temp_data);
 
   printf("po vkladani\n");
