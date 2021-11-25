@@ -18,17 +18,45 @@ void ErrMessagePossition(Token *ptr, ScannerContext *sc){
 }
 
 void ErrMessage(int errType){
-    if(errType == LEX_ERR){
+    if(errType == LEX_ERR){ 
         fprintf(stderr, "%d\n", LEX_ERR);
         fprintf(stderr, "Lexikalni chyba: ");
+
+    } else if(errType == SYNTAX_ERR){
+        fprintf(stderr, "%d\n", SYNTAX_ERR);
+        fprintf(stderr, "Syntakticka chyba: ");
+
+    } else if(errType == SEMANTIC_PROG_ERR){
+        fprintf(stderr, "%d\n", SEMANTIC_PROG_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+
+    } else if(errType == SEMANTIC_TYPE_ERR){
+        fprintf(stderr, "%d\n", SEMANTIC_TYPE_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+    
+    } else if(errType == SEMANTIC_FUNCTION_ERR){
+        fprintf(stderr, "%d\n", SEMANTIC_FUNCTION_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+    
+    } else if(errType == SEMANTIC_PSA_ERR){
+        fprintf(stderr, "%d\n", SEMANTIC_PSA_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+
+    } else if(errType == SEMANTIC_OTHER_ERR){
+        fprintf(stderr, "%d\n", SEMANTIC_OTHER_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+    
+    } else if(errType == RUN_NIL_ERR){
+        fprintf(stderr, "%d\n", RUN_NIL_ERR);
+        fprintf(stderr, "Semanticka chyba: ");
+
+    } else if(errType == DIV_BY_ZERO){
+        fprintf(stderr, "%d\n", DIV_BY_ZERO);
+        fprintf(stderr, "Semanticka chyba: ");
 
     } else if(errType == COMPILER_ERR){
         fprintf(stderr, "%d\n", COMPILER_ERR);
         fprintf(stderr, "Interni chyba prekladace: ");
-    } else if(errType == SYNTAX_ERR){
-
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
-        fprintf(stderr, "Syntakticka chyba: ");
     }
 
     return;
@@ -380,7 +408,7 @@ bool NExpression(Token *ptr, ScannerContext *sc){
     TokenStore(*ptr, sc);
     sc->tokenLookAhead = true; // podivam se o token dopredu
     *ptr = Next(sc);
-    //printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
     if(ptr->token_type == TOKEN_ID_F){
         *ptr = Next(sc);
@@ -444,12 +472,13 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 
 
 bool NExp_cond(Token *ptr, ScannerContext *sc){
-    bool exp_cond = false;
+    bool exp_cond = true;
     int psa = 0;
 
-    *ptr = Next(sc);
+    //*ptr = Next(sc);
 
-    // TODO
+    // TODO cekam na PSA
+    
     printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
@@ -463,10 +492,9 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         exit(EXIT_FAILURE);
     }
     
-
-    //TokenStore(*ptr, sc);
+    
+    // zalozni reseni
     /*while(ptr->token_type != TOKEN_KEYWORD){
-        // TODO pripravit tokeny pro PSA
         exp_cond = true;
         *ptr = Next(sc);
     }*/
@@ -640,7 +668,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
             printf("$60 <list> => <expressions>\n");
             printf("---------------------------\n");
         #endif
-        TokenStore(*ptr, sc);
+        //TokenStore(*ptr, sc);
         ret = NExpressions(ptr, sc);
     //}
 
@@ -1018,7 +1046,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
                         //printf("%s\n", ptr->attribute);
 
-                        if(strcmp(ptr->attribute, "end") == 0){
+                        if(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "end") == 0){
                             prog = prog && true;
                             //printf("%s\n", ptr->attribute);
                         } else {
@@ -1230,6 +1258,10 @@ bool Begin(ScannerContext *sc){
     bool OK;
 
     OK = NProg(ptr, sc);
+
+    if(OK){
+        fprintf(stderr, "0\n");
+    }
 
     // LEX
 

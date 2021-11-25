@@ -12,5 +12,5 @@ function main() : integer
 
     fc(a)
 
-    return a
+    return 0
 end

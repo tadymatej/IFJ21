@@ -3,7 +3,7 @@
 
 require "ifj21"
 
-function main()
+function main() : integer
     local a : integer
     if a > 5 then
         a = 6
@@ -12,6 +12,9 @@ function main()
     else
         a = 0
     end
+
+    return 10
+
 end
 
 main()
