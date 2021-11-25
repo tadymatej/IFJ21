@@ -13,6 +13,7 @@
 #define DEFAULT_QUEUE_SIZE 10
 
 #include "symtable.h"
+//#include "scanner.h"
 
 typedef struct Q_Elem {
     void *data;
@@ -29,6 +30,11 @@ int q_push(Queue_t *q, void *elem);
 void* q_top(Queue_t *q);
 void* q_pop(Queue_t *q);
 void dispose_queue(Queue_t **q);
+
+/**
+ * Vloží na konec fronty a provede swap dvou posledních elementů
+ */
+int q_push_front(Queue_t *q, void *elem);
 
 #endif
 // Konec souboru queue.h

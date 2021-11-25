@@ -1,5 +1,6 @@
 #include "queue.h"
 
+
 Queue_t* init_queue() {
     Queue_t* q = (Queue_t*)malloc(sizeof(Queue_t));
     if (q == NULL)
@@ -7,6 +8,24 @@ Queue_t* init_queue() {
     q->first = NULL;
     q->last = NULL;
     return q;
+}
+
+int q_push_front(Queue_t *q, void *elem) {
+    Q_elem_t* new = (Q_elem_t*)malloc(sizeof(Q_elem_t));
+    if (new == NULL)
+        return 1;
+    new->data = elem;
+    if (q->first == NULL) {
+        q->first = new;
+        new->next = NULL;
+        q->last = new;
+    }
+    else {
+        Q_elem_t *tmp = q->first;
+        q->first = new;
+        new->next = tmp;
+    }
+    return 0;
 }
 
 int q_push(Queue_t* q, void* elem) {
@@ -34,6 +53,7 @@ void* q_pop(Queue_t* q) {
         Q_elem_t* tmp = q->first;
         void* data = tmp->data;
         q->first = tmp->next;
+        if(q->first == NULL) q->last = NULL;
         free(tmp);
         return data;
     }
