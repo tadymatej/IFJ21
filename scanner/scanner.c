@@ -673,6 +673,7 @@ Token GetNextToken(ScannerContext *sc) {
             void *tmp = q_top(sc->tokens);
             TokenStore(token, sc);
             if(tmp != NULL) token = *((Token *) tmp);
+            else token.token_type = TOKEN_NONE;
             sc->tokenLookAhead = false;
         }
         sc->getStoredToken = true;
