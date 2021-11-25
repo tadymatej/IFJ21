@@ -118,6 +118,8 @@ void end_bottom_up(exp_tree_stack_t **stack);
  */
 int map_token_types(TOKEN_TYPES token_type);
 
+extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE_SIZE_X];
+
 #define check_name(name)                                                  \
   if(name == NO_TYPE){                                                    \
     fprintf(stderr, "Error: wrong data types in arithmetic operation\n"); \
