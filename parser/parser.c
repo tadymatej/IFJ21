@@ -19,44 +19,54 @@ void ErrMessagePossition(Token *ptr){
 
 void ErrMessage(int errType){
     if(errType == LEX_ERR){ 
-        fprintf(stderr, "%d\n", LEX_ERR);
-        fprintf(stderr, "Lexikalni chyba: ");
+        //fprintf(stderr, "%d\n", LEX_ERR);
+        fprintf(stderr, "Lexikalni chyba\n");
+        exit(LEX_ERR);
 
     } else if(errType == SYNTAX_ERR){
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
-        fprintf(stderr, "Syntakticka chyba: ");
+        //fprintf(stderr, "%d\n", SYNTAX_ERR);
+        fprintf(stderr, "Syntakticka chyba\n");
+        exit(SYNTAX_ERR);
 
     } else if(errType == SEMANTIC_PROG_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_PROG_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_PROG_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_PROG_ERR);
 
     } else if(errType == SEMANTIC_TYPE_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_TYPE_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_TYPE_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_TYPE_ERR);
     
     } else if(errType == SEMANTIC_FUNCTION_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_FUNCTION_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_FUNCTION_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_FUNCTION_ERR);
     
     } else if(errType == SEMANTIC_PSA_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_PSA_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_PSA_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_PSA_ERR);
 
     } else if(errType == SEMANTIC_OTHER_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_OTHER_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_OTHER_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_OTHER_ERR);
     
     } else if(errType == RUN_NIL_ERR){
-        fprintf(stderr, "%d\n", RUN_NIL_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", RUN_NIL_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(RUN_NIL_ERR);
 
     } else if(errType == DIV_BY_ZERO){
-        fprintf(stderr, "%d\n", DIV_BY_ZERO);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", DIV_BY_ZERO);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(DIV_BY_ZERO);
 
     } else if(errType == COMPILER_ERR){
-        fprintf(stderr, "%d\n", COMPILER_ERR);
-        fprintf(stderr, "Interni chyba prekladace: ");
+        //fprintf(stderr, "%d\n", COMPILER_ERR);
+        fprintf(stderr, "Interni chyba prekladace\n");
+        exit(COMPILER_ERR);
     }
 
     return;
@@ -71,7 +81,7 @@ Token Next(ScannerContext *sc){
             // chyba alokace pameti
             ErrMessage(COMPILER_ERR);
             fprintf(stderr, "Chyba alokace pameti!\n");
-            exit(EXIT_FAILURE); // TODO odstranit exit
+            //exit(EXIT_FAILURE); // TODO odstranit exit
 
         } else if (token.token_type == TOKEN_ERR){
             // lexikalni chyba
@@ -80,7 +90,7 @@ Token Next(ScannerContext *sc){
             
             err = true;
 
-            exit(EXIT_FAILURE); // TODO odstranit exit
+            //exit(EXIT_FAILURE); // TODO odstranit exit
         }
     }
 
@@ -393,7 +403,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
     if(psa != 0){
         ErrMessage(psa);
         ErrMessagePossition(ptr);
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     exp = true;
@@ -489,7 +499,7 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     if(psa != 0){
         ErrMessage(psa);
         ErrMessagePossition(ptr);
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
     
     
@@ -1211,9 +1221,9 @@ bool NProg(Token *ptr, ScannerContext *sc){
     }
 
     if(prog != true){
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
+        ErrMessage(SYNTAX_ERR);
         //ErrMessagePossition(ptr, sc);
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
 
     }
 

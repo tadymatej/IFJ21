@@ -16,7 +16,7 @@ int main(){
 
     bool syntaxOK = Parse();
     if(syntaxOK){
-        fprintf(stderr, "0\n");
+        exit(EXIT_SUCCESS);
     }
     //printf("syntax OK: %d\n", syntaxOK);
 }
