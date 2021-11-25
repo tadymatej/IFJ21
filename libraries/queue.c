@@ -34,6 +34,7 @@ void* q_pop(Queue_t* q) {
         Q_elem_t* tmp = q->first;
         void* data = tmp->data;
         q->first = tmp->next;
+        if(q->first == NULL) q->last = NULL;
         free(tmp);
         return data;
     }
