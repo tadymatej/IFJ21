@@ -23,7 +23,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc);
 bool NFunction_body(Token *ptr, ScannerContext *sc);
 bool NFunction_call(Token *ptr, ScannerContext *sc);
 bool NParam(Token *ptr, ScannerContext *sc);
-bool NType(Token *ptr, ScannerContext *sc);
+bool NType(Token *ptr);
 bool NAssignment(Token *ptr, ScannerContext *sc);
 bool NExpr(Token *ptr, ScannerContext *sc);
 bool NNext_params(Token *ptr, ScannerContext *sc);

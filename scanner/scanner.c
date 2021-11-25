@@ -632,31 +632,40 @@ void NextTokens(ScannerContext *sc) {
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
             if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
             else token.token_type = TOKEN_KEYWORD;
+            __TokenStore(token, sc);
         }
         else {
-            token2 = nextToken(sc);
-            if(StringsArrayPush(strArr, '\0') == -1) {
-                token.token_type = TOKEN_ERR;
-                sc->actualState = STATE_ERR;
-                sc->errorMalloc = true;
-                return;
-            }
-            strArr->lastValid++;
-            if(sc->actualState == STATE_ERR) {
-                sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
-                token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
-                __TokenStore(token, sc);
-                __TokenStore(token2, sc);
-                return;
-            }
+            do {
+                token2 = nextToken(sc);
+                if(token2.attribute != NULL && BinaryTreeFindByStr(sc->kw, token2.attribute) != NULL) {
+                    if(strcmp(token2.attribute, "nil") == 0) token2.token_type = TOKEN_NULL;
+                    else token2.token_type = TOKEN_KEYWORD;
+                }
+                if(StringsArrayPush(strArr, '\0') == -1) {
+                    token.token_type = TOKEN_ERR;
+                    sc->actualState = STATE_ERR;
+                    sc->errorMalloc = true;
+                    return;
+                }
+                strArr->lastValid++;
+                if(sc->actualState == STATE_ERR) {
+                    sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
+                    token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
+                    __TokenStore(token, sc);
+                    __TokenStore(token2, sc);
+                    return;
+                }
 
-            if(token2.token_type == TOKEN_START_BRACKET)
-                token.token_type = TOKEN_ID_F;
+                if(token2.token_type == TOKEN_START_BRACKET)
+                    token.token_type = TOKEN_ID_F;
+                
+                __TokenStore(token, sc);
+                if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET && token2.token_type != TOKEN_ID) __TokenStore(token2, sc);
+                token = token2;
+            } while(token2.token_type == TOKEN_ID);
         }
     }
-
-    if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
-    if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
+    else if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
 }
 
 Token GetNextToken(ScannerContext *sc) {
@@ -673,7 +682,7 @@ Token GetNextToken(ScannerContext *sc) {
             void *tmp = q_top(sc->tokens);
             TokenStore(token, sc);
             if(tmp != NULL) token = *((Token *) tmp);
-            else token.token_type = TOKEN_NONE;
+            else token.token_type = TOKEN_NONE; //Pokud si uložili token a za uloženým tokenem nic není => byl tam EOF, vrátím TOKEN_NONE
             sc->tokenLookAhead = false;
         }
         sc->getStoredToken = true;

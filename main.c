@@ -1,6 +1,6 @@
-#include "./scanner/scanner.h"
-#include "./parser/parser.h"
-#include "./semantic_actions/semantic_global.h"
+#include "scanner.h"
+#include "parser.h"
+#include "semantic_global.h"
 //#include "scanner.c"
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,5 +15,8 @@ int main(){
     add_variable(globals.ts, temp_data);
 
     bool syntaxOK = Parse();
-    printf("syntax OK: %d\n", syntaxOK);
+    if(syntaxOK){
+        exit(EXIT_SUCCESS);
+    }
+    //printf("syntax OK: %d\n", syntaxOK);
 }

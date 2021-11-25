@@ -171,16 +171,3 @@ int cg_envelope(char *str) {
     }
     return 0;
 }
-
-char *CG_format_var(char *prefix, char *name, char *suffix){ //TODO function to convert string to ifjcode compatible format
-  char *ret_string = (char *) malloc(DEF_COM_SIZE);
-  char *underscore = "_";
-  if (suffix == NULL) { //konstanty nemaju suffix
-    suffix = "";
-    underscore = "";
-  }
-  if(ret_string != NULL) {
-    snprintf(ret_string, DEF_COM_SIZE, "%s@%s%s%s", prefix, name, underscore, suffix);
-  }
-  return ret_string;
-}

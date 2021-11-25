@@ -1,6 +1,6 @@
 
 
-#include "TS_handler.h"
+#include "ts_handler.h"
 
 Sym_table_t *TS_init(char *prefix){
   Sym_table_t *temp = malloc(sizeof(Sym_table_t));

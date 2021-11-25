@@ -1,5 +1,5 @@
 #include "semantic_action.h"
-
+/*
 //je volana nad tokenem  2 - id_f
 int function_definition(Token *token) {
     globals.cur_function = init_fun_data(token->attribute);
@@ -68,3 +68,4 @@ int prepare_assignment() {
     q_push(globals.q_assignments, globals.var);
     return 0;
 }
+*/

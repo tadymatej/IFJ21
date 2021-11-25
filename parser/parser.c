@@ -1,62 +1,72 @@
-#include "../scanner/scanner.h"
+#include "scanner.h"
 
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define DEBUG_USED_RULE
-#define DEBUG_ERROR
+//#define DEBUG_USED_RULE
+//#define DEBUG_ERROR
 
 
 bool isEnd = false;
 bool err = false;
 
-void ErrMessagePossition(Token *ptr, ScannerContext *sc){
+void ErrMessagePossition(Token *ptr){
     fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
     return;
 }
 
 void ErrMessage(int errType){
     if(errType == LEX_ERR){ 
-        fprintf(stderr, "%d\n", LEX_ERR);
-        fprintf(stderr, "Lexikalni chyba: ");
+        //fprintf(stderr, "%d\n", LEX_ERR);
+        fprintf(stderr, "Lexikalni chyba\n");
+        exit(LEX_ERR);
 
     } else if(errType == SYNTAX_ERR){
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
-        fprintf(stderr, "Syntakticka chyba: ");
+        //fprintf(stderr, "%d\n", SYNTAX_ERR);
+        fprintf(stderr, "Syntakticka chyba\n");
+        exit(SYNTAX_ERR);
 
     } else if(errType == SEMANTIC_PROG_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_PROG_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_PROG_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_PROG_ERR);
 
     } else if(errType == SEMANTIC_TYPE_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_TYPE_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_TYPE_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_TYPE_ERR);
     
     } else if(errType == SEMANTIC_FUNCTION_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_FUNCTION_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_FUNCTION_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_FUNCTION_ERR);
     
     } else if(errType == SEMANTIC_PSA_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_PSA_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_PSA_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_PSA_ERR);
 
     } else if(errType == SEMANTIC_OTHER_ERR){
-        fprintf(stderr, "%d\n", SEMANTIC_OTHER_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", SEMANTIC_OTHER_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(SEMANTIC_OTHER_ERR);
     
     } else if(errType == RUN_NIL_ERR){
-        fprintf(stderr, "%d\n", RUN_NIL_ERR);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", RUN_NIL_ERR);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(RUN_NIL_ERR);
 
     } else if(errType == DIV_BY_ZERO){
-        fprintf(stderr, "%d\n", DIV_BY_ZERO);
-        fprintf(stderr, "Semanticka chyba: ");
+        //fprintf(stderr, "%d\n", DIV_BY_ZERO);
+        fprintf(stderr, "Semanticka chyba\n");
+        exit(DIV_BY_ZERO);
 
     } else if(errType == COMPILER_ERR){
-        fprintf(stderr, "%d\n", COMPILER_ERR);
-        fprintf(stderr, "Interni chyba prekladace: ");
+        //fprintf(stderr, "%d\n", COMPILER_ERR);
+        fprintf(stderr, "Interni chyba prekladace\n");
+        exit(COMPILER_ERR);
     }
 
     return;
@@ -71,7 +81,7 @@ Token Next(ScannerContext *sc){
             // chyba alokace pameti
             ErrMessage(COMPILER_ERR);
             fprintf(stderr, "Chyba alokace pameti!\n");
-            exit(EXIT_FAILURE); // TODO odstranit exit
+            //exit(EXIT_FAILURE); // TODO odstranit exit
 
         } else if (token.token_type == TOKEN_ERR){
             // lexikalni chyba
@@ -80,7 +90,7 @@ Token Next(ScannerContext *sc){
             
             err = true;
 
-            exit(EXIT_FAILURE); // TODO odstranit exit
+            //exit(EXIT_FAILURE); // TODO odstranit exit
         }
     }
 
@@ -97,7 +107,7 @@ Token Next(ScannerContext *sc){
 // ------------------------------------------------------------------
 
 
-bool Req(Token *ptr, ScannerContext *sc){
+bool Req(Token *ptr){
     bool req = false;
     if((strcmp(ptr->attribute, "\"ifj21\"") == 0) && (ptr->token_type != TOKEN_NONE)){
         req = true;
@@ -135,7 +145,7 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
                         printf("$18 <param> => id : <type>\n");
                         printf("---------------------------\n");
                     #endif
-                    next_params = NType(ptr, sc);
+                    next_params = NType(ptr);
                 } else {
                     next_params = false;
                     #ifdef DEBUG_ERROR
@@ -170,7 +180,7 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
 }
 
 
-bool NType(Token *ptr, ScannerContext *sc){
+bool NType(Token *ptr){
     bool type = false;
 
     //printf("NType recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
@@ -232,7 +242,7 @@ bool NParam(Token *ptr, ScannerContext *sc){
         *ptr = Next(sc);
 
 
-        param = NType(ptr, sc);
+        param = NType(ptr);
     } else {
         param = false;
         #ifdef DEBUG_ERROR
@@ -291,7 +301,7 @@ bool NParams_list(Token *ptr, ScannerContext *sc){
                 #endif
 
                 *ptr = Next(sc);
-                params_list = NType(ptr, sc);
+                params_list = NType(ptr);
 
             }
             *ptr = Next(sc);
@@ -384,7 +394,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
     //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
@@ -392,8 +402,8 @@ bool NExp(Token *ptr, ScannerContext *sc){
 
     if(psa != 0){
         ErrMessage(psa);
-        ErrMessagePossition(ptr, sc);
-        exit(EXIT_FAILURE);
+        ErrMessagePossition(ptr);
+        //exit(EXIT_FAILURE);
     }
 
     exp = true;
@@ -408,7 +418,7 @@ bool NExpression(Token *ptr, ScannerContext *sc){
     TokenStore(*ptr, sc);
     sc->tokenLookAhead = true; // podivam se o token dopredu
     *ptr = Next(sc);
-    printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
     if(ptr->token_type == TOKEN_ID_F){
         *ptr = Next(sc);
@@ -479,17 +489,17 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
 
     // TODO cekam na PSA
     
-    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); // aktualizace tokenu
 
-    printf("NExp_cond: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-    printf("\nPSA = %d\n", psa);
+    //printf("NExp_cond: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("\nPSA = %d\n", psa);
 
     if(psa != 0){
         ErrMessage(psa);
-        ErrMessagePossition(ptr, sc);
-        exit(EXIT_FAILURE);
+        ErrMessagePossition(ptr);
+        //exit(EXIT_FAILURE);
     }
     
     
@@ -755,7 +765,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                                 printf("$41 <function_body> => local id : <type> <assignment>\n");
                                 printf("---------------------------\n");
                             #endif
-                            function_body = function_body && NType(ptr, sc) && NAssignment(ptr, sc);
+                            function_body = function_body && NType(ptr) && NAssignment(ptr, sc);
 
                             TokenStore(*ptr, sc);
 
@@ -929,17 +939,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
-
-        if(sc->actualState == STATE_ERR){
-            printf("@@ STATE_ERR\n");
-        }
-
         *ptr = Next(sc);
-
-        if(sc->actualState == STATE_ERR){
-
-            printf("@@ STATE_ERR\n");
-        }
 
         // $24 <first_ret> => <type>
         #ifdef DEBUG_USED_RULE
@@ -947,7 +947,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
-        return_fc = NType(ptr, sc);
+        return_fc = NType(ptr);
 
         *ptr = Next(sc);
 
@@ -959,7 +959,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             #endif
 
             *ptr = Next(sc);
-            return_fc =  return_fc && NType(ptr, sc);
+            return_fc =  return_fc && NType(ptr);
             *ptr = Next(sc);
 
         }
@@ -1009,7 +1009,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
             *ptr = Next(sc);
 
-            prog = Req(ptr, sc);
+            prog = Req(ptr);
             #ifdef DEBUG_USED_RULE
                 printf("$1 <prog> => require\n");
                 printf("---------------------------\n");
@@ -1102,7 +1102,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                             printf("---------------------------\n");
                                         #endif
                                         //*ptr = Next(sc);
-                                        prog = prog && NType(ptr, sc);
+                                        prog = prog && NType(ptr);
                                         *ptr = Next(sc);
                                         while(ptr->token_type == TOKEN_COMMA){
                                             // $15 <next_types> => , <type> <next_types>
@@ -1111,7 +1111,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                 printf("---------------------------\n");
                                             #endif
                                             *ptr = Next(sc);
-                                            prog = prog && NType(ptr, sc);
+                                            prog = prog && NType(ptr);
                                             *ptr = Next(sc);
                                         }
                                         if(ptr->token_type == TOKEN_END_BRACKET){
@@ -1142,7 +1142,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                 printf("$29 <fc_ret_first_type> => <type>\n");
                                                 printf("---------------------------\n");
                                             #endif
-                                            prog = prog && NType(ptr, sc);
+                                            prog = prog && NType(ptr);
                                             *ptr = Next(sc);
                                             if(ptr->token_type == TOKEN_COMMA){
                                                 while(ptr->token_type == TOKEN_COMMA){
@@ -1152,7 +1152,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                                                         printf("---------------------------\n");
                                                     #endif
                                                     *ptr = Next(sc);
-                                                    prog = prog && NType(ptr, sc);
+                                                    prog = prog && NType(ptr);
                                                     *ptr = Next(sc);
                                                 }
                                             }
@@ -1221,9 +1221,9 @@ bool NProg(Token *ptr, ScannerContext *sc){
     }
 
     if(prog != true){
-        fprintf(stderr, "%d\n", SYNTAX_ERR);
+        ErrMessage(SYNTAX_ERR);
         //ErrMessagePossition(ptr, sc);
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
 
     }
 
@@ -1259,20 +1259,16 @@ bool Begin(ScannerContext *sc){
 
     OK = NProg(ptr, sc);
 
-    if(OK){
-        fprintf(stderr, "0\n");
-    }
-
+    
     // LEX
-
-    /*while(((*ptr = Next(sc)).token_type != TOKEN_NONE || sc->actualState == STATE_ERR)) {
+/*
+    while(((*ptr = Next(sc)).token_type != TOKEN_NONE || sc->actualState == STATE_ERR)) {
         printf("*********%s %s\n", lex2String(ptr->token_type), ptr->attribute);
     }
+    
     */
 
-
-
-    printf("RESULT: %d\n", OK);
+    //printf("RESULT: %d\n", OK);
     free(token);
 
     return OK;
