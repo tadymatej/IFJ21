@@ -9,7 +9,7 @@ CODE_GEN=code_generator
 SEMANTIC_ACTION=semantic_action
 PARSER=parser
 #
-PROGS=$(SIMPLE_STACK)-test $(ANALYZER)-test
+PROGS=$(PARSER)
 LIB_PATH=libraries/
 ANALYZER_PATH=precedence_analyzer/
 TEST_PATH=tests/
@@ -29,10 +29,11 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 
 all: $(PROGS)
 
+parser:   $(PARSER)-test
+
 run_parser: $(PARSER)-test
 	cat parser/tests/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
 
-parser:   $(PARSER)-test
 
 $(PARSER)-test: $(PARSER_DEPS)
 		$(CC) $(CFLAGS) -o parser/parser $^
