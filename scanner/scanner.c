@@ -656,7 +656,7 @@ void NextTokens(ScannerContext *sc) {
     }
 
     if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
-    if(token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
+    if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
 }
 
 Token GetNextToken(ScannerContext *sc) {
