@@ -118,6 +118,7 @@ int ScannerContextInit(ScannerContext *sc) {
     sc->col = 1;
     sc->getStoredToken = true;
     sc->errorMalloc = false;
+    sc->tokenLookAhead = false;
     sc->kw = NULL;
     char *kw[] = {"do", "else", "end", "function", "global", "if", "integer", "local", "nil", "number", "string", "return", "string", "elseif", "then", "while", "require"};
     for(int i = 0; i < NUMBER_OF_KEYWORDS; ++i) {
@@ -605,13 +606,14 @@ Token nextToken(ScannerContext *sc) {
 void NextTokens(ScannerContext *sc) {
     Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     token = nextToken(sc);
-                if(StringsArrayPush(strArr, '\0') == -1) {
-                token.token_type = TOKEN_ERR;
-                sc->actualState = STATE_ERR;
-                sc->errorMalloc = true;
-                return;
-            }
-            strArr->lastValid++;
+    if(StringsArrayPush(strArr, '\0') == -1) {
+        token.token_type = TOKEN_ERR;
+        sc->actualState = STATE_ERR;
+        sc->errorMalloc = true;
+        return;
+    }
+    strArr->lastValid++;
+    
     if(sc->actualState == STATE_ERR) {
         __TokenStore(token, sc);
         return;
@@ -643,7 +645,7 @@ void NextTokens(ScannerContext *sc) {
             if(sc->actualState == STATE_ERR) {
                 sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
                 token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
-                if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
+                __TokenStore(token, sc);
                 __TokenStore(token2, sc);
                 return;
             }
@@ -653,8 +655,8 @@ void NextTokens(ScannerContext *sc) {
         }
     }
 
-    if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
-    if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
+    __TokenStore(token, sc);
+    if(token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
 }
 
 Token GetNextToken(ScannerContext *sc) {
@@ -666,12 +668,15 @@ Token GetNextToken(ScannerContext *sc) {
         token.token_type = TOKEN_ERR;
         return token;
     }
-    if(!sc->getStoredToken) {
-        void *tmp = q_top(sc->tokens);
-        TokenStore(token, sc);
-        if(tmp != NULL) token = *((Token *) tmp);
+    if(sc->tokenLookAhead) { 
+        if(!sc->getStoredToken) {
+            void *tmp = q_top(sc->tokens);
+            TokenStore(token, sc);
+            if(tmp != NULL) token = *((Token *) tmp);
+            sc->tokenLookAhead = false;
+        }
+        sc->getStoredToken = true;
     }
-    sc->getStoredToken = true;
     return token;
 }
 
@@ -722,9 +727,9 @@ int TokenStore(Token token, ScannerContext *sc) {
     return 0;
 }
 
-#define __STANDALONE__ 0  //TODO Remove.. pro visual studio jenom
+#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
-#if __STANDALONE__==1
+#if __STANDALONE__
 int main(int argc, char **argv) {
     ScannerContext sc;
     sc.lastReadedChar = -1;
@@ -732,7 +737,14 @@ int main(int argc, char **argv) {
     ScannerContextInit(&sc);
     strArr = StringsArrayCreate('\0');
     Token token;
+    int i = 0;
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
+        if(i == 0) {
+            sc.tokenLookAhead = true;
+            TokenStore(token, &sc);
+        }
+        if(i == 4) TokenStore(token, &sc);
+        ++i;
         if(token.token_type == TOKEN_ERR) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
                 sc.actualState = STATE_START;

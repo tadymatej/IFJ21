@@ -63,6 +63,7 @@ typedef struct {
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
     Queue_t *tokens;    /**< Uložené tokeny ve scanneru */
     bool getStoredToken;
+    bool tokenLookAhead;
     bool errorMalloc;       /**< Pokud nastala chyba, zda to je chyba mallocu */
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
