@@ -24,7 +24,7 @@ typedef enum {TOKEN_LEN, TOKEN_ID, TOKEN_ID_F, TOKEN_MOD, TOKEN_DIV, TOKEN_CONCA
               TOKEN_EQ, TOKEN_SET, TOKEN_STRING, TOKEN_NUMBER, TOKEN_NUMBER_INT, TOKEN_NONE, TOKEN_START_BRACKET, TOKEN_END_BRACKET, TOKEN_SEMICOLON,
               TOKEN_COMMA, TOKEN_COLON, TOKEN_KEYWORD, TOKEN_ERR, TOKEN_NULL} TOKEN_TYPES;
 
-#define NUMBER_OF_KEYWORDS 16
+#define NUMBER_OF_KEYWORDS 17
 
 /**
  * Typy atributů tokenů
@@ -63,6 +63,7 @@ typedef struct {
     int lastReadedChar; /**< Naposledy přečtený znak scanneru pro účely přečtení znovu */
     Queue_t *tokens;    /**< Uložené tokeny ve scanneru */
     bool getStoredToken;
+    bool tokenLookAhead;
     bool errorMalloc;       /**< Pokud nastala chyba, zda to je chyba mallocu */
     int row;        /**< Pozice řádku, který scanner zpracovává */
     int col;        /**< Pozice sloupce který scanner zpracovává */
