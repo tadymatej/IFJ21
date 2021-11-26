@@ -101,11 +101,9 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   Sym_table_t *temp_table;
   DataTypes_t ret_type;
   DataTypes_t unary_type;
-  /* dev */
-  exp_node_t *right_side;
-  exp_node_t *left_side;
-  /* dev  */
 
+  exp_node_t *right_side = NULL;
+  exp_node_t *left_side = NULL;
 
   static int var_count = 0; //pocitadlo kompilatorovych premennych
 
@@ -128,7 +126,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       //ak je to na vrchole typu string
       unary_type = get_top_type(stack);
       ret_type = ret_types_table[map_token_types(token->token_type)][unary_type][NIL];
-      check_name(ret_type);
+      CHECK_TYPES(NULL, right_side, ret_type);
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
@@ -140,9 +138,10 @@ int do_action(exp_tree_stack_t *stack, Token *token){
     case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
       GET_OPERAND(right_side, stack);
       GET_OPERAND(left_side, stack);
+      CHECK_ZERO_DIVISION(left_side, right_side, token);
 
       ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
-      check_name(ret_type);
+      CHECK_TYPES(left_side, right_side, ret_type);
 
       CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
       CONVERSION_MACRO(left_side, right_side, ret_type, var_count);
@@ -163,7 +162,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       GET_OPERAND(left_side, stack);
 
       ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
-      check_name(ret_type);
+      CHECK_TYPES(left_side, right_side, ret_type);
 
       CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
       CONVERSION_MACRO(left_side, right_side, ret_type, var_count);

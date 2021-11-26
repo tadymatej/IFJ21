@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "expression_tree.h"
 #include "symtable.h"
 #include "scanner.h"
 #include "expression_tree.h"
@@ -21,62 +20,62 @@
 #include "precedence_analyzer.h"
 #include "semantic_global.h"
 
-#define RET_TYPES_TABLE_t {                                                    \
+#define RET_TYPES_TABLE_t {           /* prava strana */                       \
            /* + - * */          /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ NUMBER, NUMBER,   NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* int */ { NUMBER, INTEGER,  NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* num */{{ NUMBER,  NUMBER,  NO_TYPE, NO_TYPE,  NIL   },  \
+                    /* int */ { NUMBER,  INTEGER, NO_TYPE, NO_TYPE,  NIL   },  \
+   /*lava strana*/  /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE,  NIL   },  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN,  NIL   },  \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
            /* + - * */                                                         \
           /* / */              /* num |  int  |   str   |  bool  |  NIL*/      \
-                    /* num */{{ NUMBER, NUMBER,  NO_TYPE, NO_TYPE, NO_TYPE},   \
-                    /* int */ { NUMBER, NUMBER,  NO_TYPE, NO_TYPE, NO_TYPE},   \
-                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* num */{{ NUMBER, NUMBER,  NO_TYPE, NO_TYPE,  NIL   },   \
+                    /* int */ { NUMBER, NUMBER,  NO_TYPE, NO_TYPE,  NIL   },   \
+                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NIL    },  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NIL    },  \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,   NIL   }},  \
           /* / */                                                              \
           /* // */              /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* int */ { NO_TYPE, INTEGER, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* num */{{ INTEGER, INTEGER, NO_TYPE, NO_TYPE,  NIL    }, \
+                    /* int */ { INTEGER, INTEGER, NO_TYPE, NO_TYPE,  NIL    }, \
+                    /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE,  NIL    }, \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE,  NIL    }, \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* // */                                                             \
           /* .. */              /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* int */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, STRING,  NO_TYPE, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* num */{{ NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE,  NIL   },  \
+                    /* int */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE,  NIL   },  \
+                    /* str */ { NO_TYPE, NO_TYPE, STRING,  NO_TYPE,  NIL   },  \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN,  NIL   },  \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* .. */                                                             \
           /* # */               /* num |  int  |   str   |  bool  |  NIL*/     \
                     /* num */{{ NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
                     /* int */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
                     /* str */ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, INTEGER},  \
                     /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* # */                                                              \
           /* > < >= <= */       /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* int */ { BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, NO_TYPE},  \
-                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE, NO_TYPE},  \
-                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* num */{{ NUMBER,  NUMBER, NO_TYPE, NO_TYPE,   NIL  },   \
+                    /* int */ { NUMBER, INTEGER, NO_TYPE, NO_TYPE,   NIL  },   \
+                    /* str */ { NO_TYPE, NO_TYPE, STRING, NO_TYPE,   NIL  },   \
+                    /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN,  NIL  },   \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* > < >= <= */                                                      \
           /* ~= == */           /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
-                    /* int */ { BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
-                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE, BOOLEAN},  \
+                    /* num */{{ NUMBER,  NUMBER, NO_TYPE, NO_TYPE,  NUMBER},   \
+                    /* int */ { NUMBER, INTEGER, NO_TYPE, NO_TYPE, INTEGER},   \
+                    /* str */ { NO_TYPE, NO_TYPE, STRING, NO_TYPE,  STRING},   \
                     /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* ~= == */                                                          \
           /* = */               /* num |  int  |   str   |  bool  |  NIL*/     \
-                    /* num */{{ BOOLEAN, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
-                    /* int */ { NO_TYPE, BOOLEAN, NO_TYPE, NO_TYPE, BOOLEAN},  \
-                    /* str */ { NO_TYPE, NO_TYPE, BOOLEAN, NO_TYPE, BOOLEAN},  \
+                    /* num */{{ NUMBER,  NUMBER, NO_TYPE, NO_TYPE,  NUMBER },  \
+                    /* int */ { NUMBER, INTEGER, NO_TYPE, NO_TYPE,  INTEGER},  \
+                    /* str */ { NO_TYPE, NO_TYPE, STRING, NO_TYPE,  STRING },  \
                     /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN},  \
-                   /* NIL */  { NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE, NO_TYPE}}, \
+                    /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
           /* = */                                                              \
                         }
 
@@ -122,17 +121,20 @@ int map_token_types(TOKEN_TYPES token_type);
 
 extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE_SIZE_X];
 
-#define check_name(name)                                                  \
-  if(name == NO_TYPE){                                                    \
-    return SEMANTIC_PSA_ERR;                                              \
-  }                                                                       \
+#define CHECK_TYPES(left_side, right_side, ret_type)                      \
+  if(ret_type == NO_TYPE || ret_type == NIL){                             \
+    destroy_tree(left_side);                                              \
+    destroy_tree(right_side);                                             \
+    if(ret_type == NO_TYPE)return SEMANTIC_PSA_ERR;                       \
+    return RUN_NIL_ERR;                                                   \
+    }
 
 #define do_conversion(node, ret_type, counter)do{                               \
   TS_data_t *temp_data = make_var_data(ret_type, RET_NAME, NULL);               \
   exp_node_t *conv_node = make_conversion_node(node, temp_data, counter, "LF"); \
   if(conv_node == NULL) {                                                       \
     destroy_tree(node);                                                         \
-    node = NULL;                                                               \
+    node = NULL;                                                                \
     break;                                                                      \
   }  /*volat generaciu kodu defvar premennej a onstrukciu podla podmienky */    \
   node = conv_node;                                                             \
@@ -145,13 +147,24 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
   Stack_pop(stack);
 
 #define CONVERSION_MACRO(node_f, node_s, ret_type, var_count)       \
-  if(node_f->data->type != ret_type){                               \
+  if(node_f->data->type != ret_type && node_f->type != TOKEN_NULL){ \
     do_conversion(node_f, ret_type, var_count);                     \
     if(node_f == NULL){                                             \
       destroy_tree(node_s);                                         \
       return COMPILER_ERR;                                          \
     }                                                               \
   }
+
+#define CHECK_ZERO_DIVISION(left, right, token)                                 \
+  if(token->token_type == TOKEN_DIV || token->token_type == TOKEN_MOD){         \
+    if (!strcmp(right->data->name, "0")) {                                      \
+      destroy_tree(left);                                                       \
+      destroy_tree(right);                                                      \
+      return DIV_BY_ZERO;                                                       \
+    }                                                                           \
+  }
+
+#define CHECK_UNEXPECTED_NIL(node)
 
 #endif
 
