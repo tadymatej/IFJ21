@@ -1,7 +1,4 @@
 #include "semantic_action.h"
-<<<<<<< HEAD
-/*
-=======
 
 // 1 - require
 int jump_to_exec_point() {
@@ -23,7 +20,6 @@ int after_global_fun_call() {
     return cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx)));
 }
 
->>>>>>> f35742746d0497a36110d0e46f01693cfa90c91a
 //je volana nad tokenem  2 - id_f
 int function_definition(Token *token) {
     globals.cur_function = init_fun_data(token->attribute);
@@ -105,9 +101,6 @@ int prepare_assignment() {
     RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, globals.var));
     return SEM_CORRECT;
 }
-<<<<<<< HEAD
-*/
-=======
 
 // 33 - id_f
 // int start_function_call(Token *token) {
@@ -166,4 +159,3 @@ int prepare_assignment() {
 //     cg_envelope(cg_pop_frame()); // Musi byt proveden pred zpracovanim return
 //     cg_e
 // }
->>>>>>> f35742746d0497a36110d0e46f01693cfa90c91a
