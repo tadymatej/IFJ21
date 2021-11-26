@@ -110,6 +110,8 @@ void destroy_top_tree(Stack *stack);
  */
 exp_node_t *exp_stack_top(Stack *stack);
 
+void destroy_tree(exp_node_t *tree);
+
 /*
  * Uvoľní všetky zdroje alokované v stacku
  * @param stack Ukazateľ na inicializovaný stack
