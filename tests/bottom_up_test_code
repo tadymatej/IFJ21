@@ -1,7 +1,7 @@
-var1 + var2 * var3 then
-var1 + var2 then
-str1 .. str1 then
+var1 + num1 * var3 then
+#str1 - (var1 + 2 -3 * num1) / 0 then
+str1 .. nil then
 str1 .. "ohohho" .. "ine" then
-var1 < var2 then
+nil < var1 then
 "slovo" == str2 .. "ovo" then
 var3 == nil end

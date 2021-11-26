@@ -91,6 +91,8 @@ int main() {
 	error_flag = precedence_analyzer(&sc);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
+	printf("koniec testov \n");
+
 	/* koniec testov*/
 
 	dispose_sem_globals();
