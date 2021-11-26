@@ -94,6 +94,7 @@ int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_co
 }
 */
 
+
 int do_action(exp_tree_stack_t *stack, Token *token){
   int retval = 0;
   TS_data_t *temp;
@@ -137,32 +138,15 @@ int do_action(exp_tree_stack_t *stack, Token *token){
     case TOKEN_END_BRACKET:
       break;
     case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
-      /* dev */
-      right_side = exp_stack_top(stack);
-      if(right_side == NULL) return SEMANTIC_OTHER_ERR;
-      Stack_pop(stack);
-
-      left_side = exp_stack_top(stack);
-      if(left_side == NULL) return SEMANTIC_OTHER_ERR;
-      Stack_pop(stack);
+      GET_OPERAND(right_side, stack);
+      GET_OPERAND(left_side, stack);
 
       ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
       check_name(ret_type);
 
-      if(right_side->data->type != ret_type){
-        do_conversion(right_side, ret_type, var_count);
-        if(right_side == NULL){
-          destroy_tree(left_side);
-          return COMPILER_ERR;
-        }
-      }
-      if(left_side->data->type != ret_type){
-        do_conversion(left_side, ret_type, var_count);
-        if(left_side == NULL){
-          destroy_tree(right_side);
-          return COMPILER_ERR;
-        }
-      }
+      CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
+      CONVERSION_MACRO(left_side, right_side, ret_type, var_count);
+      //po tomto kroku je lava aj prava strana rovnakeho typu, nad operandmi moze byt uzol konverzie ak bol potrebny
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
@@ -172,13 +156,27 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
-      /* dev */
-      //retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
-      //if(retval != 0) return retval;
+
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
-      //retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
-      //if(retval != 0) return retval;
+      GET_OPERAND(right_side, stack);
+      GET_OPERAND(left_side, stack);
+
+      ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
+      check_name(ret_type);
+
+      CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
+      CONVERSION_MACRO(left_side, right_side, ret_type, var_count);
+      //po tomto kroku je lava aj prava strana rovnakeho typu, nad operandmi moze byt uzol konverzie ak bol potrebny
+
+      temp = make_var_data(ret_type, RET_NAME, NULL);
+      if(temp == NULL) return COMPILER_ERR;
+      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(retval != 0){
+        destroy_tree(left_side);
+        destroy_tree(right_side);
+        return COMPILER_ERR;
+      }
       break;
     default:
       break;

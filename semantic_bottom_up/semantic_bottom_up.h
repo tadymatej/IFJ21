@@ -139,6 +139,20 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
   counter++;                                                                    \
   }while(0)
 
+#define GET_OPERAND(node, stack)                      \
+  node = exp_stack_top(stack);                        \
+  if(node == NULL) return SEMANTIC_OTHER_ERR;         \
+  Stack_pop(stack);
+
+#define CONVERSION_MACRO(node_f, node_s, ret_type, var_count)       \
+  if(node_f->data->type != ret_type){                               \
+    do_conversion(node_f, ret_type, var_count);                     \
+    if(node_f == NULL){                                             \
+      destroy_tree(node_s);                                         \
+      return COMPILER_ERR;                                          \
+    }                                                               \
+  }
+
 #endif
 
 //koniec súboru semantic_bottom_up.h
