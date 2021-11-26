@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "expression_tree.h"
 #include "symtable.h"
 #include "scanner.h"
 #include "expression_tree.h"
@@ -131,7 +132,7 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
   exp_node_t *conv_node = make_conversion_node(node, temp_data, counter, "LF"); \
   if(conv_node == NULL) {                                                       \
     destroy_tree(node);                                                         \
-    node == NULL;                                                               \
+    node = NULL;                                                               \
     break;                                                                      \
   }  /*volat generaciu kodu defvar premennej a onstrukciu podla podmienky */    \
   node = conv_node;                                                             \

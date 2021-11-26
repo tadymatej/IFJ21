@@ -140,7 +140,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       /* dev */
       right_side = exp_stack_top(stack);
       if(right_side == NULL) return SEMANTIC_OTHER_ERR;
-      stack_pop(stack);
+      Stack_pop(stack);
 
       left_side = exp_stack_top(stack);
       if(left_side == NULL) return SEMANTIC_OTHER_ERR;
@@ -150,14 +150,14 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       check_name(ret_type);
 
       if(right_side->data->type != ret_type){
-        do_conversion(right_side, ret_type, var_count); //TODO
+        do_conversion(right_side, ret_type, var_count);
         if(right_side == NULL){
           destroy_tree(left_side);
           return COMPILER_ERR;
         }
       }
       if(left_side->data->type != ret_type){
-        do_conversion(left_side, ret_type, var_count); //TODO
+        do_conversion(left_side, ret_type, var_count);
         if(left_side == NULL){
           destroy_tree(right_side);
           return COMPILER_ERR;
