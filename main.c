@@ -14,9 +14,8 @@ int main(){
     temp_data = make_var_data(NUMBER, "a", "7");
     add_variable(globals.ts, temp_data);
 
-    bool syntaxOK = Parse();
-    if(syntaxOK){
-        exit(EXIT_SUCCESS);
-    }
+    int retVal = Parse();
+    
+    return retVal;
     //printf("syntax OK: %d\n", syntaxOK);
 }

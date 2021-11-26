@@ -5,6 +5,7 @@ require "ifj21"
 
 function main()
     local a : integer
+
     if a > 5 then
         main()
     elseif a < 4
@@ -12,6 +13,7 @@ function main()
     else
         main()
     end
+    
 end
 
 main()

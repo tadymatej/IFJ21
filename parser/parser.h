@@ -36,7 +36,7 @@ bool NExpression(Token *ptr, ScannerContext *sc);
 bool NExpressions(Token *ptr, ScannerContext *sc);
 
 
-bool Parse();
+int Parse();
 /**
  * Vytvoří nový token
  * @param attribute Atribut tokenu
