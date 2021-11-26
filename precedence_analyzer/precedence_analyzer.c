@@ -309,17 +309,6 @@ int precedence_analyzer(ScannerContext *sc) {
         prev_token = token;
         GET_VALID_TOKEN(token, sc);
         break;
-      case '>':
-        doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
-        prev_token = make_fake_token(prev_token, top_stack_operand);
-        error_code = do_action(exp_stack, &prev_token);
-
-        if (error_code != 0) {
-          TokenStore(token, sc);
-          done = 1;
-          break;
-        }
-        break;
       case '=':
         stack_push(stack, token_operator);
         prev_token = token;
@@ -330,6 +319,21 @@ int precedence_analyzer(ScannerContext *sc) {
         error_code = SYNTAX_ERR;
         done = 1;
         break;
+      case '>':
+        doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
+        prev_token = make_fake_token(prev_token, top_stack_operand);
+        error_code = do_action(exp_stack, &prev_token);
+
+        if (error_code != 0) {
+          TokenStore(token, sc);
+          DEBUG_MACRO(print_exp_stack(exp_stack);)
+          done = 1;
+          break;
+        }
+        if(token.token_type != TOKEN_ID){
+          break;
+        }
+        //fall through
       case '&':
         done = 1;
         stack_pop(stack);
