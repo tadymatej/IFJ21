@@ -51,6 +51,7 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
   temp_node->type = TOKEN_NONE;
   strcpy(temp_node->prefix, prefix);
   temp_node->left = operand;
+  temp_node->right = NULL;
   return temp_node;
 }
 
