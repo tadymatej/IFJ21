@@ -40,16 +40,23 @@ DataTypes_t get_second_type(Stack *stack){
   return NO_TYPE;
 }
 
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix){
-  if (get_second_type(stack) == NO_TYPE) {
-    return COMPILER_ERR;
+exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int nested_id, char *prefix){
+  if(operand == NULL) return NULL;
+  exp_node_t *temp_node = malloc(sizeof(exp_node_t));
+  if (temp_node == NULL) {
+    return NULL;
   }
-  exp_node_t *right_side = exp_stack_top(stack);
-  Stack_pop(stack);
-  exp_node_t *left_side = exp_stack_top(stack);
-  Stack_pop(stack);
-  exp_node_t *root = malloc(sizeof(exp_node_t)); //kontrolovat ci ssa podaril
-  if (root == NULL) return COMPILER_ERR; //TODO error handling
+  temp_node->data = data;
+  temp_node->nested_identifier = nested_id;
+  temp_node->type = TOKEN_NONE;
+  strcpy(temp_node->prefix, prefix);
+  temp_node->left = operand;
+  return temp_node;
+}
+
+int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side){
+  exp_node_t *root = malloc(sizeof(exp_node_t));
+  if (root == NULL) return COMPILER_ERR;
   root->data = data;
   root->nested_identifier = nested_identifier;
   root->type = operator;

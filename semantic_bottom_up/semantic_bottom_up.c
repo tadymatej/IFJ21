@@ -74,6 +74,7 @@ char *__token_type_2_string(TOKEN_TYPES type){
   return NULL;
 }
 
+/*
 int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_count, char *prefix){
   int retval;
   DataTypes_t right_type;
@@ -91,7 +92,7 @@ int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_co
   retval = operator_merge(stack, type, temp, (*var_count)++, prefix);
   return retval;
 }
-
+*/
 
 int do_action(exp_tree_stack_t *stack, Token *token){
   int retval = 0;
@@ -99,8 +100,13 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   Sym_table_t *temp_table;
   DataTypes_t ret_type;
   DataTypes_t unary_type;
+  /* dev */
+  exp_node_t *right_side;
+  exp_node_t *left_side;
+  /* dev  */
 
-  static int var_count = 0;
+
+  static int var_count = 0; //pocitadlo kompilatorovych premennych
 
   switch (token->token_type) {
     case TOKEN_ID:
@@ -124,18 +130,55 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       check_name(ret_type);
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
+      if(temp == NULL) return COMPILER_ERR;
       unary_operator(stack, temp, var_count++, "LF");
       if(retval != 0) return COMPILER_ERR;
       break;
     case TOKEN_END_BRACKET:
       break;
     case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
-      retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
-      if(retval != 0) return retval;
+      /* dev */
+      right_side = exp_stack_top(stack);
+      if(right_side == NULL) return SEMANTIC_OTHER_ERR;
+      stack_pop(stack);
+
+      left_side = exp_stack_top(stack);
+      if(left_side == NULL) return SEMANTIC_OTHER_ERR;
+      Stack_pop(stack);
+
+      ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
+      check_name(ret_type);
+
+      if(right_side->data->type != ret_type){
+        do_conversion(right_side, ret_type, var_count); //TODO
+        if(right_side == NULL){
+          destroy_tree(left_side);
+          return COMPILER_ERR;
+        }
+      }
+      if(left_side->data->type != ret_type){
+        do_conversion(left_side, ret_type, var_count); //TODO
+        if(left_side == NULL){
+          destroy_tree(right_side);
+          return COMPILER_ERR;
+        }
+      }
+
+      temp = make_var_data(ret_type, RET_NAME, NULL);
+      if(temp == NULL) return COMPILER_ERR;
+      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(retval != 0){
+        destroy_tree(left_side);
+        destroy_tree(right_side);
+        return COMPILER_ERR;
+      }
+      /* dev */
+      //retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
+      //if(retval != 0) return retval;
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
-      retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
-      if(retval != 0) return retval;
+      //retval = __handle_bin_operator(stack, token->token_type, &var_count, "LF");
+      //if(retval != 0) return retval;
       break;
     default:
       break;

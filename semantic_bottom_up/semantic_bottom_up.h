@@ -126,6 +126,17 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
     return SEMANTIC_PSA_ERR;                                              \
   }                                                                       \
 
+#define do_conversion(node, ret_type, counter)do{                               \
+  TS_data_t *temp_data = make_var_data(ret_type, RET_NAME, NULL);               \
+  exp_node_t *conv_node = make_conversion_node(node, temp_data, counter, "LF"); \
+  if(conv_node == NULL) {                                                       \
+    destroy_tree(node);                                                         \
+    node == NULL;                                                               \
+    break;                                                                      \
+  }  /*volat generaciu kodu defvar premennej a onstrukciu podla podmienky */    \
+  node = conv_node;                                                             \
+  counter++;                                                                    \
+  }while(0)
 
 #endif
 
