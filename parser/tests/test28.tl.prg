@@ -174,3 +174,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: id	attribute: l|
+$53 <next_exp> => <function_body>
+---------------------------
+$4 <prog> => EOF
+---------------------------

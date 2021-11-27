@@ -1,5 +1,4 @@
--- Hello World example in IFJ21
--- run it on Merlin by: tl run hello.tl
+-- Should be OK
 
 require "ifj21"
 
@@ -11,14 +10,15 @@ function main()
     a, b, c = 0, 1, 2
 
     if a > 5 then
-        a = 6
+        b = 6
     elseif a < 4 then
-        a = 7
+        c = 7
     else
         a = 0
     end
 
     a = 0
+
 end
 
 main()

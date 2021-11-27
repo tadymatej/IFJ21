@@ -99,7 +99,7 @@ $63 <if> => if <exp_cond> then <function_body> <elseif>
 ##########|type: keyword	attribute: then|
 $68 <exp_cond> => call PSA
 ---------------------------
-##########|type: id	attribute: a|
+##########|type: id	attribute: b|
 $43 <function_body> => <ids> <expressions>
 ---------------------------
 $46 <ids> => id <next_id>
@@ -126,7 +126,7 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 ##########|type: keyword	attribute: then|
 $68 <exp_cond> => call PSA
 ---------------------------
-##########|type: id	attribute: a|
+##########|type: id	attribute: c|
 $43 <function_body> => <ids> <expressions>
 ---------------------------
 $46 <ids> => id <next_id>

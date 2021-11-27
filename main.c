@@ -15,7 +15,9 @@ int main(){
     add_variable(globals.ts, temp_data);
 
     int retVal = Parse();
-    
+
+    //printf("retVal: %d\n", retVal);
+
     return retVal;
     //printf("syntax OK: %d\n", syntaxOK);
 }

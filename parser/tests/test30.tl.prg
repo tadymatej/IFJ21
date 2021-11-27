@@ -4,4 +4,5 @@ $1 <prog> => require
 ---------------------------
 ##########|type: keyword	attribute: function|
 ##########|type: id	attribute: main|
-##########|type: end bracket	attribute: (null)|
+$4 <prog> => EOF
+---------------------------

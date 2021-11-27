@@ -2,18 +2,17 @@
 
 require "ifj21"
 
-function fc(a : integer, b : number, c : string)
+function fc(a : integer, b : number)
 
 end
 
 function main() : integer, number
     local a : integer = 10
     local b : number = 5
-    local c : string = "Ho Ho Ho!"
 
     if a > b then
-        fc(a, b, c)
+        fc(a, b)
     end
 
-    return a, b
+    return 10, 10
 end

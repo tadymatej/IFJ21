@@ -39,6 +39,27 @@ $62 <while> => while <exp_cond> do <function_body> <end>
 ##########|type: keyword	attribute: do|
 $68 <exp_cond> => call PSA
 ---------------------------
+##########|type: id	attribute: a|
+$43 <function_body> => <ids> <expressions>
+---------------------------
+$46 <ids> => id <next_id>
+---------------------------
+##########|type: set	attribute: (null)|
+$48 <next_id> => =
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: id	attribute: a|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: end|
+$53 <next_exp> => <function_body>
+---------------------------
 ##########|type: keyword	attribute: end|
 $67 <end> => end <function_body>
 ---------------------------

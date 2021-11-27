@@ -132,3 +132,7 @@ $45 <function_body> => <if>
 $63 <if> => if <exp_cond> then <function_body> <elseif>
 ---------------------------
 ##########|type: keyword	attribute: then|
+$68 <exp_cond> => call PSA
+---------------------------
+$4 <prog> => EOF
+---------------------------

@@ -1,4 +1,4 @@
--- Should be OK - Waiting for Semantic analysis
+-- Should be OK
 
 require "ifj21"
 
@@ -7,13 +7,17 @@ function fc(a : integer, b : number, c : string)
 end
 
 function main() : integer, number
-    local a : integer = 10
+    local a : integer = 1001
     local b : number = 5
     local c : string = "Ho Ho Ho!"
 
-    if a > b then
-        fc(a, b, c)
+    -- chyba zde
+    a = 456
+    
+    if a > 1000 then
+        fc( a, b, c)
     end
 
-    return a, b
+    return 10, 10
+    
 end
