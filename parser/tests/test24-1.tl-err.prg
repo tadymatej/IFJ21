@@ -2,6 +2,38 @@
 ##########|type: string	attribute: "ifj21"|
 $1 <prog> => require
 ---------------------------
+##########|type: keyword	attribute: global|
+$3 <prog> => global id : function ( <types_list> <fc_decl_ret>
+---------------------------
+##########|type: id	attribute: foo|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: function|
+##########|type: start bracket	attribute: (null)|
+$12 <types_list> => <first_type> <next_types>
+---------------------------
+##########|type: keyword	attribute: integer|
+$27 <first_type> => <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: comma	attribute: (null)|
+$15 <next_types> => , <type> <next_types>
+---------------------------
+##########|type: keyword	attribute: string|
+$20 <type> => string
+---------------------------
+##########|type: comma	attribute: (null)|
+$15 <next_types> => , <type> <next_types>
+---------------------------
+##########|type: keyword	attribute: number|
+$21 <type> => number
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$14 <next_types> => )
+---------------------------
+##########|type: keyword	attribute: function|
+$32 <fc_decl_ret> => <prog>
+---------------------------
 ##########|type: keyword	attribute: function|
 ##########|type: id_f	attribute: fc|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
@@ -26,6 +58,16 @@ $10 <next_params> => <param> <next_params>
 $18 <param> => id : <type>
 ---------------------------
 $21 <type> => number
+---------------------------
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: c|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: string|
+$18 <param> => id : <type>
+---------------------------
+$20 <type> => string
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $9 <next_params> => )
@@ -109,4 +151,10 @@ $42 <function_body> => <function_call> <function_body>
 ---------------------------
 $33 <function_call> => id_f ( <args_list>
 ---------------------------
+##########|type: id	attribute: a|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$35 <first_arg> => id
+---------------------------
+##########|type: comma	attribute: (null)|
 ##########|type: comma	attribute: (null)|

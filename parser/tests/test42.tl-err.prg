@@ -109,4 +109,15 @@ $42 <function_body> => <function_call> <function_body>
 ---------------------------
 $33 <function_call> => id_f ( <args_list>
 ---------------------------
+##########|type: id	attribute: a|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$35 <first_arg> => id
+---------------------------
 ##########|type: comma	attribute: (null)|
+##########|type: id	attribute: b|
+$36 <next_args> => , id <next_args>
+---------------------------
+##########|type: keyword	attribute: end|
+$4 <prog> => EOF
+---------------------------

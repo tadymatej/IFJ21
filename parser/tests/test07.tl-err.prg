@@ -6,25 +6,20 @@ $1 <prog> => require
 ##########|type: id_f	attribute: main|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
-##########|type: id	attribute: k|
-$7 <params_list> => <first_param> <next_params>
+##########|type: end bracket	attribute: (null)|
+$6 <params_list> => )
 ---------------------------
-$8 <first_param> => <param>
+##########|type: keyword	attribute: local|
+$23 <return_fc> => <function_body>
 ---------------------------
+##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
-$18 <param> => id : <type>
----------------------------
 ##########|type: keyword	attribute: integer|
+$41 <function_body> => local id : <type> <assignment>
+---------------------------
 $19 <type> => integer
 ---------------------------
-##########|type: comma	attribute: (null)|
-##########|type: id	attribute: l|
-$10 <next_params> => <param> <next_params>
+##########|type: number int	attribute: 88|
+$58 <assignment> => <function_body>
 ---------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: string|
-$18 <param> => id : <type>
----------------------------
-$20 <type> => string
----------------------------
-##########|type: id	attribute: m|
+##########|type: number int	attribute: 88|

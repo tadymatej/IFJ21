@@ -1,0 +1,20 @@
+-- Should be OK - PSA + Semantic fix
+
+require "ifj21"
+
+global foo : function( integer, string, number)
+
+function fc(a : integer, b : number, c : string)
+
+end
+
+function main() : integer, number
+    local a : integer = 10
+    local b : number = 5
+
+    if a >= 10 then
+        fc(a, , c)
+    end
+
+    return 0, 0
+end

@@ -11,7 +11,7 @@ function main() : integer, number
     local b : number = 5
 
     if a > 3 then
-        fc(a, b
+        fc(, b)
     end
 
     return 10, 10

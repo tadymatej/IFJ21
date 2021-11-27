@@ -328,6 +328,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
 
 
     if(ptr->token_type != TOKEN_END_BRACKET && ptr->token_type == TOKEN_ID){
+        function_call = true;
         // $35 <args_list> => <first_arg> <next_args>
         #ifdef DEBUG_USED_RULE
             printf("$35 <args_list> => <first_arg> <next_args>\n");
@@ -341,7 +342,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
         #endif
 
         *ptr = Next(sc); if(errT != 0){return false;}
-        while(ptr->token_type == TOKEN_COMMA){
+        while(ptr->token_type == TOKEN_COMMA && function_call == true){
             *ptr = Next(sc); if(errT != 0){return false;}
 
             if(ptr->token_type == TOKEN_ID){
@@ -350,19 +351,23 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
                     printf("$36 <next_args> => , id <next_args>\n");
                     printf("---------------------------\n");
                 #endif
+                *ptr = Next(sc); if(errT != 0){return false;}
+            } else {
+                return false;
             }
-            *ptr = Next(sc); if(errT != 0){return false;}
-
         }
 
-        // $38 <next_args> => )
-        #ifdef DEBUG_USED_RULE
-            printf("$38 <next_args> => )\n");
-            printf("---------------------------\n");
-        #endif
+        if(ptr->token_type == TOKEN_END_BRACKET){
+            // $38 <next_args> => )
+            #ifdef DEBUG_USED_RULE
+                printf("$38 <next_args> => )\n");
+                printf("---------------------------\n");
+            #endif
 
-        function_call = true;
-        return function_call;
+            function_call = true;
+        } else {
+            return false;
+        }
     }
 
     else if(ptr->token_type == TOKEN_END_BRACKET) {
@@ -911,9 +916,14 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                 function_body = function_body && NFunction_call(ptr, sc);
                 break;
 
-            default:
-                //break_from_while++;
+            case TOKEN_END_BRACKET:
                 break;
+
+            default:
+                //printf("default case: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+                //break_from_while++;
+
+                return false;
         }
 
         if(break_from_while != 0){

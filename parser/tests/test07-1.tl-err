@@ -1,0 +1,9 @@
+-- Should be ERR
+
+require "ifj21"
+
+function main()
+    a : integer = 88
+end
+
+main()
