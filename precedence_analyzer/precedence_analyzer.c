@@ -10,13 +10,7 @@
 
 #define MAX_LEN 128
 
-#define _DEBUG_PSA_ 0
-
-void truncate_array(char *array, int length){
-  for (int i = 0; i < length; i++) {
-    array[i] = '\0';
-  }
-}
+#define _DEBUG_PSA_ 1
 
 /*
  * Funkcia dekóduje string zadaný ako source
