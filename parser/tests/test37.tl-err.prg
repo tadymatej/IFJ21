@@ -14,17 +14,4 @@ $8 <first_param> => <param>
 ##########|type: colon - dvojtecka	attribute: (null)|
 $18 <param> => id : <type>
 ---------------------------
-##########|type: keyword	attribute: integer|
-$19 <type> => integer
----------------------------
-##########|type: comma	attribute: (null)|
-##########|type: id	attribute: l|
-$10 <next_params> => <param> <next_params>
----------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: string|
-$18 <param> => id : <type>
----------------------------
-$20 <type> => string
----------------------------
-##########|type: id	attribute: m|
+##########|type: id	attribute: intege|

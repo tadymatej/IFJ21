@@ -19,5 +19,3 @@ $63 <if> => if <exp_cond> then <function_body> <elseif>
 ##########|type: keyword	attribute: if|
 $68 <exp_cond> => call PSA
 ---------------------------
-$4 <prog> => EOF
----------------------------

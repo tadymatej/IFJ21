@@ -3,10 +3,10 @@
 $1 <prog> => require
 ---------------------------
 ##########|type: keyword	attribute: function|
-##########|type: id_f	attribute: factorial|
+##########|type: id_f	attribute: main|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
-##########|type: id	attribute: n|
+##########|type: id	attribute: k|
 $7 <params_list> => <first_param> <next_params>
 ---------------------------
 $8 <first_param> => <param>
@@ -17,36 +17,42 @@ $18 <param> => id : <type>
 ##########|type: keyword	attribute: integer|
 $19 <type> => integer
 ---------------------------
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: l|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: string|
+$18 <param> => id : <type>
+---------------------------
+$20 <type> => string
+---------------------------
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: m|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: number|
+$18 <param> => id : <type>
+---------------------------
+$21 <type> => number
+---------------------------
 ##########|type: end bracket	attribute: (null)|
 $9 <next_params> => )
 ---------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-$22 <return_fc> => : <first_ret> <next_rets>
----------------------------
-##########|type: keyword	attribute: integer|
-$24 <first_ret> => <type>
----------------------------
-$19 <type> => integer
----------------------------
 ##########|type: keyword	attribute: local|
-$26 <next_rets> => <function_body>
+$23 <return_fc> => <function_body>
 ---------------------------
-##########|type: id	attribute: n1|
+##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
 $41 <function_body> => local id : <type> <assignment>
 ---------------------------
 $19 <type> => integer
 ---------------------------
-##########|type: set	attribute: (null)|
-$57 <assignment> => = <expression>
----------------------------
-##########|type: id	attribute: n|
-$54 <expression> => <exp>
----------------------------
-##########|type: set	attribute: (null)|
-$55 <exp> => call PSA
----------------------------
-##########|type: sub	attribute: (null)|
+##########|type: id	attribute: a|
 $58 <assignment> => <function_body>
 ---------------------------
+##########|type: id	attribute: a|
+$43 <function_body> => <ids> <expressions>
+--------------------------

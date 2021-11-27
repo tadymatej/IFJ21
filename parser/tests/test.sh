@@ -12,7 +12,13 @@ RED="\e[31m"
 BLUE="\e[36m"
 PURPLE="\e[35;1m"
 NORMAL="\e[39m"
-echo "$BLUE NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
+
+
+echo "$BLUE@NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
+
+echo ""
+echo ""
+
 echo "$GREEN#########################################################################################" ;
 echo "# *.tl Testing " ;
 echo "#########################################################################################$NORMAL" ;
@@ -60,14 +66,15 @@ for f in *.tl; do
     #tail -1 $f.txt;
     echo "";
 done
-
+echo ""
+echo ""
 echo "$RED#########################################################################################" ;
 echo "# *.tl-err ERROR Testing $RED" ;
 echo "#########################################################################################$NORMAL" ;
 for f in *.tl-err; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    cat $f | ../parser > $f.prg
+    cat $f | ../parser > $f.txt
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";
@@ -103,9 +110,13 @@ for f in *.tl-err; do
             echo "$BLUE ERR $NORMAL [99]";
             ;;
     esac
-done
 
-echo "$BLUE NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
+    diff $f.txt $f.prg
+
+done
+echo ""
+echo ""
+echo "$BLUE@NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
 #for f in *.tl; do
 echo "# Dodelat str. 13 tl run $f.prg < $f.in > $f.out " ;
 echo "# Dodelat str. 13 ic2lint run $f.prg < $f.in > $f.out " ;

@@ -44,5 +44,3 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 ##########|type: id_f	attribute: main|
 $68 <exp_cond> => call PSA
 ---------------------------
-$4 <prog> => EOF
----------------------------

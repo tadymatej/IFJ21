@@ -1,0 +1,6 @@
+-- Should be ERR - PSA fix
+
+require "ifj21"
+
+function main(k : integer, l : string, m : number)
+    local a : integer = 5

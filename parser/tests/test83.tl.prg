@@ -51,5 +51,3 @@ $55 <exp> => call PSA
 ##########|type: concat	attribute: (null)|
 $58 <assignment> => <function_body>
 ---------------------------
-$4 <prog> => EOF
----------------------------

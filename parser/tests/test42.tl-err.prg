@@ -27,16 +27,6 @@ $18 <param> => id : <type>
 ---------------------------
 $21 <type> => number
 ---------------------------
-##########|type: comma	attribute: (null)|
-##########|type: id	attribute: c|
-$10 <next_params> => <param> <next_params>
----------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: string|
-$18 <param> => id : <type>
----------------------------
-$20 <type> => string
----------------------------
 ##########|type: end bracket	attribute: (null)|
 $9 <next_params> => )
 ---------------------------
@@ -103,6 +93,20 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-##########|type: id	attribute: a|
+##########|type: keyword	attribute: if|
 $58 <assignment> => <function_body>
 ---------------------------
+##########|type: keyword	attribute: if|
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: keyword	attribute: then|
+$68 <exp_cond> => call PSA
+---------------------------
+##########|type: id_f	attribute: fc|
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: comma	attribute: (null)|

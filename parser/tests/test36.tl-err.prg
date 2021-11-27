@@ -21,10 +21,4 @@ $19 <type> => integer
 ##########|type: id	attribute: l|
 $10 <next_params> => <param> <next_params>
 ---------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: string|
-$18 <param> => id : <type>
----------------------------
-$20 <type> => string
----------------------------
-##########|type: id	attribute: m|
