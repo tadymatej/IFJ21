@@ -560,7 +560,7 @@ bool NElseif(Token *ptr, ScannerContext *sc){
             break;
         }
         *ptr = Next(sc); if(errT != 0){return false;}
-
+        TokenStore(*ptr, sc);
     }
 
     if(elseif && ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "else") == 0){
@@ -884,7 +884,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
 
                     function_body = function_body && NRet(ptr, sc);
 
-                } else {
+                } else if(strcmp(ptr->attribute, "end") == 0){
                     // $39 <function_body> => epsilon
                     function_body = true; /// ???
                     break_from_while++;
@@ -893,6 +893,9 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                         printf("---------------------------\n");
                     #endif
                     */
+                
+                } else {
+                    return false;
                 }
                 break;
             case TOKEN_ID:
