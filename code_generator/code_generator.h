@@ -49,6 +49,8 @@ char *cg_format_label(char *fun_name, char *name, int n_id, int idx);
 
 char *cg_format_string(char *string);
 
+char *cg_format_float(char *string);
+
 char *cg_label(char *label);
 
 char *cg_push_frame();

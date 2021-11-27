@@ -96,6 +96,13 @@ char *cg_format_string(char *string){
     return string_format;
 }
 
+char *cg_format_float(char *string){
+  if(string == NULL) return NULL;
+  double value = strtod(string, NULL);
+  char *string_format = calloc(DEF_COM_SIZE ,1);
+  snprintf(string_format, DEF_COM_SIZE, "%a", value);
+  return string_format;
+}
 
 char *cg_label(char *label) {
     function_templ(strlen(label) + strlen("LABEL $%s\n") - 1, (sprintf(str, "LABEL $%s\n", label), free(label)));
