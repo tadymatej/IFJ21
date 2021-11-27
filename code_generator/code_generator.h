@@ -13,8 +13,7 @@ typedef struct {
 } Variable;
 
 #define DEF_COM_SIZE 128
-#define BUFFER_LEN 6
-#define ESCAPE_LEN 3
+#define ESCAPE_LEN 4
 
 #define Variable_CreateInt(val) \
     ((Variable){"int", val})
@@ -75,17 +74,18 @@ char *cg_jump(char *label);
 
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
+char *cg_int2float(char *dst, char *src);
+
+char *cg_float2int(char *dst, char *src);
+
+char *cg_strlen(char *dst, char *src);
+
 /**
  * dest = a .. b
  */
 #define CG_Concat(dest, a, b) \
     (printf("CONCAT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
 
-/**
- * dest = strlen(src)
- */
-#define CG_Strlen(dest, src) \
-    (printf("STRLEN %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
 
 /**
  * dest = a[b]
@@ -137,18 +137,6 @@ char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
  */
 #define CG_NOT(dest, a) \
     (printf("NOT %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name))
-
-/**
- * dest = (float) src
- */
-#define CG_Int2Float(dest, src) \
-    (printf("INT2FLOAT %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
-
-/**
- * dest = (int) src
- */
-#define CG_Float2Int(dest, src) \
-    (printf("FLOAT2INT %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
 
 /**
  * dest = (char) src

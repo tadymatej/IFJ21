@@ -79,13 +79,13 @@ char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
 char *cg_format_string(char *string){
     int input_len = strlen(string);
     char *string_format = calloc(ESCAPE_LEN*input_len+1, 1);
-    char buffer[BUFFER_LEN] = {'0'};
+    char buffer[ESCAPE_LEN+1] = {'0'};
     char act_char;
     if(string_format == NULL) return NULL;
     for(int input_index = 0, output_index = 0; input_index < input_len; input_index++, output_index++){
         act_char = string[input_index];
         if(act_char == '#' || act_char == '\\' || act_char <= ' '){
-            snprintf(buffer, BUFFER_LEN, "\\%03d", (int)act_char);
+            snprintf(buffer, ESCAPE_LEN+1, "\\%03d", (int)act_char);
             strcat(string_format, buffer);
             output_index += ESCAPE_LEN;
         }
@@ -176,11 +176,33 @@ char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op) {
     case TOKEN_MOD:
         operation = "IDIV %s %s %s\n";
         break;
+    case TOKEN_CONCAT:
+        operation = "CONCAT %s %s %s\n";
+        break;
     default:
         operation = NULL;
         return NULL;
     }
     function_templ(strlen(dest) + strlen(f_op) + strlen(s_op) + strlen(operation) - 1, (sprintf(str, operation, dest, f_op, s_op), free(dest), free(f_op), free(s_op)));
+}
+
+char *cg_int2float(char *dst, char *src){
+  if (dst == NULL || src == NULL)
+      return NULL;
+  function_templ(strlen(dst) + strlen(src) + strlen("INT2FLOAT %s %s\n") , (sprintf(str, "INT2FLOAT %s %s\n", dst, src), free(dst), free(src)));
+}
+
+char *cg_float2int(char *dst, char *src){
+  if (dst == NULL || src == NULL)
+      return NULL;
+  function_templ(strlen(dst) + strlen(src) + strlen("FLOAT2INT %s %s\n") , (sprintf(str, "FLOAT2INT %s %s\n", dst, src)));
+}
+
+char *cg_strlen(char *dst, char *src){
+  if (dst == NULL || src == NULL)
+      return NULL;
+  function_templ(strlen(dst) + strlen(src) + strlen("STRLEN %s %s\n") , (sprintf(str, "STRLEN %s %s\n", dst, src)));
+
 }
 
 int cg_envelope(char *str) {
