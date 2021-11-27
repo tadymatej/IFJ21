@@ -1,8 +1,0 @@
-$1 <prog> => require
----------------------------
-ERROR || $2
-ERROR
-$4 <prog> => EOF
----------------------------
-RESULT: 0
-syntax OK: 0

@@ -1,4 +1,4 @@
--- Should be OK - Waiting for Semantic analysis
+-- Should be OK - Semantic fix
 
 require "ifj21"
 

@@ -123,8 +123,16 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-##########|type: id	attribute: a|
+##########|type: keyword	attribute: if|
 $58 <assignment> => <function_body>
+---------------------------
+##########|type: keyword	attribute: if|
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: keyword	attribute: then|
+$68 <exp_cond> => call PSA
 ---------------------------
 $4 <prog> => EOF
 ---------------------------

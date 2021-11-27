@@ -1,5 +1,4 @@
--- Hello World example in IFJ21
--- run it on Merlin by: tl run hello.tl
+-- Should be OK - PSA + Semantic fix
 
 require "ifj21"
 

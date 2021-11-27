@@ -1,5 +1,4 @@
--- Hello World example in IFJ21
--- run it on Merlin by: tl run hello.tl
+-- Should be OK - PSA fix
 
 require "ifj21"
 
@@ -17,6 +16,6 @@ function fuuf()
     
 end
 
-function foo(k : integer, l : string, m : number)
-    return m, l, k
+function foo(k : integer, l : string, m : number) : integer, number, integer
+    return 0, 0, 0
 end

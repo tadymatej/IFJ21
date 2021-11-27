@@ -1,3 +1,5 @@
+-- Should be OK
+
 require "ifj21"
 function concat (x : string, y : string) : string, integer
   return x .. y, 0 end

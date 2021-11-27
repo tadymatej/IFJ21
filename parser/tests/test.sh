@@ -10,8 +10,9 @@
 GREEN="\e[32m"
 RED="\e[31m"
 BLUE="\e[36m"
+PURPLE="\e[35;1m"
 NORMAL="\e[39m"
-
+echo "$BLUE NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
 echo "$GREEN#########################################################################################" ;
 echo "# *.tl Testing " ;
 echo "#########################################################################################$NORMAL" ;
@@ -60,18 +61,55 @@ for f in *.tl; do
     echo "";
 done
 
-echo "#" ;
-echo "#" ;
 echo "$RED#########################################################################################" ;
-echo "# *.tl-err Errror Testing $RED" ;
+echo "# *.tl-err ERROR Testing $RED" ;
 echo "#########################################################################################$NORMAL" ;
 for f in *.tl-err; do
-    echo "$f ***************************" ;
+    echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    cat $f | ../parser > $f.txt
+    cat $f | ../parser > $f.prg
+    case $? in
+        0)
+            echo "$GREEN OK $NORMAL [0]";
+            ;;
+        1)
+            echo "$RED ERR $NORMAL [1]";
+            ;;
+        2)
+            echo "$RED ERR $NORMAL [2]";
+            ;;
+        3)
+            echo "$RED ERR $NORMAL [3]";
+            ;;
+        4)
+            echo "$RED ERR $NORMAL [4]";
+            ;;
+        5)
+            echo "$RED ERR $NORMAL [5]";
+            ;;
+        6)
+            echo "$RED ERR $NORMAL [6]";
+            ;;
+        7)
+            echo "$RED ERR $NORMAL [7]";
+            ;;
+        8)
+            echo "$RED ERR $NORMAL [8]";
+            ;;
+        9)
+            echo "$RED ERR $NORMAL [9]";
+            ;;
+        99)
+            echo "$BLUE ERR $NORMAL [99]";
+            ;;
+    esac
 done
 
+echo "$BLUE NOTE:$NORMAL All test files .tl or .tl-err must have$PURPLE LF$NORMAL EOF sequence!!!!!";
 #for f in *.tl; do
 echo "# Dodelat str. 13 tl run $f.prg < $f.in > $f.out " ;
 echo "# Dodelat str. 13 ic2lint run $f.prg < $f.in > $f.out " ;
 #done
+
+# remove .txt files
+rm -f *.txt

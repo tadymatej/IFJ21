@@ -1,21 +1,23 @@
+##########|type: keyword	attribute: require|
+##########|type: string	attribute: "ifj21"|
 $1 <prog> => require
 ---------------------------
+##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: main|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
+##########|type: end bracket	attribute: (null)|
 $6 <params_list> => )
 ---------------------------
+##########|type: keyword	attribute: if|
 $23 <return_fc> => <function_body>
 ---------------------------
 $45 <function_body> => <if>
 ---------------------------
 $63 <if> => if <exp_cond> then <function_body> <elseif>
 ---------------------------
+##########|type: keyword	attribute: if|
 $68 <exp_cond> => call PSA
 ---------------------------
-ERROR || $63
-ERROR || $2
-ERROR
 $4 <prog> => EOF
 ---------------------------
-RESULT: 0
-syntax OK: 0

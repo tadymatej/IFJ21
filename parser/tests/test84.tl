@@ -1,0 +1,12 @@
+-- Program 4: Zadani strana 5
+
+require "ifj21"
+
+global foo : function(string) : string
+function bar(param : string) : string
+    return foo (param)
+end
+
+function foo(param:string):string
+    return bar(param)
+end

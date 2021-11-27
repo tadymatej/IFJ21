@@ -386,11 +386,11 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
 
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
-    printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     //printf("\nPSA = %d\n", psa);
 
     if(psa != 0){
