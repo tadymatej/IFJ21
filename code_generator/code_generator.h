@@ -13,6 +13,8 @@ typedef struct {
 } Variable;
 
 #define DEF_COM_SIZE 128
+#define BUFFER_LEN 6
+#define ESCAPE_LEN 3
 
 #define Variable_CreateInt(val) \
     ((Variable){"int", val})
@@ -44,6 +46,8 @@ typedef struct {
 char *cg_format_var(char *prefix, char *name, char *suffix);
 
 char *cg_format_label(char *fun_name, char *name, int n_id, int idx);
+
+char *cg_format_string(char *string);
 
 char *cg_label(char *label);
 
