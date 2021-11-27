@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "scanner.h"
-#include "TS_handler.h"
+#include "ts_handler.h"
 #include "precedence_analyzer.h"
 #include "semantic_bottom_up.h"
 
