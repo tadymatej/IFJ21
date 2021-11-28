@@ -46,9 +46,6 @@ int exp_cg_arith(exp_node_t *dest, exp_node_t *left_operand, exp_node_t *right_o
   dest_string = exp_format_node(dest);
 
   retval = cg_envelope(cg_arith_operation(dest->type, dest_string, left_string, right_string));
-  free(left_string);
-  free(right_string);
-  free(dest_string);
   return retval;
 }
 
@@ -72,8 +69,6 @@ int exp_cg_int2float(exp_node_t *dest, exp_node_t *argument){
   dest_string = exp_format_node(dest);
   argument_string = exp_format_node(argument);
   retval = cg_envelope(cg_int2float(dest_string, argument_string));
-  free(dest_string);
-  free(argument_string);
   return retval;
 }
 
@@ -87,8 +82,6 @@ int exp_cg_float2int(exp_node_t *dest, exp_node_t *argument){
   dest_string = exp_format_node(dest);
   argument_string = exp_format_node(argument);
   retval = cg_envelope(cg_float2int(dest_string, argument_string));
-  free(dest_string);
-  free(argument_string);
   return retval;
 }
 
@@ -120,4 +113,4 @@ int exp_cg_strlen(exp_node_t *dest, exp_node_t *argument){
   return retval;
 }
 
-/* koniec suboru zcg_expression_tree.c */
+/* koniec suboru cg_expression_tree.c */
