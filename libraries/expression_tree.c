@@ -55,9 +55,9 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
   return temp_node;
 }
 
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side){
+exp_node_t *operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side){
   exp_node_t *root = malloc(sizeof(exp_node_t));
-  if (root == NULL) return COMPILER_ERR;
+  if (root == NULL) return NULL;
   root->data = data;
   root->nested_identifier = nested_identifier;
   root->type = operator;
@@ -65,7 +65,7 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nest
   root->left = left_side;
   root->right = right_side;
   Stack_push(stack, root, 1);
-  return 0;
+  return root;
 }
 
 //kod pozicany zo zadania projektu v predmete IAL

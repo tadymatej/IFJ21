@@ -83,8 +83,11 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
  * @param data data premennej ktora bude drzat hodnotu operacie
  * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
  * @param prefix ci je premenna v TF alebo LF
+ * @param left_side ukazatel na lavy stranu vyrazu
+ * @param right_side ukazatel na pravu stranu stromu vyrazu
+ * @return vrati ukazatel na uzol, v ktorom su spojene operandy operaciou
  */
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
+exp_node_t *operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
 
 /*
  * Funkcia vypíše stromy výrazov na konzolu
