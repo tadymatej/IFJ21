@@ -15,6 +15,9 @@ typedef struct {
 #define DEF_COM_SIZE 128
 #define ESCAPE_LEN 4
 
+#define _CG_GENERATE_ 1
+#define CODE_PRINT(command) if(_CG_GENERATE_) {command;}
+
 #define Variable_CreateInt(val) \
     ((Variable){"int", val})
 
