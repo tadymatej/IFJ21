@@ -23,8 +23,8 @@ int new_stack_frame(Sym_table_t **table, char *prefix){
 void dispose_table(Sym_table_t **table){
   Sym_table_t *temp = NULL;
   while (*table != NULL){
-    BinaryTreeDestroy((*table)->tree, dispose_ts_data); //TODO dorobit destroyer pre dealokovanie pamate
-    *temp = (*table)->upper;
+    BinaryTreeDestroy((*table)->tree, dispose_ts_data);
+    temp = (*table)->upper;
     free(*table);
     *table = temp;
   }
