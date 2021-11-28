@@ -19,7 +19,7 @@ int main() {
 	Token token;
 
   init_sem_globals();
-  globals.ts = TS_init("TF");
+  globals.ts = TS_init("LF");
   TS_data_t *temp_data;
 
   temp_data = make_var_data(INTEGER, "var1", "7");
@@ -35,7 +35,7 @@ int main() {
   new_stack_frame(&(globals.ts), "LF");
   temp_data = make_var_data(STRING, "str1", "ine");
   add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(INTEGER, "var3", "456");
+  temp_data = make_var_data(INTEGER, "var3", "4");
   add_variable(globals.ts, temp_data);
 	temp_data = make_var_data(STRING, "str2", "ahoj");
   add_variable(globals.ts, temp_data);
@@ -47,7 +47,7 @@ int main() {
 	//q_push(globals.q_assignments, temp_data);
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
-  temp_data = find_variable(globals.ts, "num1", &TS_temp);
+  temp_data = find_variable(globals.ts, "var1", &TS_temp);
 	//q_push(globals.q_assignments, temp_data);
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
