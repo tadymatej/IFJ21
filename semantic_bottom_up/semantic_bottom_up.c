@@ -10,8 +10,6 @@
 
 DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE_SIZE_X] = RET_TYPES_TABLE_t;
 
-int _print_code_ = 1;
-
 int map_token_types(TOKEN_TYPES type){
   int index = 99;
   switch (type) {
@@ -104,13 +102,12 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, NULL);
-      if(retval != 0) {
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, NULL);
+      if(operator_node == NULL) {
         destroy_tree(left_side);
         return COMPILER_ERR;
       }
        /* dev */
-       GET_OPERAND(operator_node, stack);
        CODE_PRINT(exp_cg_strlen(operator_node, left_side));
        /* dev */
       break;
@@ -130,15 +127,14 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
-      if(retval != 0){ //ak sa nepodari urobit merge treba oba stromy ktore sa dostali na vrch znicit
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(operator_node == NULL){ //ak sa nepodari urobit merge treba oba stromy ktore sa dostali na vrch znicit
         destroy_tree(left_side);
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
 
       /* dev */
-      GET_OPERAND(operator_node, stack);
       CODE_PRINT(exp_cg_arith(operator_node, left_side, right_side));
       /* dev */
 
@@ -156,8 +152,8 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
-      if(retval != 0){
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(operator_node == NULL){
         destroy_tree(left_side);
         destroy_tree(right_side);
         return COMPILER_ERR;
@@ -169,16 +165,31 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   return retval;
 }
 
-int check_assignment(exp_tree_stack_t *stack){
+int make_assignment(exp_tree_stack_t *stack){
   int retval = 0;
-  DataTypes_t right_side;
+  exp_node_t *right_side = NULL;
+  exp_node_t *assignment_node = NULL;
   DataTypes_t ret_type;
   TS_data_t *left_side = q_pop(globals.q_assignments);
   if(left_side != NULL){
-    right_side = get_top_type(stack);
-    if(right_side == NO_TYPE) return SEMANTIC_TYPE_ERR; //ak je na pravej strane od priradenia nic, respektive keyword a podobne
-    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side];
+    right_side = GET_OPERAND(right_side, stack);
+    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
     if(ret_type == NO_TYPE) retval = SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
+    if(left_side->name == NULL){
+      exp_cg_pushs(right_side);
+    }
+    else{
+      Sym_table_t *temp_table;
+      left_side = find_variable(globals.ts, left_side->name, &temp_table);
+      if (left_side == NULL) {
+        destroy_tree(right_side);
+        return COMPILER_ERR;
+      }
+      assignment_node = operator_merge(stack, TOKEN_SET, left_side, temp_table->nested_identifier, temp_table->prefix, NULL, right_side);
+      if(assignment_node == NULL) {destroy_tree(right_side); return COMPILER_ERR;}
+      retval = exp_cg_set(assignment_node, right_side);
+    }
+
   }
   return retval;
 }

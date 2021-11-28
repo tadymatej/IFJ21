@@ -19,6 +19,7 @@
 #include "ts_handler.h"
 #include "precedence_analyzer.h"
 #include "semantic_global.h"
+#include "code_generator.h"
 
 #define RET_TYPES_TABLE_t {           /* prava strana */                       \
            /* + - * */          /* num |  int  |   str   |  bool  |  NIL*/     \
@@ -81,16 +82,11 @@
 
 #define bottom_up_init exp_tree_init()
 
-//char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
-
 #define RET_TABLE_SIZE_Y 8
 #define RET_TABLE_SIZE_X 5
 
 #define RET_NAME "%cv"
 
-extern int _print_code_;
-
-#define CODE_PRINT(command) if(_print_code_) {command;}
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
@@ -107,7 +103,7 @@ int do_action(exp_tree_stack_t *stack, Token *token);
  * @param stack ukazatel na inicilizovaný stack sxpression stromov
  * @return návratová hodnota podľa zadania IFJ
  */
-int check_assignment(exp_tree_stack_t *stack);
+int make_assignment(exp_tree_stack_t *stack);
 
 /**
  * Korektne uvoľní stromy na expression tree
