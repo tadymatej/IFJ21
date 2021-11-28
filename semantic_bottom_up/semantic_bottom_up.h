@@ -86,7 +86,11 @@
 #define RET_TABLE_SIZE_Y 8
 #define RET_TABLE_SIZE_X 5
 
-#define RET_NAME "%cc"
+#define RET_NAME "%cv"
+
+extern int _print_code_ ;
+
+#define CODE_PRINT(command) if(_print_code_) {command;}
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
