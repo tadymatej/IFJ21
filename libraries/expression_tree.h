@@ -87,15 +87,6 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
 int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
 
 /*
- * Funkcia spracuje unárnu funkciu do stromu
- * Funguje podobne ako operator operator_merge
- * @param stack ukazateľ na inicializovaný stack
- * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
- * @param prefix ci je premenna v TF alebo LF
- */
-int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix);
-
-/*
  * Funkcia vypíše stromy výrazov na konzolu
  * Použiva vnútornú štrukuru stacku
  * @param stack ukazateľ na inicializovaný ďstruktúru stacku

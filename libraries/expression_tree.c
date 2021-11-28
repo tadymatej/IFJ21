@@ -68,25 +68,6 @@ int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nest
   return 0;
 }
 
-int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix){
-  exp_node_t *temp = exp_stack_top(stack);
-  if(temp == NULL) return COMPILER_ERR;
-  Stack_pop(stack);
-  exp_node_t *root = malloc(sizeof(exp_node_t));
-  if(root == NULL){
-    Stack_push(stack, temp, 1);
-    return COMPILER_ERR;
-  }
-  root->data = data;
-  root->type = TOKEN_LEN;
-  root->nested_identifier = nested_identifier;
-  strcpy(root->prefix, prefix);
-  root->left = temp;
-  root->right = NULL;
-  Stack_push(stack, root, 1);
-  return 0;
-}
-
 //kod pozicany zo zadania projektu v predmete IAL
 const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
