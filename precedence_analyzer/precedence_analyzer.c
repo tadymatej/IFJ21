@@ -265,7 +265,8 @@ int precedence_analyzer(ScannerContext *sc) {
   exp_tree_stack_t *exp_stack =  bottom_up_init;
 
   //token štartujúci expression
-  Token token = GetNextToken(sc);
+  Token token;
+  GET_VALID_TOKEN(token, sc);
   Token prev_token = token;
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   char token_operator;
