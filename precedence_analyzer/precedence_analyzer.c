@@ -10,7 +10,7 @@
 
 #define MAX_LEN 128
 
-#define _DEBUG_PSA_ 1
+#define _DEBUG_PSA_ 0
 
 /*
  * Funkcia dekóduje string zadaný ako source
@@ -336,7 +336,7 @@ int precedence_analyzer(ScannerContext *sc) {
         if (stack_top(stack) != STACK_END) {
           error_code = SYNTAX_ERR;
         }else {
-          error_code = check_assignment(exp_stack);
+          error_code = make_assignment(exp_stack);
         }
         DEBUG_MACRO(print_exp_stack(exp_stack);)
         break;
