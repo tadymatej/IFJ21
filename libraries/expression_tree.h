@@ -9,16 +9,20 @@
 #ifndef __EXPRESSION_TREE_
 #define __EXPRESSION_TREE_
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include"scanner.h"
-#include"stack.h"
-#include"symtable.h"
+#include "scanner.h"
+#include "stack.h"
+#include "symtable.h"
+#include "code_generator.h"
+#include "ts_handler.h"
 
 #define DATA_TYPE_LEN 8
 #define COMPILER_ERR 99
+#define BUFFER_LEN 128
+#define BASE 10
 
 typedef struct exp_node_s{
   TS_data_t *data;
@@ -79,17 +83,11 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
  * @param data data premennej ktora bude drzat hodnotu operacie
  * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
  * @param prefix ci je premenna v TF alebo LF
+ * @param left_side ukazatel na lavy stranu vyrazu
+ * @param right_side ukazatel na pravu stranu stromu vyrazu
+ * @return vrati ukazatel na uzol, v ktorom su spojene operandy operaciou
  */
-int operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
-
-/*
- * Funkcia spracuje unárnu funkciu do stromu
- * Funguje podobne ako operator operator_merge
- * @param stack ukazateľ na inicializovaný stack
- * @param nested_identifier v ako hlboko zanorenom strome je dana premenna
- * @param prefix ci je premenna v TF alebo LF
- */
-int unary_operator(Stack *stack, TS_data_t *data, int nested_identifier, char *prefix);
+exp_node_t *operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
 
 /*
  * Funkcia vypíše stromy výrazov na konzolu
@@ -110,6 +108,10 @@ void destroy_top_tree(Stack *stack);
  */
 exp_node_t *exp_stack_top(Stack *stack);
 
+/**
+ * Funkcia dealokuje zadaný strom
+ * @param tree ukazatel na strom
+ */
 void destroy_tree(exp_node_t *tree);
 
 /*
@@ -117,6 +119,76 @@ void destroy_tree(exp_node_t *tree);
  * @param stack Ukazateľ na inicializovaný stack
  */
 void destroy_stack(Stack **stack);
+
+/**
+ * Funkcia vráti retazec premennej node
+ * Formátuje pomocou cg_format_var
+ * @param node ukazatel na alokovany strom
+ * @return ukazatel na alokovany retazec ako by mala byt premenna alebo konstanta v ifjcode
+ */
+char *exp_format_node(exp_node_t *node);
+
+/**
+ * Zo zadaných uzlov vyhodnotí operáciu a vypíše ju na výstup
+ * operáciu zvolí podľa dest->type
+ * Vykona formatovanie vsetkych uzlov
+ * @param dest Ukazatel na uzol operacie, uzol obsahuje kam sa ma ulozit operacia, urobi sa mu aj definicia
+ * @param left_operand Ukazatel na uzol operacie lavej strany, uz musi byt definovana
+ * @param right_operand Ukazatel na uzol operacie lavej strany, uz musi byt definovana
+ * @return navratova hodnota, 99 ak sa nepodari alokacia pamate
+ */
+int exp_cg_arith(exp_node_t *dest, exp_node_t *left_operand, exp_node_t *right_operand);
+
+/**
+ * Funkacia vytvori definiciu premennej
+ * Na vystup na pise DEFVAR format premennej
+ * @param node ukazatel na uzol stromu
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_defvar(exp_node_t *node);
+
+/**
+ * Funkacia vytvori definiciu premennej
+ * Na vystup na pise INT2FLOAT dest argument
+ * @param dest do akej premennej zapisat novu hodnotu, urobi aj defvar navratovej hodnoty
+ * @param argument aku premennu treba konvertovat
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_int2float(exp_node_t *dest, exp_node_t *argument);
+
+/**
+ * Funkacia vytvori definiciu premennej
+ * Na vystup na pise FLOAT2INT dest argument
+ * @param dest do akej premennej zapisat novu hodnotu, urobi aj defvar navratovej hodnoty
+ * @param argument aku premennu treba konvertovat
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_float2int(exp_node_t *dest, exp_node_t *argument);
+
+/**
+ * Vytvori priradenie premennej
+ * Vypise instrukciu MOV dest source
+ * @param dest do akej premennej zapisat hodnotu, je nutne aby bola najskor definovana
+ * @param argument hodnota ktora bude priradena
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_set(exp_node_t *dest, exp_node_t *argument);
+
+/**
+ * Vytvori kod pre push do zasobnika zadanej premennej
+ * @param node ktoru premennu dat do zasobnika, nutne aby bol auz definovana
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_pushs(exp_node_t *node);
+
+/**
+ * Vytvori instrukciu na zistenie dlzky retazca
+ * @param dest kam ulozit dlzku retazca, urobi aj defvar navratovej hodnoty
+ * @param argument string z ktoreho chceme dlzku
+ * @return navratova hodnota, 99 ak sa nepodari alokacia
+ */
+int exp_cg_strlen(exp_node_t *dest, exp_node_t *argument);
+
 
 #endif
 

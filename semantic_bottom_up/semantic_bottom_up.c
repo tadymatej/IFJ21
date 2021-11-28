@@ -52,17 +52,6 @@ DataTypes_t __token_type_to_ts_data(TOKEN_TYPES type){
   }
 }
 
-void __choose_instruction(TOKEN_TYPES type){
-  switch(type){
-    case TOKEN_ADD: printf("ADDS\n"); break;
-    case TOKEN_SUB: printf("SUBS\n"); break;
-    case TOKEN_MUL: printf("MULS\n"); break;
-    case TOKEN_DIV: printf("DIVS\n"); break;
-    case TOKEN_MOD: printf("IDIVS\n"); break;
-    default: break;
-  }
-}
-
 char *__token_type_2_string(TOKEN_TYPES type){
   switch(type){
     case TOKEN_NUMBER: return "float";
@@ -74,38 +63,18 @@ char *__token_type_2_string(TOKEN_TYPES type){
   return NULL;
 }
 
-/*
-int __handle_bin_operator(exp_tree_stack_t *stack, TOKEN_TYPES type, int *var_count, char *prefix){
-  int retval;
-  DataTypes_t right_type;
-  DataTypes_t left_type;
-  DataTypes_t ret_type;
-  TS_data_t *temp;
-
-  right_type = get_top_type(stack);
-  left_type = get_second_type(stack);
-  ret_type = ret_types_table[map_token_types(type)][left_type][right_type];
-  check_name(ret_type);
-
-  temp = make_var_data(ret_type, RET_NAME, NULL);
-  if(temp == NULL) return COMPILER_ERR;
-  retval = operator_merge(stack, type, temp, (*var_count)++, prefix);
-  return retval;
-}
-*/
-
-
 int do_action(exp_tree_stack_t *stack, Token *token){
   int retval = 0;
   TS_data_t *temp;
   Sym_table_t *temp_table;
   DataTypes_t ret_type;
-  DataTypes_t unary_type;
 
   exp_node_t *right_side = NULL;
   exp_node_t *left_side = NULL;
-
+  exp_node_t *operator_node = NULL;
   static int var_count = 0; //pocitadlo kompilatorovych premennych
+
+
 
   switch (token->token_type) {
     case TOKEN_ID:
@@ -120,18 +89,27 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
       if(temp == NULL) return COMPILER_ERR;
       retval = add_id_node(stack, temp, 0, token->token_type, __token_type_2_string(token->token_type));
-      if(retval != 0) return COMPILER_ERR;
+      if(retval != 0) {
+        free(temp);
+        return COMPILER_ERR;
+      }
       break;
     case TOKEN_LEN:
       //ak je to na vrchole typu string
-      unary_type = get_top_type(stack);
-      ret_type = ret_types_table[map_token_types(token->token_type)][unary_type][NIL];
-      CHECK_TYPES(NULL, right_side, ret_type);
+      GET_OPERAND(left_side, stack);
+      ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][NIL];
+      CHECK_TYPES(left_side, NULL, ret_type);
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      unary_operator(stack, temp, var_count++, "LF");
-      if(retval != 0) return COMPILER_ERR;
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, NULL);
+      if(operator_node == NULL) {
+        destroy_tree(left_side);
+        return COMPILER_ERR;
+      }
+       /* dev */
+       CODE_PRINT(exp_cg_strlen(operator_node, left_side));
+       /* dev */
       break;
     case TOKEN_END_BRACKET:
       break;
@@ -149,12 +127,16 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
-      if(retval != 0){
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(operator_node == NULL){ //ak sa nepodari urobit merge treba oba stromy ktore sa dostali na vrch znicit
         destroy_tree(left_side);
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
+
+      /* dev */
+      CODE_PRINT(exp_cg_arith(operator_node, left_side, right_side));
+      /* dev */
 
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
@@ -170,8 +152,8 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
       if(temp == NULL) return COMPILER_ERR;
-      retval = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
-      if(retval != 0){
+      operator_node = operator_merge(stack, token->token_type, temp, var_count++, "LF", left_side, right_side);
+      if(operator_node == NULL){
         destroy_tree(left_side);
         destroy_tree(right_side);
         return COMPILER_ERR;
@@ -183,16 +165,31 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   return retval;
 }
 
-int check_assignment(exp_tree_stack_t *stack){
+int make_assignment(exp_tree_stack_t *stack){
   int retval = 0;
-  DataTypes_t right_side;
+  exp_node_t *right_side = NULL;
+  exp_node_t *assignment_node = NULL;
   DataTypes_t ret_type;
   TS_data_t *left_side = q_pop(globals.q_assignments);
   if(left_side != NULL){
-    right_side = get_top_type(stack);
-    if(right_side == NO_TYPE) return SEMANTIC_TYPE_ERR; //ak je na pravej strane od priradenia nic, respektive keyword a podobne
-    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side];
+    right_side = GET_OPERAND(right_side, stack);
+    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
     if(ret_type == NO_TYPE) retval = SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
+    if(left_side->name == NULL){
+      exp_cg_pushs(right_side);
+    }
+    else{
+      Sym_table_t *temp_table;
+      left_side = find_variable(globals.ts, left_side->name, &temp_table);
+      if (left_side == NULL) {
+        destroy_tree(right_side);
+        return COMPILER_ERR;
+      }
+      assignment_node = operator_merge(stack, TOKEN_SET, left_side, temp_table->nested_identifier, temp_table->prefix, NULL, right_side);
+      if(assignment_node == NULL) {destroy_tree(right_side); return COMPILER_ERR;}
+      retval = exp_cg_set(assignment_node, right_side);
+    }
+
   }
   return retval;
 }

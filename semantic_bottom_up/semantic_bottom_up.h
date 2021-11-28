@@ -19,6 +19,7 @@
 #include "ts_handler.h"
 #include "precedence_analyzer.h"
 #include "semantic_global.h"
+#include "code_generator.h"
 
 #define RET_TYPES_TABLE_t {           /* prava strana */                       \
            /* + - * */          /* num |  int  |   str   |  bool  |  NIL*/     \
@@ -81,12 +82,11 @@
 
 #define bottom_up_init exp_tree_init()
 
-//char *prefixes[] = {"float", "int", "string", "bool", "nil", " "};
-
 #define RET_TABLE_SIZE_Y 8
 #define RET_TABLE_SIZE_X 5
 
-#define RET_NAME "%cc"
+#define RET_NAME "%cv"
+
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
@@ -103,7 +103,7 @@ int do_action(exp_tree_stack_t *stack, Token *token);
  * @param stack ukazatel na inicilizovaný stack sxpression stromov
  * @return návratová hodnota podľa zadania IFJ
  */
-int check_assignment(exp_tree_stack_t *stack);
+int make_assignment(exp_tree_stack_t *stack);
 
 /**
  * Korektne uvoľní stromy na expression tree
@@ -137,6 +137,19 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
     node = NULL;                                                                \
     break;                                                                      \
   }  /*volat generaciu kodu defvar premennej a onstrukciu podla podmienky */    \
+  int retval = 0;                                                               \
+  if(ret_type == NUMBER){                                                       \
+    CODE_PRINT(retval = exp_cg_int2float(conv_node, node));                     \
+  }                                                                             \
+  else if(ret_type == INTEGER){                                                 \
+    CODE_PRINT(retval = exp_cg_float2int(conv_node, node));                     \
+  }                                                                             \
+  if(retval != 0) {                                                             \
+    destroy_tree(conv_node);                                                    \
+    destroy_tree(node);                                                         \
+    node = NULL;                                                                \
+    break;                                                                      \
+  }                                                                             \
   node = conv_node;                                                             \
   counter++;                                                                    \
   }while(0)

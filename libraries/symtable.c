@@ -77,6 +77,7 @@ TreeNode *BinaryTreeFindStruct(BinaryTree *tree, char *str) {
 
 void BinaryTreeDestroy(BinaryTree *tree, void (*dataDestroyHandler)(void *)) {
     Stack *stack = Stack_create();
+    if(tree == NULL) return;
     if(tree->rPtr != NULL) Stack_push(stack, (void *) tree->rPtr, 0);
     if(tree->lPtr != NULL) Stack_push(stack, (void *) tree->lPtr, 0);
     if(dataDestroyHandler != NULL)

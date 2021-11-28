@@ -12,12 +12,6 @@
 
 #define _DEBUG_PSA_ 0
 
-void truncate_array(char *array, int length){
-  for (int i = 0; i < length; i++) {
-    array[i] = '\0';
-  }
-}
-
 /*
  * Funkcia dekóduje string zadaný ako source
  * Primárne slúži na rozkódovanie operátorov, ktoré sa skladajú z dvoch znakov
@@ -342,7 +336,7 @@ int precedence_analyzer(ScannerContext *sc) {
         if (stack_top(stack) != STACK_END) {
           error_code = SYNTAX_ERR;
         }else {
-          error_code = check_assignment(exp_stack);
+          error_code = make_assignment(exp_stack);
         }
         DEBUG_MACRO(print_exp_stack(exp_stack);)
         break;
