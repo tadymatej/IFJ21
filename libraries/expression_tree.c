@@ -141,7 +141,7 @@ exp_node_t *exp_stack_top(Stack *stack){
 
 void destroy_tree(exp_node_t *tree){
   if(tree == NULL) return;
-  if(tree->type != TOKEN_ID) free(tree->data); //uvolnit kompilatorove premenne ktore su len v expression tree
+  if(tree->type != TOKEN_ID) free(tree->data); //uvolnit kompilatorove premenne ktore su len v expression tree, este uvolnit korektne name a value v data
   destroy_tree(tree->left);
   destroy_tree(tree->right);
   free(tree);

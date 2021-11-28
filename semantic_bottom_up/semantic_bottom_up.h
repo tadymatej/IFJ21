@@ -177,7 +177,7 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
     }                                                                           \
   }
 
-#define CHECK_UNEXPECTED_NIL(node)
+#define _DBG_SEM_PSA_(command) if(_DEBUG_SEMANTIC_PSA_) {command;}
 
 #endif
 
