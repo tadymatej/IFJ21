@@ -39,7 +39,7 @@ typedef enum {
 typedef struct {
     TOKEN_TYPES token_type; /**< Typ tokenu */
     ATTRIBUTE_TYPES attributeType;  /**< Typ atributu tokenu */
-    char *attribute;    /**< Ukazatel do pole řetězců na atribut */
+    int attributeIndex;    /**< Index do pole řetězců na atribut */
     int startPosRow;
     int startPosCol;
 } Token;
@@ -84,7 +84,7 @@ StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here 
  * @param attribute Ukazatel do pole s řetězci na daný atribut
  * @return Vrací vytvořený token
  */
-Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute);
+Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, int attributeIndex);
 
 /**
  * Uloží token dovnitř lexikální analýzy, vkládá na konec fronty narozdíl od TokenStore

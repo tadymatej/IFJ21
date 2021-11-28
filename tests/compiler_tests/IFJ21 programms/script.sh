@@ -1,4 +1,4 @@
-for i in seq {3..30}
+for i in seq {0..30}
 do
-	touch "syntax-err$i.tl"
+	touch "semantic/semantic-err$i.tl"
 done
