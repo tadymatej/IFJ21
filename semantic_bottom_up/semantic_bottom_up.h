@@ -88,7 +88,7 @@
 
 #define RET_NAME "%cv"
 
-extern int _print_code_ ;
+extern int _print_code_;
 
 #define CODE_PRINT(command) if(_print_code_) {command;}
 
@@ -141,6 +141,19 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
     node = NULL;                                                                \
     break;                                                                      \
   }  /*volat generaciu kodu defvar premennej a onstrukciu podla podmienky */    \
+  int retval = 0;                                                               \
+  if(ret_type == NUMBER){                                                       \
+    CODE_PRINT(retval = exp_cg_int2float(conv_node, node));                     \
+  }                                                                             \
+  else if(ret_type == INTEGER){                                                 \
+    CODE_PRINT(retval = exp_cg_float2int(conv_node, node));                     \
+  }                                                                             \
+  if(retval != 0) {                                                             \
+    destroy_tree(conv_node);                                                    \
+    destroy_tree(node);                                                         \
+    node = NULL;                                                                \
+    break;                                                                      \
+  }                                                                             \
   node = conv_node;                                                             \
   counter++;                                                                    \
   }while(0)
