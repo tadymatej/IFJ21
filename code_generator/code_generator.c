@@ -195,13 +195,13 @@ char *cg_int2float(char *dst, char *src){
 char *cg_float2int(char *dst, char *src){
   if (dst == NULL || src == NULL)
       return NULL;
-  function_templ(strlen(dst) + strlen(src) + strlen("FLOAT2INT %s %s\n") , (sprintf(str, "FLOAT2INT %s %s\n", dst, src)));
+  function_templ(strlen(dst) + strlen(src) + strlen("FLOAT2INT %s %s\n") , (sprintf(str, "FLOAT2INT %s %s\n", dst, src), free(dst), free(src)));
 }
 
 char *cg_strlen(char *dst, char *src){
   if (dst == NULL || src == NULL)
       return NULL;
-  function_templ(strlen(dst) + strlen(src) + strlen("STRLEN %s %s\n") , (sprintf(str, "STRLEN %s %s\n", dst, src)));
+  function_templ(strlen(dst) + strlen(src) + strlen("STRLEN %s %s\n") , (sprintf(str, "STRLEN %s %s\n", dst, src), free(dst), free(src)));
 
 }
 
