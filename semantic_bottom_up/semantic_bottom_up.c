@@ -8,6 +8,8 @@
 
 #include"semantic_bottom_up.h"
 
+#define _DEBUG_SEMANTIC_PSA_ 1
+
 DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE_SIZE_X] = RET_TYPES_TABLE_t;
 
 int map_token_types(TOKEN_TYPES type){
@@ -74,10 +76,9 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   exp_node_t *operator_node = NULL;
   static int var_count = 0; //pocitadlo kompilatorovych premennych
 
-
-
   switch (token->token_type) {
     case TOKEN_ID:
+      _DBG_SEM_PSA_(printf("token na psa: %s | typ: %s\n", token->attribute, lex2String(token->token_type)))
       temp = find_variable(globals.ts, token->attribute, &temp_table);
       if(temp == NULL) return SEMANTIC_PROG_ERR;
       retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type, temp_table->prefix);
@@ -86,6 +87,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
     case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT: case TOKEN_NULL:
       //skontroluj ci je definovana premenna
+      _DBG_SEM_PSA_(printf("konstanta na psa: %s\n", token->attribute))
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
       if(temp == NULL) return COMPILER_ERR;
       retval = add_id_node(stack, temp, 0, token->token_type, __token_type_2_string(token->token_type));
