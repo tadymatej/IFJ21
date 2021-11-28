@@ -1303,20 +1303,23 @@ int Parse(){
         ErrMessagePossition(token);
     }
     
-    free(token);
+    
+    
 
     /*
     // tokens trough SCANNER
-    while(((*ptr = Next(sc)).token_type != TOKEN_NONE || sc->actualState == STATE_ERR)) {
-        printf("*********%s %s\n", lex2String(ptr->token_type), ptr->attribute);
+    while((*token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
+        printf("*********%s %s\n", lex2String(token->token_type), token->attribute);
     }
-    
     */
+    
 
     //printf("RESULT: %d\n", OK);
 
     //Begin(&sc)
 
     //printf("%d\n", errT);
+
+    free(token);
     return errT;
 }
