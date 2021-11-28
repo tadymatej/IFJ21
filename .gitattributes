@@ -1,0 +1,12 @@
+# LF normalization for /parser
+
+# absolute path
+#/parser/* text eol=lf
+
+# scripts
+*.sh       text eol=lf
+
+# others
+*.tl       text eol=lf
+*.prg       text eol=lf
+*.tl-err       text eol=lf
