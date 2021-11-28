@@ -75,6 +75,8 @@ char *cg_stack_pop(char *var);
 
 char *cg_jump(char *label);
 
+char *cg_stack_clear();
+
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
 char *cg_int2float(char *dst, char *src);
@@ -188,9 +190,6 @@ char *cg_strlen(char *dst, char *src);
 
 #define CG_Exit(exitVal) \
     (printf("EXIT %s@%d\n", "int", exitVal))
-
-#define CG_StackClear() \
-    (printf("CLEARS\n"))
 
 /**
  * a = Pop(Stack) + Pop(Stack)

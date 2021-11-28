@@ -26,15 +26,15 @@ char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function t
  * Muze vygenerovat lably dvou druhu (fun_name)_(name)_(n_id) nebo (fun_name)_(n_id)_(idx)
  * Kdyz name je zadano, tak vygeneruje (fun_name)_(name)_(n_id)  pro jump na konec ifu, zacatek/konec while
  * Kdyz name == NULL pak v zavislosti na idx a n_id vygeneruje vygeneruji ruzne lably
- *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy
- *      idx < 0 && n_id < 0 - (fun_name)    pro volani
- *      idx > 0 && n_id < 0 - (fun_name)_(idx) nevyuzito
+ *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy  
+ *      idx < 0 && n_id < 0 - (fun_name)    pro volani 
+ *      idx > 0 && n_id < 0 - (fun_name)_(idx) pro generace exec_pointu
  *      idx < 0 && n_id > 0 - (fun_name)_(n_id) nevyuzito
  * @param fun_name - nazev funkce, ke ktere tento label patri
  * @param name - nazev konstrukce, ke ktere label patri
  * @param n_id - unikatni identifikator vnoreni konstrukce
  * @param idx - poradove cislo, ktere je pouzito pro lably pro opakijici se konstrukce
- * @return - vraci vygenerovani label. V pripade chyby NULL
+ * @return Vraci vygenerovany label. V pripade chyby NULL
 */
 char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
     char *underscore = "_";
@@ -76,35 +76,38 @@ char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
     return str;
 }
 
-char *cg_format_string(char *string){
+char *cg_format_string(char *string) {
     int input_len = strlen(string);
     char *string_format = calloc(ESCAPE_LEN*input_len+1, 1);
     char buffer[ESCAPE_LEN+1] = {'0'};
     char act_char;
-    if(string_format == NULL) return NULL;
-    for(int input_index = 0, output_index = 0; input_index < input_len; input_index++, output_index++){
+    if (string_format == NULL)
+        return NULL;
+    for (int input_index = 0, output_index = 0; input_index < input_len; input_index++, output_index++) {
         act_char = string[input_index];
         if(act_char == '#' || act_char == '\\' || act_char <= ' '){
             snprintf(buffer, ESCAPE_LEN+1, "\\%03d", (int)act_char);
             strcat(string_format, buffer);
             output_index += ESCAPE_LEN;
-        }
-        else{
+        } else {
             string_format[output_index] = string[input_index];
         }
     }
     return string_format;
 }
 
-char *cg_format_float(char *string){
-  if(string == NULL) return NULL;
-  double value = strtod(string, NULL);
-  char *string_format = calloc(DEF_COM_SIZE ,1);
-  snprintf(string_format, DEF_COM_SIZE, "%a", value);
-  return string_format;
+char *cg_format_float(char *string) {
+    if (string == NULL)
+        return NULL;
+    double value = strtod(string, NULL);
+    char *string_format = calloc(DEF_COM_SIZE, 1);
+    snprintf(string_format, DEF_COM_SIZE, "%a", value);
+    return string_format;
 }
 
 char *cg_label(char *label) {
+    if (label == NULL)
+        return NULL;
     function_templ(strlen(label) + strlen("LABEL $%s\n") - 1, (sprintf(str, "LABEL $%s\n", label), free(label)));
 }
 
@@ -131,8 +134,14 @@ char *cg_call_fun(char *fun_name) {
 }
 
 char *cg_move(char *dst, char *src) {
-    if (dst == NULL || src == NULL)
+    if (dst == NULL) {
+        free(src);
         return NULL;
+    }
+    if(src == NULL){
+        free(dst);
+        return NULL;
+    }
     function_templ(strlen(dst) + strlen(src) + strlen("MOVE %s %s\n") - 3, (sprintf(str, "MOVE %s %s\n", dst, src), free(dst), free(src)));
 }
 
@@ -153,7 +162,13 @@ char *cg_stack_pop(char *var) {
 }
 
 char *cg_jump(char *label) {
+    if (label == NULL)
+        return NULL;
     function_templ(strlen(label) + strlen("JUMP $%s\n") - 1, (sprintf(str, "JUMP $%s\n", label), free(label)));
+}
+
+char *cg_stack_clear() {
+    function_templ(strlen("CLEARS\n") + 1, sprintf(str, "CLEARS\n"));
 }
 
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op) {

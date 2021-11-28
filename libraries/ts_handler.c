@@ -23,8 +23,8 @@ int new_stack_frame(Sym_table_t **table, char *prefix){
 void dispose_table(Sym_table_t **table){
   Sym_table_t *temp = NULL;
   while (*table != NULL){
-    BinaryTreeDestroy((*table)->tree, NULL); //TODO dorobit destroyer pre dealokovanie pamate
-    temp = (*table)->upper;
+    BinaryTreeDestroy((*table)->tree, dispose_ts_data); //TODO dorobit destroyer pre dealokovanie pamate
+    *temp = (*table)->upper;
     free(*table);
     *table = temp;
   }
@@ -58,9 +58,41 @@ TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){ //TODO alok
   TS_data_t *temp = malloc(sizeof(TS_data_t));
   if(temp == NULL) return NULL;
   temp->type = type;
-  temp->name = name;
-  temp->value = value;
+  if(name != NULL){
+    temp->name = (char*)malloc(strlen(name)+1);
+    if(temp->name != NULL){
+      strcpy(temp->name, name);
+    }
+    else{
+      free(temp);
+      return NULL;
+    }
+  }
+  else
+    temp->name = NULL;
+  if(value != NULL){
+    temp->value = (char*)malloc(strlen(value)+1);
+    if(temp->value != NULL){
+      strcpy(temp->value, value);
+    }
+    else{
+      free(temp->name);
+      free(temp);
+      return NULL;
+    }
+  }
+  else
+    temp->value = NULL;
   return temp;
+}
+
+void dispose_ts_data(void *ptr){
+  TS_data_t *data = (TS_data_t*)ptr;
+  if(data != NULL){
+    free(data->name);
+    free(data->value);
+  }
+  free(data);
 }
 
 DataTypes_t string_to_data_type(char *str){

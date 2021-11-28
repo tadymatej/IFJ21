@@ -76,6 +76,13 @@ TS_data_t *make_var_data(DataTypes_t type, char *name, char *value);
  */
 DataTypes_t string_to_data_type(char *str);
 
+/**
+ * Uvolni pamet alokovanou pro instanci struktury TS_data_t
+ * 
+ * @param ptr - ukazatel na instanci struktury
+ */
+void dispose_ts_data(void *ptr);
+
 void print_TS_var(Sym_table_t *table);
 #endif
 
