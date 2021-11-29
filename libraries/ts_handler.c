@@ -54,7 +54,7 @@ int add_variable(Sym_table_t *table, TS_data_t *data){
   return 0;
 }
 
-TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){ //TODO alokovat miesto pre name a value
+TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){
   TS_data_t *temp = malloc(sizeof(TS_data_t));
   if(temp == NULL) return NULL;
   temp->type = type;

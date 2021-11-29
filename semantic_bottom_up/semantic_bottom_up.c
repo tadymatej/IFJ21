@@ -78,16 +78,13 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
   switch (token->token_type) {
     case TOKEN_ID:
-      _DBG_SEM_PSA_(printf("token na psa: %s | typ: %s\n", token->attribute, lex2String(token->token_type)))
       temp = find_variable(globals.ts, token->attribute, &temp_table);
       if(temp == NULL) return SEMANTIC_PROG_ERR;
       retval = add_id_node(stack, temp, temp_table->nested_identifier, token->token_type, temp_table->prefix);
       if(retval != 0) return COMPILER_ERR;
       break;
-
     case TOKEN_NUMBER: case TOKEN_STRING: case TOKEN_NUMBER_INT: case TOKEN_NULL:
       //skontroluj ci je definovana premenna
-      _DBG_SEM_PSA_(printf("konstanta na psa: %s\n", token->attribute))
       temp = make_var_data(__token_type_to_ts_data(token->token_type), token->attribute, token->attribute);
       if(temp == NULL) return COMPILER_ERR;
       retval = add_id_node(stack, temp, 0, token->token_type, __token_type_2_string(token->token_type));
@@ -109,9 +106,9 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         destroy_tree(left_side);
         return COMPILER_ERR;
       }
-       /* dev */
+
        CODE_PRINT(exp_cg_strlen(operator_node, left_side));
-       /* dev */
+
       break;
     case TOKEN_END_BRACKET:
       break;
@@ -174,7 +171,7 @@ int make_assignment(exp_tree_stack_t *stack){
   DataTypes_t ret_type;
   TS_data_t *left_side = q_pop(globals.q_assignments);
   if(left_side != NULL){
-    right_side = GET_OPERAND(right_side, stack);
+    GET_OPERAND(right_side, stack);
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
     if(ret_type == NO_TYPE) retval = SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
     if(left_side->name == NULL){
