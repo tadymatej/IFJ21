@@ -254,21 +254,6 @@ char get_stack_operand(simp_stack_t *stack){
   return operand;
 }
 
-int _token_copy(Token *dest, Token *src){
-  free(dest->attribute);
-  dest->attribute = NULL;
-  if(src->attribute != NULL){
-    dest->attribute = malloc(strlen(src->attribute) + 1);
-    if(dest->attribute == NULL) return COMPILER_ERR;
-    strcpy(dest->attribute, src->attribute);
-  }
-  dest->token_type = src->token_type;
-  dest->attributeType = dest->attributeType;
-  dest->startPosCol = src->startPosCol;
-  dest->startPosRow = src->startPosRow;
-  return 0;
-}
-
 int precedence_analyzer(ScannerContext *sc) {
   //genrovanie postfixoveho zapisu z vstupného reťazca
   char *postfixExpression = (char *) calloc(MAX_LEN, sizeof(char));
@@ -284,7 +269,7 @@ int precedence_analyzer(ScannerContext *sc) {
   Token prev_token;
   prev_token.attribute = NULL;
   GET_VALID_TOKEN(token, sc);
-  if((error_code = _token_copy(&prev_token, &token)) != 0) return COMPILER_ERR;
+  prev_token = token;
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   char token_operator;
 
@@ -318,21 +303,13 @@ int precedence_analyzer(ScannerContext *sc) {
           stack_push(stack, '<');
         }
         stack_push(stack, token_operator);
-        if((error_code = _token_copy(&prev_token, &token)) != 0){
-          done = 1;
-          break;
-        }
+        prev_token = token;
         GET_VALID_TOKEN(token, sc);
-        printf("dodany token: %s | token type: %s\n", token.attribute, lex2String(token.token_type));
         break;
       case '=':
         stack_push(stack, token_operator);
-        if((error_code = _token_copy(&prev_token, &token)) != 0){
-          done = 1;
-          break;
-        }
+        prev_token = token;
         GET_VALID_TOKEN(token, sc);
-        printf("dodany token: %s | token type: %s\n", token.attribute, lex2String(token.token_type));
         break;
       case '#':
         TokenStore(token, sc);
@@ -371,7 +348,6 @@ int precedence_analyzer(ScannerContext *sc) {
   }
   end_bottom_up(&exp_stack);
   free(postfixExpression);
-  free(prev_token.attribute);
   stack_destroy(&stack);
   return error_code;
 }
