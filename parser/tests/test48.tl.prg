@@ -22,9 +22,9 @@ $19 <type> => integer
 $10 <next_params> => <param> <next_params>
 ---------------------------
 ##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: number|
 $18 <param> => id : <type>
 ---------------------------
+##########|type: keyword	attribute: number|
 $21 <type> => number
 ---------------------------
 ##########|type: end bracket	attribute: (null)|

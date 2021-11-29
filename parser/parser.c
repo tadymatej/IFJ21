@@ -1,5 +1,3 @@
-#include "scanner.h"
-
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,12 +7,16 @@
 //#define DEBUG_ERROR
 #define SHOW_TOKENS
 
+//#define SEMANTIC_CONNECT
+
 
 bool isEnd = false;
 bool err = false;
 
+
 int errT = 0;
 int psa = 0;
+int semantic = 0;
 
 void ErrMessagePossition(Token *ptr){
     fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
@@ -129,28 +131,12 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
             #endif
 
             if(ptr->token_type == TOKEN_ID){
-                // $18 <param> => id : <type>
-
-                *ptr = Next(sc); if(errT != 0){return false;}
-                if(ptr->token_type == TOKEN_COLON){
-                    *ptr = Next(sc); if(errT != 0){return false;}
-
-                    #ifdef DEBUG_USED_RULE
-                        printf("$18 <param> => id : <type>\n");
-                        printf("---------------------------\n");
-                    #endif
-                    next_params = NType(ptr);
-                } else {
-                    return false;
-                    #ifdef DEBUG_ERROR
-                        printf("ERROR || $18\n");
-                    #endif
-                }
+                next_params = NParam(ptr, sc);
             } else {
-                return false;
                 #ifdef DEBUG_ERROR
                     printf("ERROR || $18\n");
                 #endif
+                return false;
             }
         }
 
@@ -168,12 +154,15 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
             return false;
         }
 
+        if(!next_params){
+            return false;
+        }
+
         *ptr = Next(sc); if(errT != 0){return false;}
     }
 
     *ptr = Next(sc); if(errT != 0){return false;}
-
-
+    
     return next_params;
 }
 
@@ -230,6 +219,15 @@ bool NType(Token *ptr){
 
 bool NParam(Token *ptr, ScannerContext *sc){
     bool param = false;
+    // $18 <param> => id : <type>
+
+    //18 - id
+    #ifdef SEMANTIC_CONNECT
+        semantic = init_function_argument(ptr);
+        if(semantic){
+            return false;
+        }
+    #endif
 
     // $18 <param> => id : <type>
     *ptr = Next(sc); if(errT != 0){return false;}
@@ -242,8 +240,20 @@ bool NParam(Token *ptr, ScannerContext *sc){
         #endif
         *ptr = Next(sc); if(errT != 0){return false;}
 
-
         param = NType(ptr);
+
+        if(param){
+            //18 - <type>
+            #ifdef SEMANTIC_CONNECT
+                semantic = fun_arg_definition(ptr);
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
+
     } else {
        return false;
         #ifdef DEBUG_ERROR
@@ -465,6 +475,18 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
             printf("$57 <assignment> => = <expression>\n");
             printf("---------------------------\n");
         #endif
+
+        if(assignment){
+            //57 - =
+            #ifdef SEMANTIC_CONNECT
+                semantic = prepare_assignment();
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
 
         assignment = NExpression(ptr, sc);
     }
@@ -816,6 +838,14 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     *ptr = Next(sc); if(errT != 0){return false;}
 
                     if(ptr->token_type == TOKEN_ID){
+                        //41 - id
+                        #ifdef SEMANTIC_CONNECT
+                            semantic = define_local_var(ptr);
+                            if(semantic){
+                                return false;
+                            }
+                        #endif
+
                         *ptr = Next(sc); if(errT != 0){return false;}
 
                         if(ptr->token_type == TOKEN_COLON){
@@ -825,7 +855,21 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                                 printf("$41 <function_body> => local id : <type> <assignment>\n");
                                 printf("---------------------------\n");
                             #endif
-                            function_body = function_body && NType(ptr) && NAssignment(ptr, sc);
+
+                            function_body = function_body && NType(ptr);
+                            if(function_body){
+                                //41 - <type>
+                                #ifdef SEMANTIC_CONNECT
+                                    semantic = var_type_assignment(ptr);
+                                    if(semantic){
+                                        return false;
+                                    }
+                                #endif
+                            } else {
+                                return false;
+                            }
+
+                            function_body = function_body && NAssignment(ptr, sc);
                             
                             TokenStore(*ptr, sc);
 
@@ -963,6 +1007,18 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
 
         return_fc = NType(ptr);
 
+        if(return_fc){
+            //24 - <type>
+            #ifdef SEMANTIC_CONNECT
+                semantic = ret_val_dec(ptr);
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
+
         *ptr = Next(sc); if(errT != 0){return false;}
 
         while(ptr->token_type == TOKEN_COMMA){
@@ -974,8 +1030,20 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
 
             *ptr = Next(sc); if(errT != 0){return false;}
             return_fc =  return_fc && NType(ptr);
-            *ptr = Next(sc); if(errT != 0){return false;}
 
+            if(return_fc){
+                //25 - <type>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = ret_val_dec(ptr);
+                    if(semantic){
+                        return false;
+                    }
+                #endif
+            } else {
+                return false;
+            }
+
+            *ptr = Next(sc); if(errT != 0){return false;}
         }
 
         // $26 <next_rets> => <function_body>
@@ -1182,6 +1250,13 @@ bool NProg(Token *ptr, ScannerContext *sc){
         return false;
     }
 
+    // 1 - require
+    #ifdef SEMANTIC_CONNECT
+        semantic = jump_to_exec_point();
+        if(semantic){
+            return false;
+        }
+    #endif
 
     while(ptr->token_type != TOKEN_NONE && prog == true) {
         switch(ptr->token_type){
@@ -1195,6 +1270,15 @@ bool NProg(Token *ptr, ScannerContext *sc){
                             printf("$2 <prog> => function id_f ( <params_list> <return_fc> end\n");
                             printf("---------------------------\n");
                         #endif
+
+                        // je volana nad tokenem  2 - id_f
+                        #ifdef SEMANTIC_CONNECT
+                            semantic = function_definition(ptr);
+                            if(semantic){
+                                return false;
+                            }
+                        #endif
+
                         *ptr = Next(sc); if(errT != 0){return false;}
                         prog = prog && NParams_list(ptr, sc) && NReturn_fc(ptr, sc);
 
@@ -1237,7 +1321,24 @@ bool NProg(Token *ptr, ScannerContext *sc){
                     printf("$5 <prog> => <function_call>\n");
                     printf("---------------------------\n");
                 #endif
+
+                // 5 - <function_call>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = before_global_fun_call();
+                    if(semantic){
+                        return false;
+                    }
+                #endif
+
                 prog = prog && NFunction_call(ptr, sc);
+
+                // 5 - <prog>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = after_global_fun_call();
+                    if(semantic){
+                        return false;
+                    }
+                #endif
 
                 break;
 
@@ -1256,6 +1357,14 @@ bool NProg(Token *ptr, ScannerContext *sc){
     #ifdef DEBUG_USED_RULE
         printf("$4 <prog> => EOF\n");
         printf("---------------------------\n");
+    #endif
+
+    // 4 - EOF
+    #ifdef SEMANTIC_CONNECT
+        semantic = end_program();
+        if(semantic){
+            return false;
+        }
     #endif
 
     return prog;
