@@ -5,6 +5,7 @@
 #include "scanner.h"
 #include <string.h>
 #include "scanner.h"
+#include <ctype.h>
 
 typedef struct {
     char *frame;
