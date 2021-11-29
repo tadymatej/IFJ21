@@ -1,5 +1,4 @@
--- Hello World example in IFJ21
--- run it on Merlin by: tl run hello.tl
+-- Should be OK - Semantic fix
 
 require "ifj21"
 
@@ -11,8 +10,6 @@ function main() : integer, number
     local a : integer = 10
     local b : number = 5
     local c : string = "Ho Ho Ho!"
-
-    a = 456
     
     if a > b then
         fc( a, b, c)

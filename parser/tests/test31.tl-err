@@ -1,0 +1,11 @@
+-- Should be ERR
+
+require "ifj21"
+
+function main()
+    if a > 5 
+        if a == 4 then
+    
+        end
+    end
+end

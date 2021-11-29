@@ -14,12 +14,10 @@ int main(){
     temp_data = make_var_data(NUMBER, "a", "7");
     add_variable(globals.ts, temp_data);
 
-    temp_data = make_var_data(NUMBER, "b", "7");
-    add_variable(globals.ts, temp_data);
+    int retVal = Parse();
 
-    bool syntaxOK = Parse();
-    if(syntaxOK){
-        exit(EXIT_SUCCESS);
-    }
+    //printf("retVal: %d\n", retVal);
+
+    return retVal;
     //printf("syntax OK: %d\n", syntaxOK);
 }

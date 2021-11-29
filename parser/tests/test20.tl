@@ -1,5 +1,4 @@
--- Hello World example in IFJ21
--- run it on Merlin by: tl run hello.tl
+-- Should be OK
 
 require "ifj21"
 
@@ -11,7 +10,7 @@ function main() : integer, number
     local a : integer = 10
     local b : number = 5
 
-    if a > b then
+    if a > 3 then
         fc(a, b)
     end
 

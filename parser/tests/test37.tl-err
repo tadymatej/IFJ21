@@ -1,0 +1,7 @@
+-- Should be ERR
+
+require "ifj21"
+
+function main(k : intege, l : string, m : number)
+    local a : integer
+end

@@ -1,52 +1,9 @@
 #include "scanner.h"
 
-Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute) {
+Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, char *attribute) {
     Token token = {token_type, attributeType, attribute, 0, 0};
     return token;
 }
-
-StringsArray* StringsArrayCreate(char separator) {
-    StringsArray *strArr = malloc(sizeof(StringsArray));
-    if(strArr == NULL) return NULL;
-    strArr->arr = malloc(sizeof(char) * DEFAULT_STRINGS_ARR_LEN);
-    if(strArr->arr == NULL) {
-        free(strArr);
-        return NULL;
-    }
-    strArr->cap = DEFAULT_STRINGS_ARR_LEN;
-    strArr->len = 0;
-    strArr->lastValid = 0;
-    strArr->separator = separator;
-    return strArr;
-}
-
-void StringsArrayDelete(StringsArray **strArr) {
-    if(*strArr != NULL) {
-        free((*strArr)->arr);
-        free(*strArr);
-        *strArr = NULL;
-    }
-}
-
-int StringsArrayExtend(StringsArray *strArr) {
-    strArr->cap = strArr->cap * 2;
-    void *tmp = realloc(strArr->arr, sizeof(char) * strArr->cap);
-    if(tmp != NULL) {
-        strArr->arr = (char *) tmp;
-        return 0;
-    }
-    else return -1;
-}
-
-int StringsArrayPush(StringsArray *strArr, char c) {
-    if(strArr->cap < strArr->len + 1) {
-        if(StringsArrayExtend(strArr) == -1) return -1;
-    }
-    strArr->arr[strArr->len] = c;
-    strArr->len++;
-    return 0;
-}
-
 
 #define COMMENT -10
 
@@ -167,9 +124,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -180,9 +136,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -193,34 +148,33 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
         } break;
         case STATE_LEN: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_LEN, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_ADD: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_ADD, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_MUL: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_MUL, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_SUB: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_SUB, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_DOT: {
@@ -230,7 +184,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_DOTF: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_CONCAT, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_NOT: {
@@ -252,13 +206,13 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_LEQ: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_LEQ, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_L: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_L, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_G_GEQ: {
@@ -271,13 +225,13 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_GEQ: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_GEQ, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_G: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_G, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_EQ_SET: {
@@ -290,13 +244,13 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_EQ: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_EQ, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_SET: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_SET, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_DIV_MOD: {
@@ -309,13 +263,13 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_MOD: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_MOD, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_DIV: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_DIV, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_S1: {
@@ -353,9 +307,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         case STATE_SF: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->arr[strArr->len] = strArr->separator;
-            char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-            strArr->lastValid = strArr->len;
+            char *ptr = StringsArrayGetLastPointer(strArr);
+            StringsArrayPush(strArr, strArr->separator);
             return TokenCreate(TOKEN_STRING, ATTRIBUTE_STRING, ptr);
         } break;
         case STATE_NF1: {
@@ -366,9 +319,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_NUMBER_INT, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -387,9 +339,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -404,9 +355,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -425,9 +375,8 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->arr[strArr->len] = strArr->separator;
-                char *ptr = (char *) ((ptrInt) strArr->arr + strArr->lastValid);
-                strArr->lastValid = strArr->len;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -444,7 +393,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             else {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
-                strArr->len = strArr->lastValid;
+                StringsArrayInvalidateLast(strArr);
                 //return TokenCreate(COMMENT, ATTRIBUTE_NONE, NULL);
             }
         } break;
@@ -452,7 +401,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             if(f(actualChar)) sc->actualState = STATE_CF2;
             else {
                 sc->lastReadedChar = (int) actualChar;
-                strArr->len = strArr->lastValid;
+                StringsArrayInvalidateLast(strArr);
                 sc->actualState = STATE_START; //return TokenCreate(COMMENT, ATTRIBUTE_NONE, NULL);
             }
         } break;
@@ -481,37 +430,37 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         } break;
         case STATE_CF3: {
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             sc->actualState = STATE_START; //return TokenCreate(COMMENT, ATTRIBUTE_NONE, NULL);;
         } break;
         case STATE_COMMA: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_COMMA, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_COLON: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_COLON, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_SEMICOLON: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_SEMICOLON, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_START_BRACKET: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_START_BRACKET, ATTRIBUTE_NONE, NULL);
         } break;
         case STATE_END_BRACKET: {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
-            strArr->len = strArr->lastValid;
+            StringsArrayInvalidateLast(strArr);
             return TokenCreate(TOKEN_END_BRACKET, ATTRIBUTE_NONE, NULL);
         } break;
 
@@ -612,7 +561,7 @@ void NextTokens(ScannerContext *sc) {
         sc->errorMalloc = true;
         return;
     }
-    strArr->lastValid++;
+    //strArr->lastValid++;
     
     if(sc->actualState == STATE_ERR) {
         __TokenStore(token, sc);
@@ -627,7 +576,7 @@ void NextTokens(ScannerContext *sc) {
             sc->errorMalloc = true;
             return;
         }
-        strArr->lastValid++;
+        //strArr->lastValid++;
 
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
             if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
@@ -647,7 +596,7 @@ void NextTokens(ScannerContext *sc) {
                     sc->errorMalloc = true;
                     return;
                 }
-                strArr->lastValid++;
+                //strArr->lastValid++;
                 if(sc->actualState == STATE_ERR) {
                     sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
                     token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
@@ -736,7 +685,7 @@ int TokenStore(Token token, ScannerContext *sc) {
     q_push_front(sc->tokens, (void *) t);
     return 0;
 }
-/*
+
 #define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #if __STANDALONE__
@@ -759,4 +708,3 @@ int main(int argc, char **argv) {
     return 0;
 }
 #endif
-*/

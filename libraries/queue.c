@@ -60,6 +60,11 @@ void* q_pop(Queue_t* q) {
     return NULL;
 }
 
+bool q_is_empty(Queue_t *q) {
+    if(q->first == NULL) return true;
+    else return false;
+}
+
 void dispose_queue(Queue_t** q) {
     if (q != NULL && *q != NULL) {
         Q_elem_t* cur = (*q)->first;

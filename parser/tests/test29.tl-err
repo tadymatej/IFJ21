@@ -1,0 +1,4 @@
+-- Should be ERR
+
+function main()
+end

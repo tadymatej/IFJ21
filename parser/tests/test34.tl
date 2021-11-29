@@ -1,3 +1,5 @@
+--Should be OK
+
 require "ifj21"
 
 function main() : integer
@@ -6,6 +8,7 @@ function main() : integer
     local b : integer = foo(a)
 
     a, b = 5, 88
+
 end
 
 main()

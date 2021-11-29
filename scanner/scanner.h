@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include "symtable.h"
 #include "queue.h"
+#include "strings_array.h"
 
 /**
  * Stavy automatu scanneru
@@ -45,17 +46,6 @@ typedef struct {
 } Token;
 
 /**
- * Struktura pole řetězců
- */
-typedef struct {
-    int cap;    /**< Maximální kapacita pole */
-    int len;    /**< Reálná velikost pole */
-    int lastValid; /**< Poslední validní pozice v poli (len != lastValid) */
-    char separator; /**< Oddělovač jednotlivých řetězců */
-    char *arr;      /**< Pole samotné */
-} StringsArray;
-
-/**
  * Struktura pro volání scanneru
  */
 typedef struct {
@@ -72,8 +62,6 @@ typedef struct {
 
 typedef unsigned long long ptrInt;
 
-#define DEFAULT_STRINGS_ARR_LEN 128
-
 StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
 
 
@@ -84,7 +72,7 @@ StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here 
  * @param attribute Ukazatel do pole s řetězci na daný atribut
  * @return Vrací vytvořený token
  */
-Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, void *attribute);
+Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, char *attribute);
 
 /**
  * Uloží token dovnitř lexikální analýzy, vkládá na konec fronty narozdíl od TokenStore
@@ -172,34 +160,6 @@ int b(char c);
  * Zjistí jestli znak vyhovuje znaku uvnitř identifikátoru
  */
 int a(char c);
-
-/**
- * Přidá do strArr nový znak
- * @param strArr StringsArray, do kterého se má vložit znak
- * @param c Znak, který se má vložit
- * @return Vrací 0 v případě úspěchu nebo -1 v případě neúspěchu
- */
-int StringsArrayPush(StringsArray *strArr, char c);
-
-/**
- * Zvětší kapacitu strArr o dvojnásobek
- * @param strArr StringsArray, kterému se má zvětšit kapacita
- * @return Vrací -1 v případě neúspěchu, cokoliv jiného v případě úspěchu
- */
-int StringsArrayExtend(StringsArray *strArr);
-
-/**
- * Vytvoří StringsArray
- * @param separator Separátor, který je považován za oddělovač jednotlivých stringů
- * @return Vrací NULL v případě neúspěchu, jinak ukazatel na vytvořený StringsArray
- */
-StringsArray* StringsArrayCreate(char separator);
-
-/**
- * Korektně uvolní StringsArray
- * @param strArr StringsArray, který má být uvolněn
- */
-void StringsArrayDelete(StringsArray **strArr);
 
 /**
  * Updatuje pozici scanneru = řádek a sloupec vstupu

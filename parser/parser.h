@@ -34,9 +34,13 @@ bool NRet(Token *ptr, ScannerContext *sc);
 bool NExp_cond(Token *ptr, ScannerContext *sc);
 bool NExpression(Token *ptr, ScannerContext *sc);
 bool NExpressions(Token *ptr, ScannerContext *sc);
+bool NGlobal(Token *ptr, ScannerContext *sc);
+bool NFc_decl_ret(Token *ptr, ScannerContext *sc);
+bool NTypes_list(Token *ptr, ScannerContext *sc);
+bool NIds(Token *ptr, ScannerContext *sc);
 
 
-bool Parse();
+int Parse();
 /**
  * Vytvoří nový token
  * @param attribute Atribut tokenu
