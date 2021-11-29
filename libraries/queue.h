@@ -30,6 +30,7 @@ int q_push(Queue_t *q, void *elem);
 void* q_top(Queue_t *q);
 void* q_pop(Queue_t *q);
 void dispose_queue(Queue_t **q);
+bool q_is_empty(Queue_t *q);
 
 /**
  * Vloží na konec fronty a provede swap dvou posledních elementů
