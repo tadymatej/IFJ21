@@ -5,7 +5,6 @@ SEMANTIC_BOTTOM_UP=semantic_bottom_up
 SEMANTIC_ACTION=semantic_action
 CODE_GEN=code_generator
 SEMANTIC_GLOBAL=semantic_global
-CODE_GEN=code_generator
 SEMANTIC_ACTION=semantic_action
 PARSER=parser
 #
@@ -35,8 +34,10 @@ FILES_TO_PACK_REMOVE = ./Makefile ./main.c scanner.c scanner.h parser.c parser.h
 						code_generator.h array.c array.h expression_tree.c expression_tree.h fun_data.c fun_data.h fun_table.c fun_table.h \
 						queue.c queue.h simple_stack.c simple_stack.h stack.c stack.h symtable.c symtable.h ts_handler.c ts_handler.h
 
-SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c $(CODE_GENERATOR_PATH)*.c
-PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
+SEMANTIC_ACTION_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_ACTION).c $(CODE_GEN_PATH)$(CODE_GEN).c
+SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
+
+PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) $(SEMANTIC_ACTION_DEPS) main.c $(PARSER_PATH)parser.c
 
 CC=gcc
 CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS_PATH) -I$(PARSER_PATH) -I$(CODE_GEN_PATH) -I$(CODE_GENERATOR_PATH) -fcommon -g

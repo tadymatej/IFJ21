@@ -1,20 +1,30 @@
-#include "scanner.h"
+/********************************************************************************
+ *  Projekt - Prekladač
+ *  Název souboru: parser.c
+ *  Popis: Implementace gramatických pravidel
+ *  Zodpovědný student: Eva Mičánková email: xmican10@stud.fit.vutbr.cz
+ ********************************************************************************
+*/
 
 #include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
+// ---------------------- Show debug information ---------------------
+
 #define DEBUG_USED_RULE
 //#define DEBUG_ERROR
 #define SHOW_TOKENS
+//#define SEMANTIC_CONNECT
 
+// --------------------------------------------------------------------
 
-bool isEnd = false;
-bool err = false;
+bool isEnd = false; //?
 
-int errT = 0;
-int psa = 0;
+int errT = 0; // Kód chyby, návratová hodnota programu
+int psa = 0; // Návratová hodnota PSA
+int semantic = 0; // Návratová hodnota sémantické analýzy
 
 void ErrMessagePossition(Token *ptr){
     fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
@@ -80,7 +90,6 @@ Token Next(ScannerContext *sc){
             // lexikalni chyba
             ErrMessage(LEX_ERR);
             ErrMessagePossition(&token);
-            //fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
         }
     }
 
@@ -129,28 +138,9 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
             #endif
 
             if(ptr->token_type == TOKEN_ID){
-                // $18 <param> => id : <type>
-
-                *ptr = Next(sc); if(errT != 0){return false;}
-                if(ptr->token_type == TOKEN_COLON){
-                    *ptr = Next(sc); if(errT != 0){return false;}
-
-                    #ifdef DEBUG_USED_RULE
-                        printf("$18 <param> => id : <type>\n");
-                        printf("---------------------------\n");
-                    #endif
-                    next_params = NType(ptr);
-                } else {
-                    return false;
-                    #ifdef DEBUG_ERROR
-                        printf("ERROR || $18\n");
-                    #endif
-                }
+                next_params = NParam(ptr, sc);
             } else {
                 return false;
-                #ifdef DEBUG_ERROR
-                    printf("ERROR || $18\n");
-                #endif
             }
         }
 
@@ -168,20 +158,21 @@ bool NNext_params(Token *ptr, ScannerContext *sc){
             return false;
         }
 
+        if(!next_params){
+            return false;
+        }
+
         *ptr = Next(sc); if(errT != 0){return false;}
     }
 
     *ptr = Next(sc); if(errT != 0){return false;}
-
-
+    
     return next_params;
 }
 
 
 bool NType(Token *ptr){
     bool type = true;
-
-    //printf("NType recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
    if(ptr->token_type == TOKEN_KEYWORD){
         // $19 <type> => integer
@@ -230,6 +221,15 @@ bool NType(Token *ptr){
 
 bool NParam(Token *ptr, ScannerContext *sc){
     bool param = false;
+    // $18 <param> => id : <type>
+
+    //18 - id
+    #ifdef SEMANTIC_CONNECT
+        semantic = init_function_argument(ptr);
+        if(semantic){
+            return false;
+        }
+    #endif
 
     // $18 <param> => id : <type>
     *ptr = Next(sc); if(errT != 0){return false;}
@@ -242,8 +242,20 @@ bool NParam(Token *ptr, ScannerContext *sc){
         #endif
         *ptr = Next(sc); if(errT != 0){return false;}
 
-
         param = NType(ptr);
+
+        if(param){
+            //18 - <type>
+            #ifdef SEMANTIC_CONNECT
+                semantic = fun_arg_definition(ptr);
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
+
     } else {
        return false;
         #ifdef DEBUG_ERROR
@@ -271,45 +283,27 @@ bool NParams_list(Token *ptr, ScannerContext *sc){
         return true;
     }
 
-
     // $7 <params_list> => <first_param> <next_params>
-    if(ptr->token_type == TOKEN_ID){
-        params_list = true;
+    else if(ptr->token_type == TOKEN_ID){
 
         #ifdef DEBUG_USED_RULE
             printf("$7 <params_list> => <first_param> <next_params>\n");
             printf("---------------------------\n");
         #endif
         // $8 <first_param> => <param>
-        // $18 <param> => id : <type>
 
         #ifdef DEBUG_USED_RULE
             printf("$8 <first_param> => <param>\n");
             printf("---------------------------\n");
         #endif
 
-        *ptr = Next(sc); if(errT != 0){return false;}
+        params_list = NParam(ptr, sc);
 
-        if(ptr->token_type == TOKEN_COLON){
-            #ifdef DEBUG_USED_RULE
-                printf("$18 <param> => id : <type>\n");
-                printf("---------------------------\n");
-            #endif
-
+        if(params_list){
             *ptr = Next(sc); if(errT != 0){return false;}
-            params_list = params_list && NType(ptr);
-
-            if(params_list){
-                *ptr = Next(sc); if(errT != 0){return false;}
-                params_list = params_list && NNext_params(ptr, sc);
-            }
-
+            params_list = params_list && NNext_params(ptr, sc);
         }
-
-        //*ptr = Next(sc); if(errT != 0){return false;}
-
     }
-
 
     return params_list;
 }
@@ -337,7 +331,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
 
         // $36 <first_arg> => id
         #ifdef DEBUG_USED_RULE
-            printf("$35 <first_arg> => id\n");
+            printf("$36 <first_arg> => id\n");
             printf("---------------------------\n");
         #endif
 
@@ -346,9 +340,9 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
             *ptr = Next(sc); if(errT != 0){return false;}
 
             if(ptr->token_type == TOKEN_ID){
-                // $36 <next_args> => , id <next_args>
+                // $37 <next_args> => , id <next_args>
                 #ifdef DEBUG_USED_RULE
-                    printf("$36 <next_args> => , id <next_args>\n");
+                    printf("$37 <next_args> => , id <next_args>\n");
                     printf("---------------------------\n");
                 #endif
                 *ptr = Next(sc); if(errT != 0){return false;}
@@ -398,17 +392,13 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
-    //printf("NExp recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-    //printf("\nPSA = %d\n", psa);
 
     if(psa != 0){
         ErrMessage(psa);
         ErrMessagePossition(ptr);
         exp = false;
-        //exit(EXIT_FAILURE);
     } else {
         exp = true;
     }
@@ -423,13 +413,10 @@ bool NExpression(Token *ptr, ScannerContext *sc){
     TokenStore(*ptr, sc);
     sc->tokenLookAhead = true; // podivam se o token dopredu
     *ptr = Next(sc); if(errT != 0){return false;}
-    //printf("LookAhead: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
     if(ptr->token_type == TOKEN_ID_F){
-        *ptr = Next(sc); if(errT != 0){return false;}
-        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-        *ptr = Next(sc); if(errT != 0){return false;}
-        //printf("Continue: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+        *ptr = Next(sc); if(errT != 0){return false;} // vraci predchozi (=)
+        *ptr = Next(sc); if(errT != 0){return false;} // vraci id_f
 
         // $56 <expression> => <function_call>
         #ifdef DEBUG_USED_RULE
@@ -438,8 +425,6 @@ bool NExpression(Token *ptr, ScannerContext *sc){
         #endif
         expression = NFunction_call(ptr, sc);
     } else {
-        // TODO store token pro PSA
-        //TokenStore(*ptr, sc);
 
         // $54 <expression> => <exp>
         #ifdef DEBUG_USED_RULE
@@ -466,6 +451,18 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
+        if(assignment){
+            //57 - =
+            #ifdef SEMANTIC_CONNECT
+                semantic = prepare_assignment();
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
+
         assignment = NExpression(ptr, sc);
     }
 
@@ -484,24 +481,16 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 bool NExp_cond(Token *ptr, ScannerContext *sc){
     bool exp_cond = true;
 
-    //*ptr = Next(sc); if(errT != 0){return false;}
-
-    // TODO cekam na PSA
+    // $68 <exp_cond> => call PSA
     
-    //printf("Calling PSA with: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
     psa = precedence_analyzer(sc);
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
-
-    //printf("NExp_cond: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-    //printf("\nPSA = %d\n", psa);
 
     if(psa != 0){
         ErrMessage(psa);
         ErrMessagePossition(ptr);
         return false;
-        //exit(EXIT_FAILURE);
     }
-    
     
     // zalozni reseni
     /*while(ptr->token_type != TOKEN_KEYWORD){
@@ -523,8 +512,6 @@ bool NElseif(Token *ptr, ScannerContext *sc){
 
     bool elseif = true;
 
-    //if(ptr->token_type == TOKEN_KEYWORD){
-
     while(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "elseif") == 0){
         // $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
         #ifdef DEBUG_USED_RULE
@@ -542,21 +529,17 @@ bool NElseif(Token *ptr, ScannerContext *sc){
                     break;
                 }
             } else {
-                //ErrMessage(SYNTAX_ERR);
-                //ErrMessagePossition(ptr);
-                return false;
                 #ifdef DEBUG_ERROR
                     printf("ERROR || $64\n");
                 #endif
+                return false;
                 break;
             }
         } else {
-            //ErrMessage(SYNTAX_ERR);
-            //ErrMessagePossition(ptr);
-            return false;
             #ifdef DEBUG_ERROR
                 printf("ERROR || $64\n");
             #endif
+            return false;
             break;
         }
         *ptr = Next(sc); if(errT != 0){return false;}
@@ -604,9 +587,8 @@ bool NIf(Token *ptr, ScannerContext *sc){
     #endif
 
     fi = NExp_cond(ptr, sc);
-    //printf("fi = %d\n", fi);
+    
     if(fi){
-        //*ptr = Next(sc); if(errT != 0){return false;}
         if(ptr->token_type == TOKEN_KEYWORD){
             if(strcmp(ptr->attribute, "then") == 0){
                 *ptr = Next(sc); if(errT != 0){return false;}
@@ -646,8 +628,6 @@ bool NWhile(Token *ptr, ScannerContext *sc){
 
             *ptr = Next(sc); if(errT != 0){return false;}
             w = w && NFunction_body(ptr, sc);
-            //printf("NWhile recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-
         }
     }
 
@@ -676,25 +656,18 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-
-    //*ptr = Next(sc); if(errT != 0){return false;}
-    //if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_ID_F || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
-        // $60 <list> => <expressions>
+    // $60 <list> => <expressions>
     #ifdef DEBUG_USED_RULE
         printf("$60 <list> => <expressions>\n");
         printf("---------------------------\n");
     #endif
-        //TokenStore(*ptr, sc);
     ret = NExpressions(ptr, sc);
-    //}
 
     // $61 <list> => <function_body>
     #ifdef DEBUG_USED_RULE
         printf("$61 <list> => <function_body>\n");
         printf("---------------------------\n");
     #endif
-
-    //ret = true;
 
     // TODO mrtvy kod
 
@@ -703,7 +676,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
 
 bool NExpressions(Token *ptr, ScannerContext *sc){
     bool expressions = true;
-    //printf("NExpressions recieved: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
+    
     // $49 <expressions> => <exp_first> <next_expr>
     #ifdef DEBUG_USED_RULE
         printf("$49 <expressions> => <exp_first> <next_expr>\n");
@@ -718,13 +691,8 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
 
     expressions = NExpression(ptr, sc);
 
-    //*ptr = Next(sc); if(errT != 0){return false;}
-
-    //printf("NExpressions accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-
     if(ptr->token_type == TOKEN_COMMA){
         while(ptr->token_type == TOKEN_COMMA){
-            //printf("NExpressions accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
             // $52 <next_exp> => , <expression> <next_expr>
             #ifdef DEBUG_USED_RULE
                 printf("$52 <next_exp> => , <expression> <next_expr>\n");
@@ -732,7 +700,6 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
             #endif
 
             expressions = expressions && NExpression(ptr, sc);
-            //*ptr = Next(sc); if(errT != 0){return false;}
         }
         TokenStore(*ptr, sc);
     } else {
@@ -795,7 +762,6 @@ bool NIds(Token *ptr, ScannerContext *sc){
         #endif
     }
 
-
     ids = ids && NExpressions(ptr, sc);
 
     return ids;
@@ -806,7 +772,6 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
     int break_from_while = 0;
 
     while(ptr->token_type != TOKEN_NONE && function_body == true){
-        //printf("NFunction_body accepted: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
 
         //function_body = true;
         switch(ptr->token_type){
@@ -816,6 +781,14 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     *ptr = Next(sc); if(errT != 0){return false;}
 
                     if(ptr->token_type == TOKEN_ID){
+                        //41 - id
+                        #ifdef SEMANTIC_CONNECT
+                            semantic = define_local_var(ptr);
+                            if(semantic){
+                                return false;
+                            }
+                        #endif
+
                         *ptr = Next(sc); if(errT != 0){return false;}
 
                         if(ptr->token_type == TOKEN_COLON){
@@ -825,7 +798,21 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                                 printf("$41 <function_body> => local id : <type> <assignment>\n");
                                 printf("---------------------------\n");
                             #endif
-                            function_body = function_body && NType(ptr) && NAssignment(ptr, sc);
+
+                            function_body = function_body && NType(ptr);
+                            if(function_body){
+                                //41 - <type>
+                                #ifdef SEMANTIC_CONNECT
+                                    semantic = var_type_assignment(ptr);
+                                    if(semantic){
+                                        return false;
+                                    }
+                                #endif
+                            } else {
+                                return false;
+                            }
+
+                            function_body = function_body && NAssignment(ptr, sc);
                             
                             TokenStore(*ptr, sc);
 
@@ -923,9 +910,6 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                 break;
 
             default:
-                //printf("default case: \t%s \t%s\n", lex2String(ptr->token_type), ptr->attribute);
-                //break_from_while++;
-
                 return false;
         }
 
@@ -963,6 +947,18 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
 
         return_fc = NType(ptr);
 
+        if(return_fc){
+            //24 - <type>
+            #ifdef SEMANTIC_CONNECT
+                semantic = ret_val_dec(ptr);
+                if(semantic){
+                    return false;
+                }
+            #endif
+        } else {
+            return false;
+        }
+
         *ptr = Next(sc); if(errT != 0){return false;}
 
         while(ptr->token_type == TOKEN_COMMA){
@@ -974,8 +970,20 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
 
             *ptr = Next(sc); if(errT != 0){return false;}
             return_fc =  return_fc && NType(ptr);
-            *ptr = Next(sc); if(errT != 0){return false;}
 
+            if(return_fc){
+                //25 - <type>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = ret_val_dec(ptr);
+                    if(semantic){
+                        return false;
+                    }
+                #endif
+            } else {
+                return false;
+            }
+
+            *ptr = Next(sc); if(errT != 0){return false;}
         }
 
         // $26 <next_rets> => <function_body>
@@ -1182,6 +1190,13 @@ bool NProg(Token *ptr, ScannerContext *sc){
         return false;
     }
 
+    // 1 - require
+    #ifdef SEMANTIC_CONNECT
+        semantic = jump_to_exec_point();
+        if(semantic){
+            return false;
+        }
+    #endif
 
     while(ptr->token_type != TOKEN_NONE && prog == true) {
         switch(ptr->token_type){
@@ -1195,6 +1210,15 @@ bool NProg(Token *ptr, ScannerContext *sc){
                             printf("$2 <prog> => function id_f ( <params_list> <return_fc> end\n");
                             printf("---------------------------\n");
                         #endif
+
+                        // je volana nad tokenem  2 - id_f
+                        #ifdef SEMANTIC_CONNECT
+                            semantic = function_definition(ptr);
+                            if(semantic){
+                                return false;
+                            }
+                        #endif
+
                         *ptr = Next(sc); if(errT != 0){return false;}
                         prog = prog && NParams_list(ptr, sc) && NReturn_fc(ptr, sc);
 
@@ -1237,7 +1261,24 @@ bool NProg(Token *ptr, ScannerContext *sc){
                     printf("$5 <prog> => <function_call>\n");
                     printf("---------------------------\n");
                 #endif
+
+                // 5 - <function_call>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = before_global_fun_call();
+                    if(semantic){
+                        return false;
+                    }
+                #endif
+
                 prog = prog && NFunction_call(ptr, sc);
+
+                // 5 - <prog>
+                #ifdef SEMANTIC_CONNECT
+                    semantic = after_global_fun_call();
+                    if(semantic){
+                        return false;
+                    }
+                #endif
 
                 break;
 
@@ -1256,6 +1297,14 @@ bool NProg(Token *ptr, ScannerContext *sc){
     #ifdef DEBUG_USED_RULE
         printf("$4 <prog> => EOF\n");
         printf("---------------------------\n");
+    #endif
+
+    // 4 - EOF
+    #ifdef SEMANTIC_CONNECT
+        semantic = end_program();
+        if(semantic){
+            return false;
+        }
     #endif
 
     return prog;
@@ -1302,9 +1351,6 @@ int Parse(){
         ErrMessage(SYNTAX_ERR);
         ErrMessagePossition(token);
     }
-    
-    
-    
 
     /*
     // tokens trough SCANNER
@@ -1312,8 +1358,7 @@ int Parse(){
         printf("*********%s %s\n", lex2String(token->token_type), token->attribute);
     }
     */
-    
-
+   
     //printf("RESULT: %d\n", OK);
 
     //Begin(&sc)

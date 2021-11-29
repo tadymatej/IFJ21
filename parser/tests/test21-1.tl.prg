@@ -22,9 +22,9 @@ $19 <type> => integer
 $10 <next_params> => <param> <next_params>
 ---------------------------
 ##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: number|
 $18 <param> => id : <type>
 ---------------------------
+##########|type: keyword	attribute: number|
 $21 <type> => number
 ---------------------------
 ##########|type: comma	attribute: (null)|
@@ -32,9 +32,9 @@ $21 <type> => number
 $10 <next_params> => <param> <next_params>
 ---------------------------
 ##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: string|
 $18 <param> => id : <type>
 ---------------------------
+##########|type: keyword	attribute: string|
 $20 <type> => string
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
@@ -142,15 +142,15 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: a|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$35 <first_arg> => id
+$36 <first_arg> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
 ##########|type: id	attribute: b|
-$36 <next_args> => , id <next_args>
+$37 <next_args> => , id <next_args>
 ---------------------------
 ##########|type: comma	attribute: (null)|
 ##########|type: id	attribute: c|
-$36 <next_args> => , id <next_args>
+$37 <next_args> => , id <next_args>
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
