@@ -23,7 +23,7 @@ int new_stack_frame(Sym_table_t **table, char *prefix){
 void dispose_table(Sym_table_t **table){
   Sym_table_t *temp = NULL;
   while (*table != NULL){
-    BinaryTreeDestroy((*table)->tree, dispose_ts_data);
+    BinaryTreeDestroy((*table)->tree, NULL);
     temp = (*table)->upper;
     free(*table);
     *table = temp;
@@ -58,31 +58,8 @@ TS_data_t *make_var_data(DataTypes_t type, char *name, char *value){
   TS_data_t *temp = malloc(sizeof(TS_data_t));
   if(temp == NULL) return NULL;
   temp->type = type;
-  if(name != NULL){
-    temp->name = (char*)malloc(strlen(name)+1);
-    if(temp->name != NULL){
-      strcpy(temp->name, name);
-    }
-    else{
-      free(temp);
-      return NULL;
-    }
-  }
-  else
-    temp->name = NULL;
-  if(value != NULL){
-    temp->value = (char*)malloc(strlen(value)+1);
-    if(temp->value != NULL){
-      strcpy(temp->value, value);
-    }
-    else{
-      free(temp->name);
-      free(temp);
-      return NULL;
-    }
-  }
-  else
-    temp->value = NULL;
+  temp->name = name;
+  temp->value = value;
   return temp;
 }
 
