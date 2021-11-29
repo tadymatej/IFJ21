@@ -17,33 +17,204 @@
 #define DIV_BY_ZERO 9 // běhová chyba celočíselného dělení nulovou konstantou
 #define COMPILER_ERR 99 // interní chyba překladače tj. neovlivněná vstupním programem (např. chyba alokace paměti atd.)
 
-// Neterminály
+/**
+ * Realizace pravidel: $1, $2, $3, $4, $5
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje gramatice ifj21
+ */
 bool NProg(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $6, $7, $8
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NParams_list(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $22, $23, $24, $25, $26
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NReturn_fc(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $39, $40, $41, $42, $43, $44, $45
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NFunction_body(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $33, $34, $35, $36, $37, $38
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NFunction_call(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidla $18
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovanému pravidlu
+ */
 bool NParam(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $17, $19, $20, $21
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NType(Token *ptr);
+
+/**
+ * Realizace pravidel: $57, $58
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NAssignment(Token *ptr, ScannerContext *sc);
-bool NExpr(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidla $55, volána PSA
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovanému pravidlu
+ */
+bool NExp(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $9, $10
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NNext_params(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidla $63
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovanému pravidlu
+ */
 bool NIf(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $64, $65, $66, $67
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NElseif(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $62, $67
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NWhile(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $59, $61
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NRet(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidla $68, volána PSA
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovanému pravidlu
+ */
 bool NExp_cond(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $54, $56
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NExpression(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $49, $51, $52, $53
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NExpressions(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $3, $12, $28, $32
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NGlobal(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $29, $30, $31
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NFc_decl_ret(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $13, $27, $15, $14
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NTypes_list(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $46, $47, $48
+ * @param ptr Ukazatel na token
+ * @param sc ScannerContext
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
 bool NIds(Token *ptr, ScannerContext *sc);
 
 
-int Parse();
 /**
- * Vytvoří nový token
- * @param attribute Atribut tokenu
-*/
-void PrintData(char *attribute);
+ * Kontroluje přítomnost prologu "ifj21"
+ * @param ptr Ukazatel na token
+ * @return Vrací true, pokud byl prolog nalezen 
+ */
+bool Req(Token *ptr);
+
+/**
+ * Volá funkci GetNextToken(sc) a kontroluje, zda-li nedošlo ve scanneru k chybě alokace paměti, či lexikální chybě, 
+ * nebo jestli byl dočten vstup do konce
+ * @param sc ScannerContext
+ * @return Vrací získaný token 
+ */
+Token Next(ScannerContext *sc);
+
+/**
+ * Vypisuje chybová hlášení na stderr, nastavuje errT dle pšíslušné chyby
+ * @param errType Číselná hodnota chyby, ke které došlo
+ */
+void ErrMessage(int errType);
+
+/**
+ * Vypisuje pozici chyby
+ * @param ptr Ukazatel na token
+ */
+void ErrMessagePossition(Token *ptr);
+
+/**
+ * Inicializuje potřebné komponenty pro scanner a parser, spouští parsing, volá funkci pro výpis chybových hlášení
+ * @return Vrací errT, pokud překlad proběhl bezchybně, pak errT == 0
+ */
+int Parse();

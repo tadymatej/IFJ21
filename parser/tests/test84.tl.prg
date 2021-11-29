@@ -79,7 +79,7 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: param|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$35 <first_arg> => id
+$36 <first_arg> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
@@ -139,7 +139,7 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: param|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$35 <first_arg> => id
+$36 <first_arg> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
