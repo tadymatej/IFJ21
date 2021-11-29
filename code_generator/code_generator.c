@@ -26,8 +26,8 @@ char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function t
  * Muze vygenerovat lably dvou druhu (fun_name)_(name)_(n_id) nebo (fun_name)_(n_id)_(idx)
  * Kdyz name je zadano, tak vygeneruje (fun_name)_(name)_(n_id)  pro jump na konec ifu, zacatek/konec while
  * Kdyz name == NULL pak v zavislosti na idx a n_id vygeneruje vygeneruji ruzne lably
- *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy  
- *      idx < 0 && n_id < 0 - (fun_name)    pro volani 
+ *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy
+ *      idx < 0 && n_id < 0 - (fun_name)    pro volani
  *      idx > 0 && n_id < 0 - (fun_name)_(idx) pro generace exec_pointu
  *      idx < 0 && n_id > 0 - (fun_name)_(n_id) nevyuzito
  * @param fun_name - nazev funkce, ke ktere tento label patri
@@ -77,19 +77,48 @@ char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
 }
 
 char *cg_format_string(char *string) {
-    int input_len = strlen(string);
+    int input_len = strlen(string) - 1;
     char *string_format = calloc(ESCAPE_LEN*input_len+1, 1);
     char buffer[ESCAPE_LEN+1] = {'0'};
-    char act_char;
     if (string_format == NULL)
         return NULL;
-    for (int input_index = 0, output_index = 0; input_index < input_len; input_index++, output_index++) {
-        act_char = string[input_index];
-        if(act_char == '#' || act_char == '\\' || act_char <= ' '){
-            snprintf(buffer, ESCAPE_LEN+1, "\\%03d", (int)act_char);
+    for (int input_index = 1, output_index = 0; input_index < input_len; input_index++, output_index++) {
+        if(string[input_index] == '#' || string[input_index] <= ' '){
+            snprintf(buffer, ESCAPE_LEN+1, "\\%03d", (int)string[input_index]);
             strcat(string_format, buffer);
-            output_index += ESCAPE_LEN;
-        } else {
+            output_index += ESCAPE_LEN-1;
+        }
+        else if(string[input_index] == '\\'){
+            switch(string[input_index+1]){
+                case 'n':
+                    strcat(string_format, "\\010");
+                    output_index += ESCAPE_LEN-1;
+                    input_index++;
+                    break;
+                case 't':
+                    strcat(string_format, "\\009");
+                    output_index += ESCAPE_LEN-1;
+                    input_index++;
+                    break;
+                case '\\':
+                    strcat(string_format, "\\092");
+                    output_index += ESCAPE_LEN-1;
+                    input_index++;
+                    break;
+                case '\"':
+                    strcat(string_format, "\\034");
+                    output_index += ESCAPE_LEN-1;
+                    input_index++;
+                    break;
+                default:
+                    if(isdigit(string[input_index+1])){
+                        string_format[output_index++] = string[input_index++];
+                        string_format[output_index++] = string[input_index++];
+                        string_format[output_index] = string[input_index];
+                    }
+            }
+        }
+        else {
             string_format[output_index] = string[input_index];
         }
     }
