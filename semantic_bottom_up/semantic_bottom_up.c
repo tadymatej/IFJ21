@@ -133,9 +133,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         return COMPILER_ERR;
       }
 
-      /* dev */
       CODE_PRINT(exp_cg_arith(operator_node, left_side, right_side));
-      /* dev */
 
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
@@ -173,7 +171,7 @@ int make_assignment(exp_tree_stack_t *stack){
   if(left_side != NULL){
     GET_OPERAND(right_side, stack);
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
-    if(ret_type == NO_TYPE) retval = SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
+    if(ret_type == NO_TYPE) return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
     if(left_side->name == NULL){
       exp_cg_pushs(right_side);
     }
