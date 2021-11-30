@@ -18,6 +18,7 @@
 #include "symtable.h"
 #include "code_generator.h"
 #include "ts_handler.h"
+#include "semantic_global.h"
 
 #define DATA_TYPE_LEN 8
 #define COMPILER_ERR 99
@@ -189,6 +190,14 @@ int exp_cg_pushs(exp_node_t *node);
  */
 int exp_cg_strlen(exp_node_t *dest, exp_node_t *argument);
 
+/**
+ * Vytvorí kód potrebný na vykonanie podmenky
+ * @param dest uakzatel na uzol s operaciou a jej navratovou hodnotou
+ * @param left_side lava strana porovnania
+ * @param right_side prava strana porovnania
+ * @return návratová hodnota funkcia, 99 ak nastane chyba, 0 ak prebehla úspešne
+ */
+int exp_cg_cond(exp_node_t *dest, exp_node_t *left_side, exp_node_t *right_side);
 
 #endif
 
