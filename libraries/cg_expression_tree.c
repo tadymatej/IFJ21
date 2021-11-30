@@ -25,6 +25,8 @@ char *exp_format_node(exp_node_t *node){
       if(temp_string == NULL) return NULL;
       ret_string = cg_format_var(node->prefix, temp_string, NULL);
       break;
+    case 'n': //pre nil generovanie
+      ret_string = cg_format_var(node->prefix, node->data->name, NULL);
     default:
       break;
   }
