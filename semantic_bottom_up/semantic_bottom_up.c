@@ -172,7 +172,7 @@ int make_assignment(exp_tree_stack_t *stack){
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
     if(ret_type == NO_TYPE) return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
     if(left_side->name == NULL){
-      exp_cg_pushs(right_side);
+      CODE_PRINT(retval = exp_cg_pushs(right_side));
     }
     else{
       Sym_table_t *temp_table;
@@ -183,7 +183,7 @@ int make_assignment(exp_tree_stack_t *stack){
       }
       assignment_node = operator_merge(stack, TOKEN_SET, left_side, temp_table->nested_identifier, temp_table->prefix, NULL, right_side);
       if(assignment_node == NULL) {destroy_tree(right_side); return COMPILER_ERR;}
-      retval = exp_cg_set(assignment_node, right_side);
+      CODE_PRINT(retval = exp_cg_set(assignment_node, right_side));
     }
 
   }
