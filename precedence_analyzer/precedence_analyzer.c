@@ -271,7 +271,14 @@ int precedence_analyzer(ScannerContext *sc) {
   GET_VALID_TOKEN(token, sc);
   prev_token = token;
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
-  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING)) return SYNTAX_ERR;
+  if(token.token_type == TOKEN_KEYWORD) {
+    free(postfixExpression);
+    TokenStore(token, sc);
+    return 0;
+  }
+  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING)) {
+    return SYNTAX_ERR;
+  }
   char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
