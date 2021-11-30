@@ -33,7 +33,7 @@ int main() {
   temp_data = make_var_data(NUMBER, "num1", "7.85");
   add_variable(globals.ts, temp_data);
 
-  globals.nested_count++;
+  //globals.nested_count++;
   new_stack_frame(&(globals.ts), "LF");
   temp_data = make_var_data(STRING, "str1", "ine");
   add_variable(globals.ts, temp_data);
@@ -53,7 +53,7 @@ int main() {
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
 	temp_data = find_variable(globals.ts, "str1", &TS_temp);
-	//q_push(globals.q_assignments, temp_data);
+	q_push(globals.q_assignments, temp_data);
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
 
