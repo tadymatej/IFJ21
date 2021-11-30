@@ -17,7 +17,7 @@ int main(){
     int retVal = Parse();
 
     //printf("retVal: %d\n", retVal);
-
+    dispose_sem_globals();
     return retVal;
     //printf("syntax OK: %d\n", syntaxOK);
 }
