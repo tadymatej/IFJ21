@@ -271,6 +271,7 @@ int precedence_analyzer(ScannerContext *sc) {
   GET_VALID_TOKEN(token, sc);
   prev_token = token;
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
+  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING)) return SYNTAX_ERR;
   char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
@@ -317,19 +318,30 @@ int precedence_analyzer(ScannerContext *sc) {
         done = 1;
         break;
       case '>':
-        doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
-        prev_token = make_fake_token(prev_token, top_stack_operand);
-        error_code = do_action(exp_stack, &prev_token);
+        do{
+          doOperation(stack, top_stack_operand, postfixExpression, &postfixExpressionLength);
+          prev_token = make_fake_token(prev_token, top_stack_operand);
+          error_code = do_action(exp_stack, &prev_token);
 
-        if (error_code != 0) {
-          TokenStore(token, sc);
-          DEBUG_MACRO(print_exp_stack(exp_stack);)
-          done = 1;
-          break;
-        }
+          if (error_code != 0) {
+            TokenStore(token, sc);
+            DEBUG_MACRO(print_exp_stack(exp_stack);)
+            done = 1;
+            break;
+          }
+          //printf("token pri >: %s | meno: %s\n", lex2String(token.token_type), token.attribute);
+          if(token.token_type != TOKEN_ID){
+            break;
+          }
+          // ak bude koniec vyrazu a za nim zaciatok dalsieho hned
+          top_stack_operand = get_stack_operand(stack); //moze byt operacia alebo $
+          if(top_stack_operand == STACK_END) break;
+        }while (1);
         if(token.token_type != TOKEN_ID){
           break;
         }
+        //printf("po konci \n" );
+        DEBUG_MACRO(decode_stack_print(stack, 30) ;printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression));
         //fall through
       case '&':
         done = 1;
