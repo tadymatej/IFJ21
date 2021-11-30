@@ -35,7 +35,7 @@ FILES_TO_PACK_REMOVE = ./Makefile ./main.c scanner.c scanner.h parser.c parser.h
 						queue.c queue.h simple_stack.c simple_stack.h stack.c stack.h symtable.c symtable.h ts_handler.c ts_handler.h
 
 SEMANTIC_ACTION_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_ACTION).c $(CODE_GEN_PATH)$(CODE_GEN).c
-SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
+SEMANTIC_BOTTOM_UP_DEPS=$(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(CODE_GENERATOR_PATH)*.c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
 
 PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) $(SEMANTIC_ACTION_DEPS) main.c $(PARSER_PATH)parser.c
 
