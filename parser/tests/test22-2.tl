@@ -1,4 +1,4 @@
--- Should be OK - PSA fix
+-- Should be OK
 
 require "ifj21"
 

@@ -1,4 +1,4 @@
--- Should be OK - PSA + Semantic fix
+-- Should be OK - Semantic fix
 
 require "ifj21"
 

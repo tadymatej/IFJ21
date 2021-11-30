@@ -176,3 +176,67 @@ $55 <exp> => call PSA
 ##########|type: id	attribute: l|
 $53 <next_exp> => <function_body>
 ---------------------------
+##########|type: id	attribute: l|
+$43 <function_body> => <ids> <expressions>
+---------------------------
+$46 <ids> => id <next_id>
+---------------------------
+##########|type: set	attribute: (null)|
+$48 <next_id> => =
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: string	attribute: "ninety-nine"|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: id	attribute: m|
+$53 <next_exp> => <function_body>
+---------------------------
+##########|type: id	attribute: m|
+$43 <function_body> => <ids> <expressions>
+---------------------------
+$46 <ids> => id <next_id>
+---------------------------
+##########|type: set	attribute: (null)|
+$48 <next_id> => =
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: number int	attribute: 0|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: return|
+$53 <next_exp> => <function_body>
+---------------------------
+##########|type: keyword	attribute: return|
+$40 <function_body> => <return>
+---------------------------
+$59 <return> => return <list>
+---------------------------
+$60 <list> => <expressions>
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: id	attribute: m|
+$54 <expression> => <exp>
+---------------------------
+##########|type: keyword	attribute: return|
+$55 <exp> => call PSA
+---------------------------
+##########|type: comma	attribute: (null)|
+$52 <next_exp> => , <expression> <next_expr>
+---------------------------
+$61 <list> => <function_body>
+---------------------------

@@ -1,4 +1,4 @@
--- Should be OK - Semantic fix
+-- Should be OK
 
 require "ifj21"
 
@@ -12,7 +12,7 @@ function main() : integer, number
 
     a, b, c = 456, 45, "Santa"
     
-    if a > b then
+    if a > 0 then
         fc(a, b, c)
     end
 

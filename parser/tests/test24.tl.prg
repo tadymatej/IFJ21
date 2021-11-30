@@ -138,3 +138,30 @@ $55 <exp> => call PSA
 ##########|type: id	attribute: a|
 $58 <assignment> => <function_body>
 ---------------------------
+##########|type: id	attribute: a|
+$43 <function_body> => <ids> <expressions>
+---------------------------
+$46 <ids> => id <next_id>
+---------------------------
+##########|type: set	attribute: (null)|
+$48 <next_id> => =
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: number int	attribute: 456|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: if|
+$53 <next_exp> => <function_body>
+---------------------------
+##########|type: keyword	attribute: if|
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: keyword	attribute: then|

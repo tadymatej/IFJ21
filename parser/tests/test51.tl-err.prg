@@ -2,58 +2,6 @@
 ##########|type: string	attribute: "ifj21"|
 $1 <prog> => require
 ---------------------------
-##########|type: keyword	attribute: global|
-$3 <prog> => global id : function ( <types_list> <fc_decl_ret>
----------------------------
-##########|type: id	attribute: foo|
-##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: function|
-##########|type: start bracket	attribute: (null)|
-$12 <types_list> => <first_type> <next_types>
----------------------------
-##########|type: keyword	attribute: integer|
-$27 <first_type> => <type>
----------------------------
-$19 <type> => integer
----------------------------
-##########|type: comma	attribute: (null)|
-$15 <next_types> => , <type> <next_types>
----------------------------
-##########|type: keyword	attribute: string|
-$20 <type> => string
----------------------------
-##########|type: comma	attribute: (null)|
-$15 <next_types> => , <type> <next_types>
----------------------------
-##########|type: keyword	attribute: number|
-$21 <type> => number
----------------------------
-##########|type: end bracket	attribute: (null)|
-$14 <next_types> => )
----------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-$28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: number|
-$29 <fc_ret_first_type> => <type>
----------------------------
-$21 <type> => number
----------------------------
-##########|type: comma	attribute: (null)|
-$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: string|
-$20 <type> => string
----------------------------
-##########|type: comma	attribute: (null)|
-$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: integer|
-$19 <type> => integer
----------------------------
-##########|type: keyword	attribute: function|
-$31 <fc_ret_next_types> => <prog>
----------------------------
 ##########|type: keyword	attribute: function|
 ##########|type: id_f	attribute: fc|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
@@ -129,7 +77,7 @@ $19 <type> => integer
 ##########|type: set	attribute: (null)|
 $57 <assignment> => = <expression>
 ---------------------------
-##########|type: number int	attribute: 10|
+##########|type: number int	attribute: 1001|
 $54 <expression> => <exp>
 ---------------------------
 ##########|type: set	attribute: (null)|
@@ -196,12 +144,12 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-##########|type: keyword	attribute: if|
+##########|type: id	attribute: a|
 $53 <next_exp> => <function_body>
 ---------------------------
+##########|type: id	attribute: a|
+$43 <function_body> => <ids> <expressions>
+---------------------------
+$46 <ids> => id <next_id>
+---------------------------
 ##########|type: keyword	attribute: if|
-$45 <function_body> => <if>
----------------------------
-$63 <if> => if <exp_cond> then <function_body> <elseif>
----------------------------
-##########|type: keyword	attribute: then|
