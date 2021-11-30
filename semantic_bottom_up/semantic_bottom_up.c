@@ -155,6 +155,9 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
+      /* dev */
+      CODE_PRINT(exp_cg_cond(operator_node, left_side, right_side));
+      /* dev */
       break;
     default:
       break;
