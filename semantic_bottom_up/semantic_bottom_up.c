@@ -163,27 +163,33 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
 int make_assignment(exp_tree_stack_t *stack){
   int retval = 0;
+  static int as_count = 0;
   exp_node_t *right_side = NULL;
-  exp_node_t *assignment_node = NULL;
+  exp_node_t *left_side = NULL;
   DataTypes_t ret_type;
-  TS_data_t *left_side = q_pop(globals.q_assignments);
-  if(left_side != NULL){
+  TS_data_t *left_data = q_pop(globals.q_assignments);
+  if(left_data != NULL){
     GET_OPERAND(right_side, stack);
-    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_side->type][right_side->data->type];
+    ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_data->type][right_side->data->type];
     if(ret_type == NO_TYPE) return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
-    if(left_side->name == NULL){
+    CONVERSION_MACRO(right_side, NULL, ret_type, as_count);
+
+    if(left_data->name == NULL){
       CODE_PRINT(retval = exp_cg_pushs(right_side));
+      destroy_tree(right_side);
     }
     else{
       Sym_table_t *temp_table;
-      left_side = find_variable(globals.ts, left_side->name, &temp_table);
-      if (left_side == NULL) {
+      left_data = find_variable(globals.ts, left_data->name, &temp_table);
+      if (left_data == NULL) {
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
-      assignment_node = operator_merge(stack, TOKEN_SET, left_side, temp_table->nested_identifier, temp_table->prefix, NULL, right_side);
-      if(assignment_node == NULL) {destroy_tree(right_side); return COMPILER_ERR;}
-      CODE_PRINT(retval = exp_cg_set(assignment_node, right_side));
+      retval = add_id_node(stack, left_data, temp_table->nested_identifier, TOKEN_ID, temp_table->prefix);
+      if(retval != 0) return COMPILER_ERR;
+      GET_OPERAND(left_side, stack);
+      operator_merge(stack, TOKEN_SET, NULL, 0, "", left_side, right_side);
+      CODE_PRINT(retval = exp_cg_set(left_side, right_side));
     }
 
   }
