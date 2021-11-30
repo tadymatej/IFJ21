@@ -336,7 +336,6 @@ int precedence_analyzer(ScannerContext *sc) {
             done = 1;
             break;
           }
-          //printf("token pri >: %s | meno: %s\n", lex2String(token.token_type), token.attribute);
           if(token.token_type != TOKEN_ID){
             break;
           }
@@ -347,7 +346,6 @@ int precedence_analyzer(ScannerContext *sc) {
         if(token.token_type != TOKEN_ID){
           break;
         }
-        //printf("po konci \n" );
         DEBUG_MACRO(decode_stack_print(stack, 30) ;printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression));
         //fall through
       case '&':
