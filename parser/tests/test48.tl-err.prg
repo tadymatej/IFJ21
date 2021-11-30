@@ -764,3 +764,5 @@ $67 <end> => end <function_body>
 $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 ---------------------------
 ##########|type: id	attribute: a|
+$68 <exp_cond> => call PSA
+---------------------------

@@ -126,5 +126,76 @@ $53 <next_exp> => <function_body>
 ---------------------------
 $61 <list> => <function_body>
 ---------------------------
-$4 <prog> => EOF
+##########|type: keyword	attribute: end|
+##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: fuuf|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$6 <params_list> => )
+---------------------------
+##########|type: keyword	attribute: end|
+$23 <return_fc> => <function_body>
+---------------------------
+##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: foo|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+##########|type: id	attribute: k|
+$7 <params_list> => <first_param> <next_params>
+---------------------------
+$8 <first_param> => <param>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: integer|
+$19 <type> => integer
+---------------------------
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: l|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: string|
+$20 <type> => string
+---------------------------
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: m|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: number|
+$21 <type> => number
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$9 <next_params> => )
+---------------------------
+##########|type: keyword	attribute: return|
+$23 <return_fc> => <function_body>
+---------------------------
+$40 <function_body> => <return>
+---------------------------
+$59 <return> => return <list>
+---------------------------
+$60 <list> => <expressions>
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: id	attribute: m|
+$54 <expression> => <exp>
+---------------------------
+##########|type: keyword	attribute: return|
+$55 <exp> => call PSA
+---------------------------
+##########|type: comma	attribute: (null)|
+$52 <next_exp> => , <expression> <next_expr>
+---------------------------
+$61 <list> => <function_body>
 ---------------------------

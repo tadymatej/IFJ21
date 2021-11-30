@@ -50,20 +50,8 @@ $41 <function_body> => local id : <type> <assignment>
 ---------------------------
 $19 <type> => integer
 ---------------------------
-##########|type: id	attribute: a|
-$58 <assignment> => <function_body>
----------------------------
-##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
----------------------------
-$46 <ids> => id <next_id>
----------------------------
 ##########|type: set	attribute: (null)|
-$48 <next_id> => =
----------------------------
-$49 <expressions> => <exp_first> <next_expr>
----------------------------
-$51 <exp_first> => <expression>
+$57 <assignment> => = <expression>
 ---------------------------
 ##########|type: number int	attribute: 5|
 $54 <expression> => <exp>
@@ -71,5 +59,5 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-$53 <next_exp> => <function_body>
+$58 <assignment> => <function_body>
 ---------------------------
