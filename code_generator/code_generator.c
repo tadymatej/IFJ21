@@ -249,6 +249,36 @@ char *cg_strlen(char *dst, char *src){
 
 }
 
+char *cg_LT(char *dest, char *left, char *right){
+  if (dest == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("LT %s %s %s\n") , (sprintf(str, "LT %s %s %s\n", dest, left, right), free(left), free(right)));
+}
+
+char *cg_GT(char *dest, char *left, char *right){
+  if (dest == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("GT %s %s %s\n") , (sprintf(str, "GT %s %s %s\n", dest, left, right), free(left), free(right)));
+}
+
+char *cg_EQ(char *dest, char *left, char *right){
+  if (dest == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("EQ %s %s %s\n") , (sprintf(str, "EQ %s %s %s\n", dest, left, right), free(left), free(right)));
+}
+
+char *cg_jumpeq(char *label, char *left, char *right){
+  if (label == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ %s %s %s\n") , (sprintf(str, "JUMPIFEQ %s %s %s\n", label, left, right), free(label), free(left)));
+}
+
+char *cg_jumpneq(char *label, char *left, char *right){
+  if (label == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ %s %s %s\n") , (sprintf(str, "JUMPIFNEQ %s %s %s\n", label, left, right), free(label), free(left)));
+}
+
 int cg_envelope(char *str) {
     if (str == NULL)
         return 99;

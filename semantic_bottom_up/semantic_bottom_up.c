@@ -107,10 +107,8 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         return COMPILER_ERR;
       }
 
-       CODE_PRINT(exp_cg_strlen(operator_node, left_side));
+      CODE_PRINT(retval = exp_cg_strlen(operator_node, left_side));
 
-      break;
-    case TOKEN_END_BRACKET:
       break;
     case TOKEN_ADD: case TOKEN_MUL: case TOKEN_SUB: case TOKEN_MOD: case TOKEN_DIV: case TOKEN_CONCAT:
       GET_OPERAND(right_side, stack);
@@ -133,7 +131,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         return COMPILER_ERR;
       }
 
-      CODE_PRINT(exp_cg_arith(operator_node, left_side, right_side));
+      CODE_PRINT(retval = exp_cg_arith(operator_node, left_side, right_side));
 
       break;
     case TOKEN_EQ: case TOKEN_NOTEQ: case TOKEN_L: case TOKEN_GEQ: case TOKEN_G: case TOKEN_LEQ:
@@ -155,6 +153,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
         destroy_tree(right_side);
         return COMPILER_ERR;
       }
+      CODE_PRINT(retval = exp_cg_cond(operator_node, left_side, right_side));
       break;
     default:
       break;

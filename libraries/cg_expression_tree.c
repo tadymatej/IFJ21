@@ -25,6 +25,8 @@ char *exp_format_node(exp_node_t *node){
       if(temp_string == NULL) return NULL;
       ret_string = cg_format_var(node->prefix, temp_string, NULL);
       break;
+    case 'n': //pre nil generovanie
+      ret_string = cg_format_var(node->prefix, node->data->name, NULL);
     default:
       break;
   }
@@ -110,6 +112,54 @@ int exp_cg_strlen(exp_node_t *dest, exp_node_t *argument){
   char *dest_string = exp_format_node(dest);
   char *argument_string = exp_format_node(argument);
   retval = cg_envelope(cg_strlen(dest_string, argument_string));
+  return retval;
+}
+
+int exp_cg_cond(exp_node_t *dest, exp_node_t *left_side, exp_node_t *right_side){
+  int retval = 0;
+  char *left_string = NULL;
+  char *right_string = NULL;
+  char *dest_string = NULL;
+  char *label = NULL;
+
+  retval = exp_cg_defvar(dest);
+  if(retval != 0) return COMPILER_ERR;
+
+  left_string = exp_format_node(left_side);
+  right_string = exp_format_node(right_side);
+  dest_string = exp_format_node(dest);
+  // cg_format_label(globals.cur_function->name, "end", globals.nested_indentifier, -1)
+  label = cg_format_label("funkcia 1", "if", globals.nested_count, globals.label_idx); //TODO generovat label
+  if (label == NULL || dest_string == NULL || right_string == NULL || left_string == NULL) return COMPILER_ERR;
+
+  switch(dest->type){
+    case TOKEN_GEQ: case TOKEN_L:
+      retval = cg_envelope(cg_LT(dest_string, left_string, right_string));
+      break;
+    case TOKEN_LEQ: case TOKEN_G:
+      retval = cg_envelope(cg_GT(dest_string, left_string, right_string));
+      break;
+    case TOKEN_EQ: case TOKEN_NOTEQ:
+      retval = cg_envelope(cg_EQ(dest_string, left_string, right_string));
+      break;
+    default:
+      break;
+  }
+  if (retval != 0) {
+    free(dest_string);
+    return retval;
+  }
+  switch(dest->type){
+    case TOKEN_LEQ: case TOKEN_GEQ: case TOKEN_NOTEQ:
+      retval = cg_envelope(cg_jumpeq(label, dest_string, TRUE_CONSTANT));
+      break;
+    case TOKEN_G: case TOKEN_L: case TOKEN_EQ:
+      retval = cg_envelope(cg_jumpneq(label, dest_string, TRUE_CONSTANT));
+      break;
+    default:
+      break;
+  }
+
   return retval;
 }
 

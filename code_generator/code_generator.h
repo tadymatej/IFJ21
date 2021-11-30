@@ -19,6 +19,8 @@ typedef struct {
 #define _CG_GENERATE_ 0
 #define CODE_PRINT(command) if(_CG_GENERATE_) {command;}
 
+#define TRUE_CONSTANT "bool@true"
+
 #define Variable_CreateInt(val) \
     ((Variable){"int", val})
 
@@ -87,11 +89,21 @@ char *cg_float2int(char *dst, char *src);
 char *cg_strlen(char *dst, char *src);
 
 /**
- * dest = a .. b
+ * Funkcie vytvoria prikaz na porovnanie
+ * POZOR neuvolnia dest pointer, ten sa uvolni az pri instrukcii skoku
  */
-#define CG_Concat(dest, a, b) \
-    (printf("CONCAT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *cg_LT(char *dest, char *left, char *right);
 
+char *cg_GT(char *dest, char *left, char *right);
+
+char *cg_EQ(char *dest, char *left, char *right);
+
+/**
+ * Uvolnia label a left stringy, right string byva konstanta neuvolnuje sa preto
+ */
+char *cg_jumpeq(char *label, char *left, char *right);
+
+char *cg_jumpneq(char *label, char *left, char *right);
 
 /**
  * dest = a[b]
@@ -104,24 +116,6 @@ char *cg_strlen(char *dst, char *src);
  */
 #define CG_SetChar(dest, a, b) \
     (printf("SETCHAR %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
-
-/**
- * dest = a < b
- */
-#define CG_LT(dest, a, b) \
-    (printf("LT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
-
-/**
- * dest = a > b
- */
-#define CG_GT(dest, a, b) \
-    (printf("GT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
-
-/**
- * dest = a == b
- */
-#define CG_EQ(dest, a, b) \
-    (printf("EQ %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
 
 /**
  * dest = a && b
@@ -161,18 +155,6 @@ char *cg_strlen(char *dst, char *src);
  */
 #define CG_StrIndex2INT(dest, src, index) \
     (printf("STRI2INT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name, index.frame, index.name))
-
-/**
- * if (a == b) goto label;
- */
-#define CG_JumpEQ(label, a, b) \
-    (printf("JUMPIFEQ %s %s@%s %s@%s\n", label, a.frame, a.name, b.frame, a.name))
-
-/**
- * if (a != b) goto label;
- */
-#define CG_JumpNEQ(label, a, b) \
-    (printf("JUMPIFNEQ %s %s@%s %s@%s\n", label, a.frame, a.name, b.frame, a.name))
 
 /**
  * printf("%s", var)

@@ -18,17 +18,6 @@
 #include "scanner.h"
 #include "semantic_bottom_up.h"
 
-#ifdef OLD_TABLE
-#define PRECEDENCE_TABLE_SIZE 6
-                              /* +    *    (    )    i    = */
-#define PRECEDENCE_TABLE /*+*/{{'>', '<', '<', '>', '<', '>'},\
-                         /***/ {'>', '>', '<', '>', '<', '>'},\
-                         /*(*/ {'<', '<', '<', '=', '<', '#'},\
-                         /*)*/ {'>', '>', '#', '>', '#', '>'},\
-                         /*i*/ {'>', '>', '#', '>', '#', '>'},\
-                         /*=*/ {'<', '<', '<', '#', '<', '&'}}
-#endif
-
 #define PRECEDENCE_TABLE_SIZE 10
                                 /*  #  |* / //| +  - |  ..  |>< ~ =|  i   | f_id |   (  |   )  |  $  */ /*prichadzajuci token*/
 #define PRECEDENCE_TABLE /* # */{{ '#',   '>',   '>',  '>',   '>',   '<',   '<',    '#',   '>',  '>'},\
@@ -55,7 +44,8 @@
 #define IMOD -7 // //
 
 #define DEBUG_MACRO(command) if(_DEBUG_PSA_) {command;}
-#define GET_VALID_TOKEN(name, sc) while((name = GetNextToken(sc)).token_type == TOKEN_NONE) { ;}
+
+#define GET_VALID_TOKEN(name, sc) name = GetNextToken(sc);
 
 int precedence_analyzer(ScannerContext *sc);
 
