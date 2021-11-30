@@ -20,6 +20,8 @@ int main() {
 
   init_sem_globals();
   globals.ts = TS_init("LF");
+	globals.nested_count = 2;
+	globals.label_idx = 4;
   TS_data_t *temp_data;
 
   temp_data = make_var_data(INTEGER, "var1", "7");
@@ -44,7 +46,6 @@ int main() {
 
   Sym_table_t *TS_temp;
 	temp_data = find_variable(globals.ts, "str1", &TS_temp);
-	//q_push(globals.q_assignments, temp_data);
   printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
 
   temp_data = find_variable(globals.ts, "var1", &TS_temp);
