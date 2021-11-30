@@ -393,6 +393,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
     #endif
 
     psa = precedence_analyzer(sc);
+    //printf("typ: %s || hodnota: %s\n", lex2String(ptr->token_type), ptr->attribute);
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
 
     if(psa != 0){
@@ -402,6 +403,8 @@ bool NExp(Token *ptr, ScannerContext *sc){
     } else {
         exp = true;
     }
+
+    //printf("typ: %s || hodnota: %s\n", lex2String(ptr->token_type), ptr->attribute);
 
     return exp;
 }
@@ -700,6 +703,10 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
             #endif
 
             expressions = expressions && NExpression(ptr, sc);
+
+            if(!expressions){
+                return false;
+            }
         }
         TokenStore(*ptr, sc);
     } else {
