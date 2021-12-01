@@ -151,30 +151,14 @@ Token make_fake_token(Token token, char top_stack_operand){
 int symb_to_index(char symbol){
   int index;
   switch (symbol) {
-    case '#':
-      index = 0;
-      break;
-    case '*': case '/': case IMOD:
-      index = 1;
-      break;
-    case '+': case '-':
-      index = 2;
-      break;
-    case CONCAT:
-      index = 3;
-      break;
-    case LTE: case GTE: case NEQ: case EQ: case '>': case '<':
-      index = 4;
-      break;
-    case '(':
-      index = 7;
-      break;
-    case ')':
-      index = 8;
-      break;
-    case STACK_END:
-      index = 9;
-      break;
+    case '#': index = 0; break;
+    case '*': case '/': case IMOD: index = 1; break;
+    case '+': case '-': index = 2; break;
+    case CONCAT: index = 3; break;
+    case LTE: case GTE: case NEQ: case EQ: case '>': case '<': index = 4; break;
+    case '(': index = 7; break;
+    case ')': index = 8; break;
+    case STACK_END: index = 9; break;
     default:
       index = 5; //for identifiers and constants
       break;
@@ -343,6 +327,7 @@ int precedence_analyzer(ScannerContext *sc) {
           top_stack_operand = get_stack_operand(stack); //moze byt operacia alebo $
           if(top_stack_operand == STACK_END) break;
         }while (1);
+        if(done) break;
         if(token.token_type != TOKEN_ID){
           break;
         }
