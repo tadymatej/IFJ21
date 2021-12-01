@@ -1,3 +1,10 @@
+/********************************************************************************
+ *  Projekt - Prekladač
+ *  Súbor: code_generator.c
+ *  Popis: Metódy na výpis a formátovanie inštrukcíi kódu
+ ********************************************************************************
+*/
+
 #include "code_generator.h"
 
 char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format

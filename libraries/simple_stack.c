@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: extended_stack.c
+ *  Súbor: simple_stack.c
  *  Popis: Implementácia knižnice extended_stack.
  *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************

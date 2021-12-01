@@ -2,13 +2,11 @@
  *  Projekt - Prekladač
  *  Súbor: semantic_bottom_up.c
  *  Popis: Implementácia sémantickej kontroly zdola hore
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  Zodpovedný študent: Juraj Novosád email: xnovos13@stud.fit.vutbr.cz
  ********************************************************************************
 */
 
 #include"semantic_bottom_up.h"
-
-#define _DEBUG_SEMANTIC_PSA_ 1
 
 DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE_SIZE_X] = RET_TYPES_TABLE_t;
 
@@ -199,6 +197,5 @@ int make_assignment(exp_tree_stack_t *stack){
 void end_bottom_up(exp_tree_stack_t **stack){
     destroy_stack(stack);
 }
-
 
 //koniec súboru semantic_bottom_up.c

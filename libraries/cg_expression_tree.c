@@ -1,4 +1,10 @@
-// zaciatok suboru cg_expression_tree.c
+/********************************************************************************
+ *  Projekt - Prekladač
+ *  Súbor: cg_expression_tree.c
+ *  Popis: Implementácia generátoru kódu z ASS
+ *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ ********************************************************************************
+*/
 
 #include "expression_tree.h"
 
@@ -25,7 +31,7 @@ char *exp_format_node(exp_node_t *node){
       if(temp_string == NULL) return NULL;
       ret_string = cg_format_var(node->prefix, temp_string, NULL);
       break;
-    case 'n': //pre nil generovanie
+    case 'n': /* pre nil generovanie */
       ret_string = cg_format_var(node->prefix, node->data->name, NULL);
     default:
       break;
@@ -129,7 +135,7 @@ int exp_cg_cond(exp_node_t *dest, exp_node_t *left_side, exp_node_t *right_side)
   right_string = exp_format_node(right_side);
   dest_string = exp_format_node(dest);
   // cg_format_label(globals.cur_function->name, "end", globals.nested_indentifier, -1)
-  label = cg_format_label("funkcia 1", "if", globals.nested_count, globals.label_idx); //TODO generovat label
+  label = cg_format_label("funkcia_1", "if", globals.nested_count, globals.label_idx); //TODO generovat label
   if (label == NULL || dest_string == NULL || right_string == NULL || left_string == NULL) return COMPILER_ERR;
 
   switch(dest->type){

@@ -1,3 +1,10 @@
+/********************************************************************************
+ *  Projekt - Prekladač
+ *  Súbor: code_generator.h
+ *  Popis: Metódy na výpis a formátovanie inštrukcíi kódu
+ ********************************************************************************
+*/
+
 #ifndef __CODE_GEN_H_
 #define __CODE_GEN_H_ 1
 
@@ -48,12 +55,30 @@ typedef struct {
         return str;                       \
     } while (0)
 
+/**
+ * Alokuje miesto a doň naformátuje zadanú premennú
+ * Ráta sa s tým, že funkcia do ktorej sa vloži naformátovaný string pamäť uvoľní
+ * @param prefix Prefix premennej, môže byť naps LF, TF, string, int, float, bool, ...
+ * @param name Meno premennej
+ * @param suffix Poradové čislo premennej, možno zadať NULL pre premenné bez suffixu
+ */
 char *cg_format_var(char *prefix, char *name, char *suffix);
 
+/**
+ * Funkcia na naformátovanie labelu, komentár v .c súbore
+ */
 char *cg_format_label(char *fun_name, char *name, int n_id, int idx);
 
+/**
+ * Alokukje pamäť a naformátuje zadaný string podǎl pravidiel IFJcode21
+ * @param string Vstupný reťazec
+ */
 char *cg_format_string(char *string);
 
+/**
+ * Alokuje pamäť a naformátuje zadaný float do hexadecimálneho formátu
+ * @param string Vstupný reťazec
+ */
 char *cg_format_float(char *string);
 
 char *cg_label(char *label);
@@ -291,6 +316,13 @@ char *cg_jumpneq(char *label, char *left, char *right);
 #define CG_JumpNEQStack(label) \
     (printf("JUMPIFNEQS %s\n", label))
 
+/**
+ * Obálka pre príkazy
+ * Kontrluje výpis inštrukcií na konzolu
+ * Ak sa v globals nastaví premenná inside while, pozdrži výpis všetkých inštrukcií
+ * Pozdržané inštrukcie sa uložia a po vyskočení z while sa naraz vypíšu hneď pri dalšom príkaze
+ * @param str naformátovaná inštrukcia, bude uvoľnená z pamäťe po výpise
+ */
 int cg_envelope(char *str);
 
 #endif
