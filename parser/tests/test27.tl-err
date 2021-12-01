@@ -1,4 +1,4 @@
--- Should be ERR - PSA fix return nic
+-- Should be ERR
 
 require "ifj21"
 

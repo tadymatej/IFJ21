@@ -46,14 +46,17 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 
 all: $(PROGS)
 
-parser:   $(PARSER)-test
+parser:   $(PARSER)
 
-run_parser: $(PARSER)-test
+run_parser: $(PARSER)
 	cat parser/tests/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
 
+parser_test: $(PARSER_DEPS)
+			 $(CC) $(CFLAGS) -o tests/compiler_tests/IFJ21_programms/$@ $^
 
-$(PARSER)-test: $(PARSER_DEPS)
+$(PARSER): $(PARSER_DEPS)
 		$(CC) $(CFLAGS) -o parser/parser $^
+
 
 run_stack: $(SIMPLE_STACK)-test
 	build/$(SIMPLE_STACK)-test

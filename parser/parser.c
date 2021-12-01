@@ -1,9 +1,8 @@
-/********************************************************************************
- *  Projekt - Prekladač
- *  Název souboru: parser.c
- *  Popis: Implementace gramatických pravidel
- *  Zodpovědný student: Eva Mičánková email: xmican10@stud.fit.vutbr.cz
- ********************************************************************************
+/**
+* @file parser.c
+*
+* @brief Implementace syntaktick0 analýzy
+* @author Eva Mičánková (xmican10)
 */
 
 #include "parser.h"
@@ -398,7 +397,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
 
     if(psa != 0){
         ErrMessage(psa);
-        ErrMessagePossition(ptr);
+        ErrMessagePossition(ptr); 
         exp = false;
     } else {
         exp = true;
@@ -1002,6 +1001,9 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
         return_fc = NFunction_body(ptr, sc);
 
         return return_fc;
+        
+    } else if(ptr->token_type == TOKEN_END_BRACKET){
+        return false;
     }
 
     // $23 <return_fc> => <function_body>
@@ -1205,6 +1207,8 @@ bool NProg(Token *ptr, ScannerContext *sc){
         }
     #endif
 
+    *ptr = Next(sc); if(errT != 0){return false;}
+    
     while(ptr->token_type != TOKEN_NONE && prog == true) {
         switch(ptr->token_type){
             case TOKEN_KEYWORD:
@@ -1290,7 +1294,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                 break;
 
             default:
-                break;
+                return false;
         }
 
         if(prog){
