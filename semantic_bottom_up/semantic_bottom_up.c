@@ -118,8 +118,8 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
       CHECK_TYPES(left_side, right_side, ret_type);
 
-      CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
-      CONVERSION_MACRO(left_side, right_side, ret_type, var_count);
+      CONVERSION_MACRO(right_side, left_side, ret_type, var_count, RET_NAME);
+      CONVERSION_MACRO(left_side, right_side, ret_type, var_count, RET_NAME);
       //po tomto kroku je lava aj prava strana rovnakeho typu, nad operandmi moze byt uzol konverzie ak bol potrebny
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
@@ -141,8 +141,8 @@ int do_action(exp_tree_stack_t *stack, Token *token){
       ret_type = ret_types_table[map_token_types(token->token_type)][left_side->data->type][right_side->data->type];
       CHECK_TYPES(left_side, right_side, ret_type);
 
-      CONVERSION_MACRO(right_side, left_side, ret_type, var_count);
-      CONVERSION_MACRO(left_side, right_side, ret_type, var_count);
+      CONVERSION_MACRO(right_side, left_side, ret_type, var_count, RET_NAME);
+      CONVERSION_MACRO(left_side, right_side, ret_type, var_count, RET_NAME);
       //po tomto kroku je lava aj prava strana rovnakeho typu, nad operandmi moze byt uzol konverzie ak bol potrebny
 
       temp = make_var_data(ret_type, RET_NAME, NULL);
@@ -172,7 +172,7 @@ int make_assignment(exp_tree_stack_t *stack){
     GET_OPERAND(right_side, stack);
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_data->type][right_side->data->type];
     if(ret_type == NO_TYPE) return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
-    CONVERSION_MACRO(right_side, NULL, ret_type, as_count);
+    CONVERSION_MACRO(right_side, NULL, ret_type, as_count, AS_NAME);
 
     if(left_data->name == NULL){
       CODE_PRINT(retval = exp_cg_pushs(right_side));

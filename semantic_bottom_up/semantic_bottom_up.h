@@ -87,6 +87,8 @@
 
 #define RET_NAME "%cv"
 
+#define AS_NAME "%av"
+
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
@@ -129,8 +131,8 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
     return RUN_NIL_ERR;                                                   \
     }
 
-#define do_conversion(node, ret_type, counter)do{                               \
-  TS_data_t *temp_data = make_var_data(ret_type, RET_NAME, NULL);               \
+#define do_conversion(node, ret_type, counter, name)do{                         \
+  TS_data_t *temp_data = make_var_data(ret_type, name, NULL);                   \
   exp_node_t *conv_node = make_conversion_node(node, temp_data, counter, "LF"); \
   if(conv_node == NULL) {                                                       \
     destroy_tree(node);                                                         \
@@ -159,9 +161,9 @@ extern DataTypes_t ret_types_table[RET_TABLE_SIZE_Y][RET_TABLE_SIZE_X][RET_TABLE
   if(node == NULL) return SEMANTIC_OTHER_ERR;         \
   Stack_pop(stack);
 
-#define CONVERSION_MACRO(node_f, node_s, ret_type, var_count)       \
+#define CONVERSION_MACRO(node_f, node_s, ret_type, var_count, name) \
   if(node_f->data->type != ret_type && node_f->type != TOKEN_NULL){ \
-    do_conversion(node_f, ret_type, var_count);                     \
+    do_conversion(node_f, ret_type, var_count, name);               \
     if(node_f == NULL){                                             \
       destroy_tree(node_s);                                         \
       return COMPILER_ERR;                                          \
