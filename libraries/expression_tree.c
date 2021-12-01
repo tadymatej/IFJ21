@@ -73,7 +73,9 @@ const char *subtree_prefix = "  |";
 const char *space_prefix = "   ";
 
 void print_exp_node(exp_node_t *node){
-  printf("[%s|%s@%s_%d]\n", lex2String(node->type), node->prefix, node->data->name, node->nested_identifier);
+  char *name = NULL;
+  if(node->data != NULL) name = node->data->name;
+  printf("[%s|%s@%s_%d]\n", lex2String(node->type), node->prefix, name, node->nested_identifier);
 }
 
 char *make_prefix(char *prefix, const char *suffix) {
