@@ -276,7 +276,7 @@ int precedence_analyzer(ScannerContext *sc) {
     TokenStore(token, sc);
     return 0;
   }
-  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING)) {
+  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING || token.token_type == TOKEN_LEN)) {
     return SYNTAX_ERR;
   }
   char token_operator;
