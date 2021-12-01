@@ -1,3 +1,10 @@
+##
+# @file test-parser.sh 
+#
+# @brief Testovací skript pro syntaktickou analýzu
+#
+#
+
 GREEN="\e[32m"
 RED="\e[31m"
 BLUE="\e[36m"
@@ -64,4 +71,4 @@ for f in syntax/*.tl; do
 done
 
 # remove .txt files
-# rm -f syntax/*.txt
+rm -f syntax/*.txt

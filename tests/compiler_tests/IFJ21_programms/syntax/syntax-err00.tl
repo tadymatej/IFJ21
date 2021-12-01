@@ -1,4 +1,4 @@
--- Should be ERR [5, 11]
+-- Should be ERR [6, 11]
 
 require "ifj21"
 

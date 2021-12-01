@@ -1,9 +1,8 @@
-/********************************************************************************
- *  Projekt - Prekladač
- *  Název souboru: parser.c
- *  Popis: Implementace gramatických pravidel
- *  Zodpovědný student: Eva Mičánková email: xmican10@stud.fit.vutbr.cz
- ********************************************************************************
+/**
+* @file parser.c
+*
+* @brief Implementace syntaktick0 analýzy
+* @author Eva Mičánková (xmican10)
 */
 
 #include "parser.h"
