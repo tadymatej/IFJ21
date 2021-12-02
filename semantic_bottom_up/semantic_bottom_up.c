@@ -163,6 +163,9 @@ int make_assignment(exp_tree_stack_t *stack){
   int retval = 0;
   static int as_count = 0;
   exp_node_t *right_side = NULL;
+  right_side = exp_stack_top(stack);
+  if(right_side->type == TOKEN_EQ || right_side->type == TOKEN_NOTEQ || right_side->type == TOKEN_GEQ ||
+    right_side->type == TOKEN_LEQ || right_side->type == TOKEN_G || right_side->type == TOKEN_L ) return 0;
   exp_node_t *left_side = NULL;
   DataTypes_t ret_type;
   TS_data_t *left_data = q_pop(globals.q_assignments);
