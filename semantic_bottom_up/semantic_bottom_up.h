@@ -73,7 +73,7 @@
           /* ~= == */                                                          \
           /* = */               /* num |  int  |   str   |  bool  |  NIL*/     \
                     /* num */{{ NUMBER,  NUMBER, NO_TYPE, NO_TYPE,  NUMBER },  \
-                    /* int */ { INTEGER, INTEGER, NO_TYPE, NO_TYPE,  INTEGER},  \
+                    /* int */ { NO_TYPE, INTEGER, NO_TYPE, NO_TYPE,  INTEGER},  \
                     /* str */ { NO_TYPE, NO_TYPE, STRING, NO_TYPE,  STRING },  \
                     /* bool*/ { NO_TYPE, NO_TYPE, NO_TYPE, BOOLEAN, BOOLEAN},  \
                     /* NIL */ {   NIL,     NIL,    NIL,      NIL,    NIL   }}, \
