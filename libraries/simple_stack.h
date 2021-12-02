@@ -1,6 +1,6 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: extended_stack.h
+ *  Súbor: simple_stack.h
  *  Popis: knižnica na prácu s jednoduchým zásobníkom
  *  Zásobník je dynamicky alokovaný a v prípade potreby sa rozširuje automaticky
  *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
@@ -46,4 +46,4 @@ void stack_destroy(simp_stack_t **stack);
 void stack_print(simp_stack_t *stack, int wide);
 
 #endif
-//koniec súboru extended_stack.h
+//koniec súboru simple_stack.h
