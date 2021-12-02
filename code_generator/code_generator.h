@@ -23,7 +23,7 @@ typedef struct {
 #define DEF_COM_SIZE 128
 #define ESCAPE_LEN 4
 
-#define _CG_GENERATE_ 0
+#define _CG_GENERATE_ 1
 #define CODE_PRINT(command) if(_CG_GENERATE_) {command;}
 
 #define TRUE_CONSTANT "bool@true"
@@ -81,36 +81,84 @@ char *cg_format_string(char *string);
  */
 char *cg_format_float(char *string);
 
+/**
+ * LABEL label
+ */
 char *cg_label(char *label);
 
+/**
+ * PUSHFRAME
+ */
 char *cg_push_frame();
 
+/**
+ * POPFRAME
+ */
 char *cg_pop_frame();
 
+/**
+ * DEFVAR var
+ */
 char *cg_define_var(char *var);
 
+/**
+ * CREATEFRAME
+ */
 char *cg_create_frame();
 
+/**
+ * CALL $fun_name
+ */
 char *cg_call_fun(char *fun_name);
 
+/**
+ * MOVE dst src
+ */
 char *cg_move(char *dst, char *src);
 
+/**
+ * RETURN
+ */
 char *cg_return();
 
+/**
+ * PUSHS var
+ */
 char *cg_stack_push(char *var);
 
+/**
+ * POPS var
+ */
 char *cg_stack_pop(char *var);
 
+/**
+ * JUMP label
+ */
 char *cg_jump(char *label);
 
+/**
+ * CLEARS
+ */
 char *cg_stack_clear();
 
+/**
+ * type dest f_op s_op
+ */
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op);
 
+/**
+ * INT2FLOAT dst src
+ */
 char *cg_int2float(char *dst, char *src);
 
+/**
+ * FLOAT2INT dst src
+ */
 char *cg_float2int(char *dst, char *src);
 
+/**
+ * STRLEN dst src
+ */
 char *cg_strlen(char *dst, char *src);
 
 /**
@@ -131,190 +179,159 @@ char *cg_jumpeq(char *label, char *left, char *right);
 char *cg_jumpneq(char *label, char *left, char *right);
 
 /**
- * dest = a[b]
+ * dest = string[index]
  */
-#define CG_GetChar(dest, a, b) \
-    (printf("GETCHAR %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *CG_GetChar(char *dest, char *string, char *index);
 
 /**
- * dest[a] = b[0]
+ * dest[index] = src[0]
  */
-#define CG_SetChar(dest, a, b) \
-    (printf("SETCHAR %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *CG_SetChar(char *dest, char *index, char *src);
 
 /**
  * dest = a && b
  * @pre typeof(dest) == "bool"
  */
-#define CG_AND(dest, a, b) \
-    (printf("AND %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *CG_AND(char *dest, char *left, char *right);
 
 /**
  * dest = a || b
  * @pre typeof(dest) == "bool"
  */
-#define CG_OR(dest, a, b) \
-    (printf("OR %s@%s %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name, b.frame, b.name))
+char *CG_AND(char *dest, char *left, char *right);
 
 /**
  * dest = !a
  * @pre typeof(dest) == "bool"
  */
-#define CG_NOT(dest, a) \
-    (printf("NOT %s@%s %s@%s\n", dest.frame, dest.name, a.frame, a.name))
+char *CG_NOT(char *dest, char *src);
 
 /**
  * dest = (char) src
  */
-#define CG_Int2Char(dest, src) \
-    (printf("INT2CHAR %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
+char *CG_Int2Char(char *dest, char *src);
 
 /**
  * dest = getType(src)
  */
-#define CG_Type(dest, src) \
-    (printf("TYPE %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name))
+char *CG_Type(char *dest, char *src);
 
 /**
  * dest = (int) src[index]
  */
-#define CG_StrIndex2INT(dest, src, index) \
-    (printf("STRI2INT %s@%s %s@%s %s@%s\n", dest.frame, dest.name, src.frame, src.name, index.frame, index.name))
+char *CG_StrIndex2INT(char *dest, char *src, char *index);
 
 /**
  * printf("%s", var)
  */
-#define CG_Write(var) \
-    (printf("WRITE %s@%s\n", var.frame, var.name))
+char *CG_Write(char *var);
 
 /**
  * dest = get_stdin(type)
  */
-#define CG_Read(dest, type) \
-    (printf("READ %s@%s %s\n", dest.frame, dest.name, type))
+char *CG_Read(char *dest, char *type);
 
-#define CG_ExitStr(exitVal) \
-    (printf("EXIT %s@%s\n", "int", exitVal))
-
-#define CG_Exit(exitVal) \
-    (printf("EXIT %s@%d\n", "int", exitVal))
+char *CG_Exit(char *exitVal);
 
 /**
  * a = Pop(Stack) + Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_AddStack() \
-    (printf("ADDS\n"))
+char *CG_AddStack();
 
 /**
  * a = Pop(Stack) - Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_SubStack() \
-    (printf("SUBS\n"))
+char *CG_SubStack();
 
 /**
  * a = Pop(Stack) * Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_MulStack() \
-    (printf("MULS\n"))
+char *CG_MulStack();
 
 /**
  * a = Pop(Stack) / Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_DivStack() \
-    (printf("DIVS\n"))
+char *CG_DivStack();
 
 /**
  * a = Pop(Stack) / Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_IdivStack() \
-    (printf("IDIVS\n"))
+char *CG_IdivStack();
 
 /**
  * a = Pop(Stack) & Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_AndStack() \
-    (printf("ANDS\n"))
+char *CG_AndStack();
 
 /**
  * a = Pop(Stack) | Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_OrStack() \
-    (printf("ORS\n"))
+char *CG_OrStack();
 
 /**
  * a = Pop(Stack) < Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_LTStack() \
-    (printf("LTS\n"))
+char *CG_LTStack();
 
 /**
  * a = Pop(Stack) > Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_GTStack() \
-    (printf("GTS\n"))
+char *CG_GTStack();
 
 /**
  * a = Pop(Stack) == Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_EQStack() \
-    (printf("EQS\n"))
+char *CG_EQStack();
 
 /**
  * a = (int) Pop(Stack)[Pop(Stack)]
  * Push(Stack, a)
  */
-#define CG_StringIndex2IntStack() \
-    (printf("STRI2INTS\n"))
+char *CG_StringIndex2IntStack();
 
 /**
  * a = (char) Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_Int2CharStack() \
-    (printf("INT2CHARS\n"))
+char *CG_Int2CharStack();
 
 /**
  * a = parseInt(Pop(Stack))
  * Push(Stack, a)
  */
-#define CG_Float2IntStack() \
-    (printf("FLOAT2INTS\n"))
+char *CG_Float2IntStack();
 
 /**
  * a = parseFloat(Pop(Stack))
  * Push(Stack, a)
  */
-#define CG_Int2FloatStack() \
-    (printf("INT2FLOATS\n"))
+char *CG_Int2FloatStack();
 
 /**
  * a = !Pop(Stack)
  * Push(Stack, a)
  */
-#define CG_NotStack() \
-    (printf("NOTS\n"))
+char *CG_NotStack();
 
 /**
  * if(Pop(Stack) == Pop(Stack)) goto label;
  */
-#define CG_JumpEQStack(label) \
-    (printf("JUMPIFEQS %s\n", label))
+char *CG_JumpEQStack(char *label);
 
 /**
  * if(Pop(Stack) != Pop(Stack)) goto label;
  */
-#define CG_JumpNEQStack(label) \
-    (printf("JUMPIFNEQS %s\n", label))
+char *CG_JumpNEQStack(char *label);
 
 /**
  * Obálka pre príkazy
