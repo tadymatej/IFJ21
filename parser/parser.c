@@ -16,6 +16,7 @@
 //#define DEBUG_ERROR
 #define SHOW_TOKENS
 //#define SEMANTIC_CONNECT
+#define ERR_TESTING
 
 // --------------------------------------------------------------------
 
@@ -27,6 +28,9 @@ int semantic = 0; // Návratová hodnota sémantické analýzy
 
 void ErrMessagePossition(Token *ptr){
     fprintf(stderr, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
+    #ifdef ERR_TESTING
+        fprintf(stdout, "Chyba na radku: %d a sloupci: %d\n", ptr->startPosRow, ptr->startPosCol);
+    #endif
     return;
 }
 
@@ -100,6 +104,7 @@ Token Next(ScannerContext *sc){
     } else {
         #ifdef SHOW_TOKENS
             printf("##########|type: %s\tattribute: %s|\n", lex2String(token.token_type), token.attribute);
+            //printf("[%d; %d]\n", token.startPosRow, token.startPosCol);
         #endif
     }
 
@@ -210,7 +215,7 @@ bool NType(Token *ptr){
         #endif
     }
 
-    else{
+    else{ 
         return false;
     }
     
@@ -1055,6 +1060,8 @@ bool NTypes_list(Token *ptr, ScannerContext *sc){
                 types_list = types_list && NType(ptr);
                 if(types_list){
                     *ptr = Next(sc); if(errT != 0){return false;}
+                } else {
+                    return false;
                 }
             }
             
@@ -1138,6 +1145,9 @@ bool NGlobal(Token *ptr, ScannerContext *sc){
 
                     *ptr = Next(sc); if(errT != 0){return false;}
                     glob = NTypes_list(ptr, sc);
+                    if(!glob){
+                        return false;
+                    }
                     *ptr = Next(sc); if(errT != 0){return false;}
 
                     if(ptr->token_type == TOKEN_COLON){

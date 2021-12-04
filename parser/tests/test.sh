@@ -123,4 +123,4 @@ echo "# Dodelat str. 13 ic2lint run $f.prg < $f.in > $f.out " ;
 #done
 
 # remove .txt files
-#rm -f *.txt
+rm -f *.txt

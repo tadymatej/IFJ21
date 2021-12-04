@@ -1,4 +1,4 @@
--- Should be ERR
+-- Should be ERR [17, 5]
 
 require "ifj21"
 
@@ -11,7 +11,7 @@ function main() : integer, number
     local b : number = 5
     local c : string = "Ho Ho Ho!"
 
-    -- chyba zde
+
     a = 456
     a
     if a > 1000 then

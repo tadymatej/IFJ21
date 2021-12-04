@@ -153,3 +153,4 @@ $43 <function_body> => <ids> <expressions>
 $46 <ids> => id <next_id>
 ---------------------------
 ##########|type: keyword	attribute: if|
+Chyba na radku: 17 a sloupci: 5

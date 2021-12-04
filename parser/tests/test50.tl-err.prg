@@ -683,3 +683,4 @@ $43 <function_body> => <ids> <expressions>
 $46 <ids> => id <next_id>
 ---------------------------
 ##########|type: id	attribute: l|
+Chyba na radku: 48 a sloupci: 7

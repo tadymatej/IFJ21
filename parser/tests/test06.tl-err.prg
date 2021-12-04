@@ -14,3 +14,4 @@ $23 <return_fc> => <function_body>
 ---------------------------
 ##########|type: id	attribute: a|
 ##########|type: keyword	attribute: integer|
+Chyba na radku: 6 a sloupci: 13
