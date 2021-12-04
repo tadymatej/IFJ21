@@ -1,3 +1,10 @@
+/********************************************************************************
+ *  Projekt - Prekladač
+ *  Súbor: code_generator.c
+ *  Popis: Metódy na výpis a formátovanie inštrukcíi kódu
+ ********************************************************************************
+*/
+
 #include "code_generator.h"
 
 char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
@@ -277,6 +284,150 @@ char *cg_jumpneq(char *label, char *left, char *right){
   if (label == NULL || left == NULL || right == NULL)
     return NULL;
   function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ %s %s %s\n") , (sprintf(str, "JUMPIFNEQ %s %s %s\n", label, left, right), free(label), free(left)));
+}
+
+char *CG_GetChar(char *dest, char *string, char *index){
+  if (dest == NULL || string == NULL || index == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(string) + strlen(index) + strlen("GETCHAR %s %s %s\n") , (sprintf(str, "GETCHAR %s %s %s\n", dest, string, index), free(dest), free(string), free(index)));
+}
+
+char *CG_SetChar(char *dest, char *index, char *src){
+  if (dest == NULL || index == NULL || src == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(src) + strlen(index) + strlen("SETCHAR %s %s %s\n") , (sprintf(str, "SETCHAR %s %s %s\n", dest, index, src), free(dest), free(src), free(index)));
+
+}
+
+char *CG_AND(char *dest, char *left, char *right){
+  if (dest == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("AND %s %s %s\n") , (sprintf(str, "AND %s %s %s\n", dest, left, right), free(dest), free(left), free(right)));
+
+}
+
+char *CG_OR(char *dest, char *left, char *right){
+  if (dest == NULL || left == NULL || right == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("OR %s %s %s\n") , (sprintf(str, "OR %s %s %s\n", dest, left, right), free(dest), free(left), free(right)));
+}
+
+char *CG_NOT(char *dest, char *src){
+  if (dest == NULL || src == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(src) + strlen("NOT %s %s\n") , (sprintf(str, "NOT %s %s\n", dest, src), free(dest), free(src)));
+}
+
+/**
+ * dest = (char) src
+ */
+char *CG_Int2Char(char *dest, char *src){
+  if (dest == NULL || src == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(src) + strlen("INT2CHAR %s %s\n") , (sprintf(str, "INT2CHAR %s %s\n", dest, src), free(dest), free(src)));
+
+}
+
+char *CG_Type(char *dest, char *src){
+  if (dest == NULL || src == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(src) + strlen("TYPE %s %s\n") , (sprintf(str, "TYPE %s %s\n", dest, src), free(dest), free(src)));
+}
+
+char *CG_StrIndex2INT(char *dest, char *src, char *index){
+  if (dest == NULL || src == NULL || index == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(src) + strlen(index) + strlen("STRI2INT %s %s %s\n") , (sprintf(str, "STRI2INT %s %s %s\n", dest, src, index), free(dest), free(src), free(index)));
+}
+
+char *CG_Write(char *var){
+  if (var == NULL)
+    return NULL;
+  function_templ(strlen(var) + strlen("WRITE %s\n") , (sprintf(str, "WRITE %s\n", var), free(var)));
+}
+
+char *CG_Read(char *dest, char *type){
+  if (dest == NULL || type == NULL)
+    return NULL;
+  function_templ(strlen(dest) + strlen(type) + strlen("READ %s %s\n") , (sprintf(str, "READ %s %s\n", dest, type), free(dest), free(type)));
+}
+
+char *CG_Exit(char *string){
+  if (string == NULL)
+    return NULL;
+  function_templ(strlen(string) + strlen("EXIT %s\n") , (sprintf(str, "EXIT %s\n", string), free(string)));
+}
+
+char *CG_AddStack(){
+  function_templ(strlen("ADDS\n") , (sprintf(str, "ADDS\n")));
+}
+
+char *CG_SubStack(){
+  function_templ(strlen("SUBS\n") , (sprintf(str, "SUBS\n")));
+}
+
+char *CG_MulStack(){
+  function_templ(strlen("MULS\n") , (sprintf(str, "MULS\n")));
+}
+
+char *CG_DivStack(){
+  function_templ(strlen("DIVS\n") , (sprintf(str, "DIVS\n")));
+}
+
+char *CG_IdivStack(){
+  function_templ(strlen("IDIVS\n") , (sprintf(str, "IDIVS\n")));
+}
+
+char *CG_AndStack(){
+  function_templ(strlen("ANDS\n") , (sprintf(str, "ANDS\n")));
+}
+
+char *CG_OrStack(){
+  function_templ(strlen("ORS\n") , (sprintf(str, "ORS\n")));
+}
+
+char *CG_LTStack(){
+  function_templ(strlen("LTS\n") , (sprintf(str, "LTS\n")));
+}
+
+char *CG_GTStack(){
+  function_templ(strlen("GTS\n") , (sprintf(str, "GTS\n")));
+}
+
+char *CG_EQStack(){
+  function_templ(strlen("EQS\n") , (sprintf(str, "EQS\n")));
+}
+
+char *CG_StringIndex2IntStack(){
+  function_templ(strlen("STRI2INTS\n") , (sprintf(str, "STRI2INTS\n")));
+}
+
+char *CG_Int2CharStack(){
+  function_templ(strlen("INT2CHARS\n") , (sprintf(str, "INT2CHARS\n")));
+}
+
+char *CG_Float2IntStack(){
+  function_templ(strlen("FLOAT2INTS\n") , (sprintf(str, "FLOAT2INTS\n")));
+}
+
+char *CG_Int2FloatStack(){
+  function_templ(strlen("INT2FLOATS\n") , (sprintf(str, "INT2FLOATS\n")));
+}
+
+char *CG_NotStack(){
+  function_templ(strlen("NOTS\n") , (sprintf(str, "NOTS\n")));
+}
+
+char *CG_JumpEQStack(char *label){
+  if (label == NULL)
+    return NULL;
+  function_templ(strlen(label) + strlen("JUMPIFEQS %s\n") , (sprintf(str, "JUMPIFEQS %s\n", label), free(label)));
+}
+
+char *CG_JumpNEQStack(char *label){
+  if (label == NULL)
+    return NULL;
+  function_templ(strlen(label) + strlen("JUMPIFNEQS %s\n") , (sprintf(str, "JUMPIFNEQS %s\n", label), free(label)));
 }
 
 int cg_envelope(char *str) {

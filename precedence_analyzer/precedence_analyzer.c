@@ -79,6 +79,25 @@ void decode_stack_print(simp_stack_t *stack, int wide){
   }
 }
 
+int symb_syntax_index(char symbol){
+  int index;
+  switch (symbol) {
+    case NT: case 'i': case 'n': case 's': case 'f':
+      index = 0;
+      break;
+    case '(': case ')':
+      index = 2;
+      break;
+    case STACK_END:
+      index = 3;
+      break;
+    default:
+      index = 1;
+      break;
+  }
+  return index;
+}
+
 /**
  *  Funkcia. ktorá preloži typ tokenu na symbol.
  *  Dvojznakové operátory vráti v kódovanej podobe, podľa definovaných makier
@@ -151,30 +170,14 @@ Token make_fake_token(Token token, char top_stack_operand){
 int symb_to_index(char symbol){
   int index;
   switch (symbol) {
-    case '#':
-      index = 0;
-      break;
-    case '*': case '/': case IMOD:
-      index = 1;
-      break;
-    case '+': case '-':
-      index = 2;
-      break;
-    case CONCAT:
-      index = 3;
-      break;
-    case LTE: case GTE: case NEQ: case EQ: case '>': case '<':
-      index = 4;
-      break;
-    case '(':
-      index = 7;
-      break;
-    case ')':
-      index = 8;
-      break;
-    case STACK_END:
-      index = 9;
-      break;
+    case '#': index = 0; break;
+    case '*': case '/': case IMOD: index = 1; break;
+    case '+': case '-': index = 2; break;
+    case CONCAT: index = 3; break;
+    case LTE: case GTE: case NEQ: case EQ: case '>': case '<': index = 4; break;
+    case '(': index = 7; break;
+    case ')': index = 8; break;
+    case STACK_END: index = 9; break;
     default:
       index = 5; //for identifiers and constants
       break;
@@ -276,12 +279,14 @@ int precedence_analyzer(ScannerContext *sc) {
     TokenStore(token, sc);
     return 0;
   }
-  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING)) {
+  if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING || token.token_type == TOKEN_LEN)) {
     return SYNTAX_ERR;
   }
   char token_operator;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
+  static char syntax_table[SYNTAX_TABLE_SIZE][SYNTAX_TABLE_SIZE] = SYNTAX_TABLE;
+
   simp_stack_t *stack = stack_init();
   char top_stack_operand = STACK_END;
   char top;
@@ -289,12 +294,22 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int done = 0;     //značí, keď je celý výraz spracovaný
   char operator = '<';
+  int syntax_check;
   DEBUG_MACRO(printf("Stack                         | op | Token           | top | output    \n" ))
 
   while(!done){
     //first index is operand at the top of stack, second operator is from token on input
     token_operator = token_to_symb(&token);
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(token_operator)];
+
+    top = stack_top(stack);
+    syntax_check = syntax_table[symb_syntax_index(top)][symb_syntax_index(token_operator)];
+    if(!syntax_check){
+    //if((symb_syntax_index(top) == 1) && (symb_syntax_index(token_operator) == 1)){
+      printf("top: %c | token: %c\n", top, token_operator);
+      error_code = SYNTAX_ERR;
+      break;
+    }
 
     DEBUG_MACRO(decode_stack_print(stack, 30) ;printf("| %c  | %15s | %c   | %30s \n", operator, lex2String(token.token_type), top_stack_operand, postfixExpression));
 
@@ -343,6 +358,7 @@ int precedence_analyzer(ScannerContext *sc) {
           top_stack_operand = get_stack_operand(stack); //moze byt operacia alebo $
           if(top_stack_operand == STACK_END) break;
         }while (1);
+        if(done) break;
         if(token.token_type != TOKEN_ID){
           break;
         }

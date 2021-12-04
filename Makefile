@@ -50,7 +50,8 @@ parser: $(PARSER_DEPS)
 		$(CC) $(CFLAGS) -o parser/$@ $^
 
 run_parser: $(PARSER)
-	cat parser/tests/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
+	cat tests/compiler_tests/IFJ21_programms/syntax/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=syntax-err15.tl
+	#cat parser/tests/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=test07.tl
 
 parser_test: $(PARSER_DEPS)
 			 $(CC) $(CFLAGS) -o tests/compiler_tests/IFJ21_programms/$@ $^

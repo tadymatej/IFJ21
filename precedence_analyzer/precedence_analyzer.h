@@ -26,11 +26,19 @@
                       /*   ..  */{ '<',   '<',   '<',  '<',   '>',   '<',   '<',    '<',   '>',  '>'},\
                       /* >< ~ =*/{ '<',   '<',   '<',  '<',   '>',   '<',   '<',    '<',   '>',  '>'},\
                       /*   i   */{ '>',   '>',   '>',  '>',   '>',   '>',   '#',    '#',   '>',  '>'},\
-                      /*  f_id */{ '>',   '>',   '>',  '>',   '>',   '#',   '#',    '#',   '>',  '>'},\
+                      /*  f_id */{ '>',   '>',   '>',  '>',   '>',   '>',   '#',    '#',   '>',  '>'},\
                       /*   (   */{ '<',   '<',   '<',  '<',   '<',   '<',   '<',    '<',   '=',  '#'},\
                       /*   )   */{ '>',   '>',   '>',  '>',   '>',   '>',   '#',    '#',   '>',  '>'},\
                       /*   $   */{ '<',   '<',   '<',  '<',   '<',   '<',   '<',    '<',   '#',  '&'}}
                   /*vrchol zasobnika*/
+
+#define SYNTAX_TABLE_SIZE 4
+                          /*       token     */
+                          /*   NT   op  ()  $  */
+#define SYNTAX_TABLE /* NT */{{1,   1,  1,   1},\
+        /* stack */  /* op */ {1,   0,  1,   0},\
+                     /* () */ {1,   1,  1,   1},\
+                     /* $  */ {1,   1,  1,   1}}
 
 #define STACK_END '$' //dno zásobníka. Ukončuje analýzu, ak sa dostane aj na vstup token, ktorý ukončuje expression
 #define NT '@' //this is substitution for nonterminal, as this character cannot be used in Expression
