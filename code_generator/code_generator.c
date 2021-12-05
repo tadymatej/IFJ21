@@ -141,6 +141,12 @@ char *cg_format_float(char *string) {
     return string_format;
 }
 
+char *cg_require(char *prerequisity){
+  if(prerequisity == NULL)
+    return NULL;
+  function_templ(strlen(".%s\n") + strlen(prerequisity), (sprintf(str, ".%s\n\n", prerequisity)));
+}
+
 char *cg_label(char *label) {
     if (label == NULL)
         return NULL;
