@@ -1,0 +1,31 @@
+##########|type: keyword	attribute: require|
+##########|type: string	attribute: "ifj21"|
+$1 <prog> => require
+---------------------------
+##########|type: keyword	attribute: global|
+$3 <prog> => global id : function ( <types_list> <fc_decl_ret>
+---------------------------
+##########|type: id	attribute: foo|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: function|
+##########|type: start bracket	attribute: (null)|
+$12 <types_list> => <first_type> <next_types>
+---------------------------
+##########|type: keyword	attribute: integer|
+$27 <first_type> => <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: comma	attribute: (null)|
+$15 <next_types> => , <type> <next_types>
+---------------------------
+##########|type: keyword	attribute: string|
+$20 <type> => string
+---------------------------
+##########|type: comma	attribute: (null)|
+$15 <next_types> => , <type> <next_types>
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$4 <prog> => EOF
+---------------------------
+Chyba na radku: 5 a sloupci: 40

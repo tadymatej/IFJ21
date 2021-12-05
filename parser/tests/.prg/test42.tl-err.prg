@@ -121,3 +121,4 @@ $37 <next_args> => , id <next_args>
 ##########|type: keyword	attribute: end|
 $4 <prog> => EOF
 ---------------------------
+Chyba na radku: 15 a sloupci: 5

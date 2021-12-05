@@ -15,3 +15,4 @@ $8 <first_param> => <param>
 $18 <param> => id : <type>
 ---------------------------
 ##########|type: id	attribute: intege|
+Chyba na radku: 5 a sloupci: 19

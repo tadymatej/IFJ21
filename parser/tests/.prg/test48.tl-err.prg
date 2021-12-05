@@ -766,3 +766,4 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 ##########|type: id	attribute: a|
 $68 <exp_cond> => call PSA
 ---------------------------
+Chyba na radku: 77 a sloupci: 17

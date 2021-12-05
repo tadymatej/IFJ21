@@ -640,3 +640,4 @@ $35 <args_list> => <first_arg> <next_args>
 $36 <first_arg> => id
 ---------------------------
 ##########|type: id	attribute: b|
+Chyba na radku: 56 a sloupci: 98

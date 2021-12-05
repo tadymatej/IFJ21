@@ -17,3 +17,4 @@ $43 <function_body> => <ids> <expressions>
 $46 <ids> => id <next_id>
 ---------------------------
 ##########|type: colon - dvojtecka	attribute: (null)|
+Chyba na radku: 6 a sloupci: 7

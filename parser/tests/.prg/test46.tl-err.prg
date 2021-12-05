@@ -647,3 +647,4 @@ $37 <next_args> => , id <next_args>
 $38 <next_args> => )
 ---------------------------
 ##########|type: sub	attribute: (null)|
+Chyba na radku: 57 a sloupci: 93

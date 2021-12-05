@@ -65,7 +65,7 @@ for f in syntax/*.tl; do
             ;;
     esac
     
-    #diff $f.txt $f.prg
+    diff $f.txt $f.vzor
     #tail -1 $f.txt;
     echo "";
 done
