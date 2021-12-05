@@ -1492,7 +1492,7 @@ int Parse(){
     //Begin(&sc)
 
     //printf("%d\n", errT);
-    //dispose_sem_globals();
+    dispose_sem_globals();
     ScannerContextDelete(&sc);
     free(token);
     return errT;
