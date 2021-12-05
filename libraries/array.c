@@ -26,7 +26,7 @@ Array_t *init_array() {
 int arr_add(Array_t *arr, void *element) {
     if (arr->length == arr->size)
         if (__resize_array(arr) == 1) {
-            dispose_array(&arr, true);
+            dispose_array(&arr, true); // PRIPADNE MEMORY LEAKY
             return 1;
         }
     arr->arr[arr->length++] = element;

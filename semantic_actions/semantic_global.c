@@ -24,10 +24,12 @@ int init_sem_globals() {
 }
 
 void dispose_sem_globals() {
-    dispose_fun_data(globals.cur_function);
-    dispose_queue(&globals.q_assignments);
-    dispose_queue(&globals.q_command);
-    free(globals.var);
+    if(find_variable(globals.ts, globals.var->name, NULL ) == NULL)
+        free(globals.var);
+    dispose_queue(&globals.q_assignments, NULL);
+    dispose_queue(&globals.q_command, NULL);
+    if(find_function(globals.ft, globals.cur_function->name, NULL, NULL) == NULL)
+        dispose_fun_data(globals.cur_function);
     dispose_fun_table(&globals.ft);
     dispose_table(&globals.ts);
     stack_destroy(&globals.blockStack);

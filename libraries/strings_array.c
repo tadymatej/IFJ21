@@ -23,11 +23,7 @@ StringsArray* StringsArrayCreate(char separator) {
 
 void StringsArrayDelete(StringsArray **strArr) {
     if(*strArr != NULL) {
-        while(!q_is_empty((*strArr)->q)) {
-            char *ptr = q_top((*strArr)->q);
-            free(ptr);
-            q_pop((*strArr)->q); 
-        }
+        dispose_queue(&((*strArr)->q), free);
         free(*strArr);
         *strArr = NULL;
     }
