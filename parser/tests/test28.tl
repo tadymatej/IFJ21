@@ -1,9 +1,10 @@
--- Should be OK - Semantic fix
+-- Should be OK
 
 require "ifj21"
 
 global foo : function(integer, string, number) : number, string, integer
-function fc (a : integer, b : number, c : string)
+function fc (a : integer, b : number, c : string) : integer, integer, string
+    return 5, 5, "Jupi"
 end
 
 function foo(k : integer, l : string, m : number) : number, string, integer
@@ -26,7 +27,7 @@ function main() : integer, number
     elseif a == 5 then
         a, b, c = 5, 5, "five"
     else
-        a = b
+        b = a
     end
 
     local d : integer
@@ -38,7 +39,7 @@ function main() : integer, number
     elseif a == 5 then
         a, b, c = 5, 5, "five"
     else
-        a = b
+        b = a
     end
 
     local k : integer

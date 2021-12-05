@@ -1,0 +1,19 @@
+.IFJcode21
+JUMP $%%exec_point_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@a_0
+MOVE LF@a_0 int@5
+DEFVAR LF@%cv_0
+LT LF@%cv_0 LF@a_0 int@5
+JUMPIFNEQ funkcia_1_if_1 LF@%cv_0 bool@true
+DEFVAR LF@%cv_1
+ADD LF@%cv_1 LF@a_0 int@1
+MOVE LF@a_0 LF@%cv_1
+DEFVAR LF@b_0
+MOVE LF@b_0 int@5
+LABEL $%%exec_point_0
+CREATEFRAME
+CALL $main
+JUMP $%%exec_point_1
+LABEL $%%exec_point_1

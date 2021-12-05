@@ -3,6 +3,7 @@
 require "ifj21"
 
 global foo : function(string) : string
+
 function bar(param : string) : string
     return foo (param)
 end

@@ -3,7 +3,7 @@
 require "ifj21"
 
 global foo : function(integer, string, number) : number, string, integer
-function fc (a : integer, b : number, c : string)
+function fc (a : integer, b : number, c : string) : integer, number,string
 end
 
 function foo(k : integer, l : string, m : number) : number, string, integer

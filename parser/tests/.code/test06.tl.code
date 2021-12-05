@@ -1,0 +1,10 @@
+.IFJcode21
+JUMP $%%exec_point_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@a_0
+LABEL $%%exec_point_0
+CREATEFRAME
+CALL $main
+JUMP $%%exec_point_1
+LABEL $%%exec_point_1

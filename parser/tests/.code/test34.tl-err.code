@@ -1,0 +1,7 @@
+.IFJcode21
+JUMP $%%exec_point_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@a_0
+MOVE LF@a_0 int@5
+DEFVAR LF@b_0

@@ -12,10 +12,10 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE
+//#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
-#define SEMANTIC_CONNECT
+//#define SHOW_TOKENS
+#define SEMANTIC_CONNECT 
 
 // --------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ bool Req(Token *ptr){
     if((strcmp(ptr->attribute, "\"ifj21\"") == 0) && (ptr->token_type != TOKEN_NONE)){
         req = true;
 
-        // TODO CG_PROLOG();
+        CG_Prolog();
 
     }
 
@@ -1482,7 +1482,7 @@ int Parse(){
     //Begin(&sc)
 
     //printf("%d\n", errT);
-    dispose_sem_globals();
+    //dispose_sem_globals();
     ScannerContextDelete(&sc);
     free(token);
     return errT;

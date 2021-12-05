@@ -1,0 +1,32 @@
+.IFJcode21
+JUMP $%%exec_point_0
+LABEL $fc
+PUSHFRAME
+DEFVAR LF@a_0
+POPS LF@a_0
+DEFVAR LF@b_0
+POPS LF@b_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@a_1
+MOVE LF@a_1 int@10
+DEFVAR LF@b_1
+DEFVAR LF@%av_0
+INT2FLOAT LF@%av_0 int@5
+MOVE LF@b_1 LF@%av_0
+DEFVAR LF@%cv_0
+GT LF@%cv_0 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_0 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+DEFVAR LF@%cv_1
+GT LF@%cv_1 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_1 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+MOVE LF@a_1 int@3
+LABEL $%%exec_point_0

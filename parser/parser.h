@@ -5,6 +5,7 @@
 #include "semantic_bottom_up.h"
 #include "semantic_action.h"
 #include "semantic_global.h"
+#include "code_generator.h"
 
 #define LEX_ERR 1 // chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému)
 #define SYNTAX_ERR 2 // chyba v programu v rámci syntaktické analýzy (chybná syntaxe programu)
