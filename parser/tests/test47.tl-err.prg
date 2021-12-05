@@ -650,3 +650,4 @@ $38 <next_args> => )
 $65 <elseif> => else <function_body> <end>
 ---------------------------
 ##########|type: keyword	attribute: then|
+Chyba na radku: 57 a sloupci: 94

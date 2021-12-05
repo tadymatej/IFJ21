@@ -1,4 +1,4 @@
--- Should be ERR
+-- Should be ERR [14, 12] -- Scanner fix
 
 require "ifj21"
 

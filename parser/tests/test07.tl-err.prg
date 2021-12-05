@@ -23,3 +23,4 @@ $19 <type> => integer
 $58 <assignment> => <function_body>
 ---------------------------
 ##########|type: number int	attribute: 88|
+Chyba na radku: 6 a sloupci: 23

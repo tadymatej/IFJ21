@@ -158,3 +158,4 @@ $36 <first_arg> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
 ##########|type: comma	attribute: (null)|
+Chyba na radku: 16 a sloupci: 15

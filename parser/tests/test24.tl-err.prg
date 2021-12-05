@@ -179,3 +179,4 @@ $43 <function_body> => <ids> <expressions>
 $46 <ids> => id <next_id>
 ---------------------------
 ##########|type: keyword	attribute: return|
+Chyba na radku: 21 a sloupci: 5

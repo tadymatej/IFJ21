@@ -1,4 +1,4 @@
--- Should be ERR
+-- Should be ERR [20, 12] -- TODO check
 
 require "ifj21"
 

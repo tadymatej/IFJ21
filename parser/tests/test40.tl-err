@@ -1,4 +1,4 @@
--- Should be ERR
+-- Should be ERR -- Scanner fix [18, 4] ?
 
 require "ifj21"
 

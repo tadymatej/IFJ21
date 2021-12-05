@@ -44,7 +44,8 @@ CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$
 
 all: $(PROGS)
 
-parser:   $(PARSER)
+parser: $(PARSER_DEPS)
+		$(CC) $(CFLAGS) -o parser/$@ $^
 
 run_parser: $(PARSER)
 	#cat tests/compiler_tests/IFJ21_programms/syntax/$(TEST_NAME) | parser/$(PARSER) #pouzit ako make run_parser TEST_NAME=syntax-err15.tl
@@ -52,9 +53,6 @@ run_parser: $(PARSER)
 
 parser_test: $(PARSER_DEPS)
 			 $(CC) $(CFLAGS) -o tests/compiler_tests/IFJ21_programms/$@ $^
-
-$(PARSER): $(PARSER_DEPS)
-		$(CC) $(CFLAGS) -o parser/parser $^
 
 
 run_stack: $(SIMPLE_STACK)-test
