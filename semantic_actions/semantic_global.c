@@ -24,8 +24,10 @@ int init_sem_globals() {
 }
 
 void dispose_sem_globals() {
-    if(find_variable(globals.ts, globals.var->name, NULL ) == NULL)
+    if(globals.var != NULL){
+      if(find_variable(globals.ts, globals.var->name, NULL ) == NULL)
         free(globals.var);
+    }
     dispose_queue(&globals.q_assignments, NULL);
     dispose_queue(&globals.q_command, NULL);
     if(find_function(globals.ft, globals.cur_function->name, NULL, NULL) == NULL)
