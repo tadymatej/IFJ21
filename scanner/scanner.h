@@ -62,7 +62,7 @@ typedef struct {
 
 typedef unsigned long long ptrInt;
 
-StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
+extern StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
 
 
 /**

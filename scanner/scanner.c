@@ -1,5 +1,7 @@
 #include "scanner.h"
 
+StringsArray *strArr;
+
 Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, char *attribute) {
     Token token = {token_type, attributeType, attribute, 0, 0};
     return token;
@@ -85,7 +87,8 @@ int ScannerContextInit(ScannerContext *sc) {
 }
 
 void ScannerContextDelete(ScannerContext *sc) {
-    dispose_queue(&sc->tokens);
+    dispose_queue(&sc->tokens, free);
+    StringsArrayDelete(&strArr);
     BinaryTreeDestroy(sc->kw, NULL);
 }
 
