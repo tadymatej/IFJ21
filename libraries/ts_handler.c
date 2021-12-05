@@ -32,6 +32,7 @@ void dispose_table(Sym_table_t **table){
 }
 
 TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn){
+  if(table == NULL || name == NULL) return NULL;
   Sym_table_t *temp = table;
   TreeNode *retNode = NULL;
   while (temp != NULL && retNode == NULL){
