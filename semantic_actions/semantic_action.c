@@ -87,7 +87,8 @@ int is_dec_eq_to_def() {
 
 // 41 - id
 int define_local_var(Token *token) {
-    if (find_variable(globals.ts, token->attribute, NULL) != NULL)
+    Sym_table_t *foundIn;
+    if (find_variable(globals.ts, token->attribute, &foundIn) != NULL && foundIn == globals.ts)
         return DEFINITON_ERROR;
     globals.var = make_var_data(NO_TYPE, token->attribute, NULL);
     if (globals.var == NULL)
