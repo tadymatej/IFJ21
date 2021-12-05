@@ -23,13 +23,16 @@ typedef struct Q_Elem {
 typedef struct Queue {
     Q_elem_t *first;
     Q_elem_t *last;
+    int length;
 }Queue_t;
 
 Queue_t* init_queue();
 int q_push(Queue_t *q, void *elem);
 void* q_top(Queue_t *q);
 void* q_pop(Queue_t *q);
-void dispose_queue(Queue_t **q);
+bool q_search(Queue_t *q, void *elem);
+//vzdy uvolnuje prvky
+void dispose_queue(Queue_t **q, void (*dataDestroyHandler)(void *));
 bool q_is_empty(Queue_t *q);
 
 /**
