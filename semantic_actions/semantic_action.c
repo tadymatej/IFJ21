@@ -24,7 +24,7 @@ int after_global_fun_call() {
 //je volana nad tokenem  2 - id_f
 int function_definition(Token *token) {
     globals.cur_function = init_fun_data(token->attribute);
-    if (NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"))|| globals.cur_function == NULL)
+    if (NOT_SUCCESS(new_stack_frame(&globals.ts, "LF")) || globals.cur_function == NULL)
         return INTERNAL_ERROR;
     bool isOnlyDec;
     if (find_function(globals.ft, token->attribute, &isOnlyDec, NULL) != NULL && !isOnlyDec)
@@ -63,7 +63,7 @@ int fun_arg_definition(Token *token) {
 
 // 41 - <type>
 int var_type_assignment(Token *token) {
-    if(globals.var == NULL)
+    if (globals.var == NULL)
         return OTHER_SEM_ERRORS;
     globals.var->type = string_to_data_type(token->attribute);
     //7 se nikdy nema vratit za podminkou ze lexikalni a. a syntakticka a. funguji spravne.
@@ -197,17 +197,31 @@ int n_assignment_vars(Token *token) {
     return SEM_CORRECT;
 }
 
-// //53 - <function_body>
-// int end_n_assignment(){
-//     if(globals.q_assignments->length != 0){
+//53 - <function_body>
+int end_n_assignment() {
+    if (globals.q_assignments->length != 0) {
+        return FUN_CALL_ERROR;
+    }
+    return SEM_CORRECT;
+}
 
-//     }
-// }
+// 2 - end
+int end_function_body() {
+    globals.nested_count = 0;
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));  // Musi byt proveden pred zpracovanim return
+    for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
+    }
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_return()));
+    return SEM_CORRECT;
+}
 
-// // 2 - end
-// int end_function_body(){
-//     globals.nested_count = 0;
-//     //cg_envelope(cg_pop_frame()); // Musi byt proveden pred zpracovanim return
-//     // push pocet navrativych hodnot nil
-//     //cg_envelope RETURN
-// }
+// 59 - return
+int start_return(){
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));
+    for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
+        RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, fun_get_ret(globals.cur_function, i)));
+    }
+    return SEM_CORRECT;
+}
