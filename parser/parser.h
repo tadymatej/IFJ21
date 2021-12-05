@@ -51,6 +51,13 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc);
 bool NFunction_body(Token *ptr, ScannerContext *sc);
 
 /**
+ * Realizace pravidel: $37.1, $37.2, $37.3, $37.4, $37.5
+ * @param ptr Ukazatel na token
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
+bool NValue(Token *ptr);
+
+/**
  * Realizace pravidel: $33, $34, $35, $36, $37, $38
  * @param ptr Ukazatel na token
  * @param sc ScannerContext
