@@ -1,5 +1,8 @@
 .IFJcode21
+.IFJcode21
+
 JUMP $%%exec_point_0
+
 LABEL $main
 PUSHFRAME
 LABEL $%%exec_point_0

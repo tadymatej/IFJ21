@@ -14,9 +14,9 @@
 
 //#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
-#define ERR_TESTING
+//#define ERR_TESTING
 
 // --------------------------------------------------------------------
 
@@ -339,7 +339,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
     *ptr = Next(sc); if(errT != 0){return false;}
 
 
-    if(ptr->token_type != TOKEN_END_BRACKET && ptr->token_type == TOKEN_ID){
+    if(ptr->token_type != TOKEN_END_BRACKET && (ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER)){
         function_call = true;
         // $35 <args_list> => <first_arg> <next_args>
         #ifdef DEBUG_USED_RULE
@@ -366,7 +366,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
         while(ptr->token_type == TOKEN_COMMA && function_call == true){
             *ptr = Next(sc); if(errT != 0){return false;}
 
-            if(ptr->token_type == TOKEN_ID){
+            if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
                 // $37 <next_args> => , id <next_args>
                 #ifdef DEBUG_USED_RULE
                     printf("$37 <next_args> => , id <next_args>\n");

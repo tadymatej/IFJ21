@@ -21,12 +21,15 @@ INT2FLOAT LF@%av_0 int@5
 MOVE LF@b_1 LF@%av_0
 DEFVAR LF@c_1
 MOVE LF@c_1 string@Ho\032Ho\032Ho!
+MOVE LF@a_1 int@456
 DEFVAR LF@%cv_0
-GT LF@%cv_0 LF@a_1 int@100
-JUMPIFNEQ funkcia_1_if_2 LF@%cv_0 bool@true
+INT2FLOAT LF@%cv_0 LF@a_1
+DEFVAR LF@%cv_1
+GT LF@%cv_1 LF@%cv_0 LF@b_1
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_1 bool@true
 CREATEFRAME
-PUSHS LF@a_1
-PUSHS LF@b_1
+PUSHS int@10
+PUSHS 0x1.19799812dea11p-40
 PUSHS LF@c_1
 CALL $fc
 LABEL $%%exec_point_0

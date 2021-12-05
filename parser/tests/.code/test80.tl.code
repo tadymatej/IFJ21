@@ -1,5 +1,8 @@
 .IFJcode21
+.IFJcode21
+
 JUMP $%%exec_point_0
+
 LABEL $concat
 PUSHFRAME
 DEFVAR LF@x_0
@@ -13,3 +16,15 @@ PUSHFRAME
 DEFVAR LF@x_1
 DEFVAR LF@ret_1
 CREATEFRAME
+PUSHS ahoj
+PUSHS svete
+CALL $concat
+POPS LF@x_1
+POPS LF@ret_1
+CLEARS
+LABEL $%%exec_point_0
+CREATEFRAME
+CALL $main
+JUMP $%%exec_point_1
+
+LABEL $%%exec_point_1
