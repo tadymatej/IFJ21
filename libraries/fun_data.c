@@ -11,7 +11,7 @@ Fun_data_t *init_fun_data(char *name) {
         free(ptr);
         return NULL;
     }
-    ptr->isCalledBeforeDefinition = false;
+    //ptr->isCalledBeforeDefinition = false;
     return ptr;
 }
 
