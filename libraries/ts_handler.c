@@ -23,7 +23,7 @@ int new_stack_frame(Sym_table_t **table, char *prefix){
 void dispose_table(Sym_table_t **table){
   Sym_table_t *temp = NULL;
   while (*table != NULL){
-    BinaryTreeDestroy((*table)->tree, NULL);
+    BinaryTreeDestroy((*table)->tree, free);
     temp = (*table)->upper;
     free(*table);
     *table = temp;
@@ -32,8 +32,8 @@ void dispose_table(Sym_table_t **table){
 
 TS_data_t *find_variable(Sym_table_t *table, char *name, Sym_table_t **foundIn){
   Sym_table_t *temp = table;
-  TreeNode *retNode;
-  while (temp != NULL){
+  TreeNode *retNode = NULL;
+  while (temp != NULL && retNode == NULL){
     retNode = (BinaryTreeFindStruct(temp->tree, name));
     if(retNode != NULL && foundIn != NULL)
     {
