@@ -58,3 +58,23 @@ PUSHS LF@a_2
 PUSHS LF@b_2
 PUSHS LF@c_2
 CALL $fc
+DEFVAR LF@%cv_2
+GT LF@%cv_2 LF@a_2 int@5
+JUMPIFNEQ funkcia_1_if_3 LF@%cv_2 bool@true
+CREATEFRAME
+PUSHS LF@a_2
+PUSHS LF@b_2
+PUSHS LF@c_2
+CALL $fc
+DEFVAR LF@%cv_3
+EQ LF@%cv_3 LF@a_2 int@5
+JUMPIFNEQ funkcia_1_if_3 LF@%cv_3 bool@true
+MOVE LF@a_2 int@5
+DEFVAR LF@%av_3
+INT2FLOAT LF@%av_3 int@5
+MOVE LF@b_2 LF@%av_3
+MOVE LF@c_2 string@five
+MOVE LF@a_2 int@5
+DEFVAR LF@k_2
+DEFVAR LF@l_2
+DEFVAR LF@m_2

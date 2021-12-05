@@ -1,5 +1,3 @@
--- Should be ERR [51, 1]
-
 require "ifj21"
 
 global foo : function(integer, string, number) : number, string, integer
@@ -31,7 +29,7 @@ function main() : integer, number
 
     local d : integer
     
-    fc(a, b, c)
+    a, b, c = fc(a, b, c)
 
     if a > 5 then
         fc(a, b, c)
@@ -47,5 +45,5 @@ function main() : integer, number
     
     m, l, k = foo(k, l, m)
 
-    return 0 0
+    return 0, 0
 end
