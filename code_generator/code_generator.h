@@ -56,6 +56,11 @@ typedef struct {
     } while (0)
 
 /**
+ * Na vypisanie .IFJcode21 na zaciatku programu
+ */
+char *cg_require(char *prerequisity);
+
+/**
  * Alokuje miesto a doň naformátuje zadanú premennú
  * Ráta sa s tým, že funkcia do ktorej sa vloži naformátovaný string pamäť uvoľní
  * @param prefix Prefix premennej, môže byť naps LF, TF, string, int, float, bool, ...

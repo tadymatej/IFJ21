@@ -141,6 +141,12 @@ char *cg_format_float(char *string) {
     return string_format;
 }
 
+char *cg_require(char *prerequisity){
+  if(prerequisity == NULL)
+    return NULL;
+  function_templ(strlen(".%s\n") + strlen(prerequisity), (sprintf(str, ".%s\n\n", prerequisity)));
+}
+
 char *cg_label(char *label) {
     if (label == NULL)
         return NULL;
@@ -182,7 +188,7 @@ char *cg_move(char *dst, char *src) {
 }
 
 char *cg_return() {
-    function_templ(strlen("RETURN\n") + 1, sprintf(str, "RETURN\n"));
+    function_templ(strlen("RETURN\n\n") + 1, sprintf(str, "RETURN\n\n"));
 }
 
 char *cg_stack_push(char *var) {
@@ -200,7 +206,7 @@ char *cg_stack_pop(char *var) {
 char *cg_jump(char *label) {
     if (label == NULL)
         return NULL;
-    function_templ(strlen(label) + strlen("JUMP $%s\n") - 1, (sprintf(str, "JUMP $%s\n", label), free(label)));
+    function_templ(strlen(label) + strlen("JUMP $%s\n\n") - 1, (sprintf(str, "JUMP $%s\n\n", label), free(label)));
 }
 
 char *cg_stack_clear() {
@@ -208,8 +214,12 @@ char *cg_stack_clear() {
 }
 
 char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op) {
-    if (dest == NULL || f_op == NULL || s_op == NULL)
-        return NULL;
+    if (dest == NULL || f_op == NULL || s_op == NULL){
+      free(dest);
+      free(f_op);
+      free(s_op);
+      return NULL;
+    }
     char *operation;
     switch (type) {
     case TOKEN_ADD:
@@ -238,105 +248,155 @@ char *cg_arith_operation(TOKEN_TYPES type, char *dest, char *f_op, char *s_op) {
 }
 
 char *cg_int2float(char *dst, char *src){
-  if (dst == NULL || src == NULL)
-      return NULL;
+  if (dst == NULL || src == NULL){
+    free(src);
+    free(dst);
+    return NULL;
+  }
   function_templ(strlen(dst) + strlen(src) + strlen("INT2FLOAT %s %s\n") , (sprintf(str, "INT2FLOAT %s %s\n", dst, src), free(dst), free(src)));
 }
 
 char *cg_float2int(char *dst, char *src){
-  if (dst == NULL || src == NULL)
-      return NULL;
+  if (dst == NULL || src == NULL){
+    free(src);
+    free(dst);
+    return NULL;
+  }
   function_templ(strlen(dst) + strlen(src) + strlen("FLOAT2INT %s %s\n") , (sprintf(str, "FLOAT2INT %s %s\n", dst, src), free(dst), free(src)));
 }
 
 char *cg_strlen(char *dst, char *src){
-  if (dst == NULL || src == NULL)
-      return NULL;
+  if (dst == NULL || src == NULL){
+    free(dst);
+    free(src);
+    return NULL;
+  }
   function_templ(strlen(dst) + strlen(src) + strlen("STRLEN %s %s\n") , (sprintf(str, "STRLEN %s %s\n", dst, src), free(dst), free(src)));
 
 }
 
 char *cg_LT(char *dest, char *left, char *right){
-  if (dest == NULL || left == NULL || right == NULL)
+  if (dest == NULL || left == NULL || right == NULL){
+    free(left);
+    free(right);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("LT %s %s %s\n") , (sprintf(str, "LT %s %s %s\n", dest, left, right), free(left), free(right)));
 }
 
 char *cg_GT(char *dest, char *left, char *right){
-  if (dest == NULL || left == NULL || right == NULL)
+  if (dest == NULL || left == NULL || right == NULL){
+    free(left);
+    free(right);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("GT %s %s %s\n") , (sprintf(str, "GT %s %s %s\n", dest, left, right), free(left), free(right)));
 }
 
 char *cg_EQ(char *dest, char *left, char *right){
-  if (dest == NULL || left == NULL || right == NULL)
+  if (dest == NULL || left == NULL || right == NULL){
+    free(left);
+    free(right);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("EQ %s %s %s\n") , (sprintf(str, "EQ %s %s %s\n", dest, left, right), free(left), free(right)));
 }
 
 char *cg_jumpeq(char *label, char *left, char *right){
-  if (label == NULL || left == NULL || right == NULL)
+  if (label == NULL || left == NULL || right == NULL){
+    free(label);
+    free(left);
     return NULL;
+  }
   function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ %s %s %s\n") , (sprintf(str, "JUMPIFEQ %s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *cg_jumpneq(char *label, char *left, char *right){
-  if (label == NULL || left == NULL || right == NULL)
+  if (label == NULL || left == NULL || right == NULL){
+    free(label);
+    free(left);
     return NULL;
+  }
   function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ %s %s %s\n") , (sprintf(str, "JUMPIFNEQ %s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *CG_GetChar(char *dest, char *string, char *index){
-  if (dest == NULL || string == NULL || index == NULL)
+  if (dest == NULL || string == NULL || index == NULL){
+    free(dest);
+    free(string);
+    free(index);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(string) + strlen(index) + strlen("GETCHAR %s %s %s\n") , (sprintf(str, "GETCHAR %s %s %s\n", dest, string, index), free(dest), free(string), free(index)));
 }
 
 char *CG_SetChar(char *dest, char *index, char *src){
-  if (dest == NULL || index == NULL || src == NULL)
+  if (dest == NULL || index == NULL || src == NULL){
+    free(dest);
+    free(index);
+    free(src);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(src) + strlen(index) + strlen("SETCHAR %s %s %s\n") , (sprintf(str, "SETCHAR %s %s %s\n", dest, index, src), free(dest), free(src), free(index)));
 
 }
 
 char *CG_AND(char *dest, char *left, char *right){
-  if (dest == NULL || left == NULL || right == NULL)
+  if (dest == NULL || left == NULL || right == NULL){
+    free(dest);
+    free(left);
+    free(right);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("AND %s %s %s\n") , (sprintf(str, "AND %s %s %s\n", dest, left, right), free(dest), free(left), free(right)));
 
 }
 
 char *CG_OR(char *dest, char *left, char *right){
-  if (dest == NULL || left == NULL || right == NULL)
+  if (dest == NULL || left == NULL || right == NULL){
+    free(dest);
+    free(left);
+    free(right);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(left) + strlen(right) + strlen("OR %s %s %s\n") , (sprintf(str, "OR %s %s %s\n", dest, left, right), free(dest), free(left), free(right)));
 }
 
 char *CG_NOT(char *dest, char *src){
-  if (dest == NULL || src == NULL)
+  if (dest == NULL || src == NULL){
+    free(dest);
+    free(src);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(src) + strlen("NOT %s %s\n") , (sprintf(str, "NOT %s %s\n", dest, src), free(dest), free(src)));
 }
 
-/**
- * dest = (char) src
- */
 char *CG_Int2Char(char *dest, char *src){
-  if (dest == NULL || src == NULL)
+  if (dest == NULL || src == NULL){
+    free(dest);
+    free(src);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(src) + strlen("INT2CHAR %s %s\n") , (sprintf(str, "INT2CHAR %s %s\n", dest, src), free(dest), free(src)));
 
 }
 
 char *CG_Type(char *dest, char *src){
-  if (dest == NULL || src == NULL)
+  if (dest == NULL || src == NULL){
+    free(dest);
+    free(src);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(src) + strlen("TYPE %s %s\n") , (sprintf(str, "TYPE %s %s\n", dest, src), free(dest), free(src)));
 }
 
 char *CG_StrIndex2INT(char *dest, char *src, char *index){
-  if (dest == NULL || src == NULL || index == NULL)
+  if (dest == NULL || src == NULL || index == NULL){
+    free(dest);
+    free(src);
+    free(index);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(src) + strlen(index) + strlen("STRI2INT %s %s %s\n") , (sprintf(str, "STRI2INT %s %s %s\n", dest, src, index), free(dest), free(src), free(index)));
 }
 
@@ -347,8 +407,11 @@ char *CG_Write(char *var){
 }
 
 char *CG_Read(char *dest, char *type){
-  if (dest == NULL || type == NULL)
+  if (dest == NULL || type == NULL){
+    free(dest);
+    free(type);
     return NULL;
+  }
   function_templ(strlen(dest) + strlen(type) + strlen("READ %s %s\n") , (sprintf(str, "READ %s %s\n", dest, type), free(dest), free(type)));
 }
 

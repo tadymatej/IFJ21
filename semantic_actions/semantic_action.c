@@ -2,6 +2,7 @@
 
 // 1 - require
 int jump_to_exec_point() {
+    if((cg_envelope(cg_require("IFJcode21"))) != 0) return INTERNAL_ERROR;
     return cg_envelope(cg_jump(cg_format_label("%%exec_point", NULL, -1, globals.label_idx)));
 }
 
@@ -122,7 +123,7 @@ int push_parameter(Token *token) {
         return FUN_CALL_ERROR;
     Sym_table_t *foundIn;
     switch (token->token_type) {
-    case TOKEN_ID:    
+    case TOKEN_ID:
         globals.var = find_variable(globals.ts, token->attribute, &foundIn);
         if (globals.var == NULL)
             return DEFINITON_ERROR;
