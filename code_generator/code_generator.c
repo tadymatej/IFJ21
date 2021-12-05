@@ -188,7 +188,7 @@ char *cg_move(char *dst, char *src) {
 }
 
 char *cg_return() {
-    function_templ(strlen("RETURN\n") + 1, sprintf(str, "RETURN\n"));
+    function_templ(strlen("RETURN\n\n") + 1, sprintf(str, "RETURN\n\n"));
 }
 
 char *cg_stack_push(char *var) {
@@ -206,7 +206,7 @@ char *cg_stack_pop(char *var) {
 char *cg_jump(char *label) {
     if (label == NULL)
         return NULL;
-    function_templ(strlen(label) + strlen("JUMP $%s\n") - 1, (sprintf(str, "JUMP $%s\n", label), free(label)));
+    function_templ(strlen(label) + strlen("JUMP $%s\n\n") - 1, (sprintf(str, "JUMP $%s\n\n", label), free(label)));
 }
 
 char *cg_stack_clear() {
