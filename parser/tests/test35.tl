@@ -1,5 +1,4 @@
--- Should be OK - Semantic fix
-
+-- Should be OK
 require "ifj21"
 
 function fc(a : integer, b : number)

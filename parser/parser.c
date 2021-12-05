@@ -316,6 +316,43 @@ bool NParams_list(Token *ptr, ScannerContext *sc){
     return params_list;
 }
 
+bool NValue(Token *ptr){
+    bool value = false;
+
+    if(ptr->token_type == TOKEN_ID){
+            value = true;
+            #ifdef DEBUG_USED_RULE
+                printf("$37.1 <value> => id\n");
+                printf("---------------------------\n");
+            #endif
+    } else if (ptr->token_type == TOKEN_STRING){
+            value = true;
+            #ifdef DEBUG_USED_RULE
+                printf("$37.2 <value> => string_value\n");
+                printf("---------------------------\n");
+            #endif
+    } else if (ptr->token_type == TOKEN_NUMBER){
+            value = true;
+            #ifdef DEBUG_USED_RULE
+                printf("$37.3 <value> => number_value\n");
+                printf("---------------------------\n");
+            #endif
+    } else if (ptr->token_type == TOKEN_NUMBER_INT){
+            value = true;
+            #ifdef DEBUG_USED_RULE
+                printf("$37.4 <value> => number_int_value\n");
+                printf("---------------------------\n");
+            #endif
+    } else if (ptr->token_type == TOKEN_NULL){
+            value = true;
+            #ifdef DEBUG_USED_RULE
+                printf("$37.5 <value> => nil\n");
+                printf("---------------------------\n");
+            #endif
+    }
+
+    return value;
+}
 
 bool NFunction_call(Token *ptr, ScannerContext *sc){
 
@@ -339,17 +376,21 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
     *ptr = Next(sc); if(errT != 0){return false;}
 
 
-    if(ptr->token_type != TOKEN_END_BRACKET && (ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER)){
-        function_call = true;
+    if(ptr->token_type != TOKEN_END_BRACKET){
+        function_call = NValue(ptr);
+        if(!function_call){
+            return false;
+        }
+
         // $35 <args_list> => <first_arg> <next_args>
         #ifdef DEBUG_USED_RULE
             printf("$35 <args_list> => <first_arg> <next_args>\n");
             printf("---------------------------\n");
         #endif
 
-        // $36 <first_arg> => id
+        // $36 <first_arg> => <value>
         #ifdef DEBUG_USED_RULE
-            printf("$36 <first_arg> => id\n");
+            printf("$36 <first_arg> => <value>\n");
             printf("---------------------------\n");
         #endif
 
@@ -365,11 +406,11 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
         *ptr = Next(sc); if(errT != 0){return false;}
         while(ptr->token_type == TOKEN_COMMA && function_call == true){
             *ptr = Next(sc); if(errT != 0){return false;}
-
-            if(ptr->token_type == TOKEN_ID || ptr->token_type == TOKEN_STRING || ptr->token_type == TOKEN_NUMBER_INT || ptr->token_type == TOKEN_NUMBER){
-                // $37 <next_args> => , id <next_args>
+            function_call = NValue(ptr);
+            if(function_call){
+                // $37 <next_args> => , <value> <next_args>
                 #ifdef DEBUG_USED_RULE
-                    printf("$37 <next_args> => , id <next_args>\n");
+                    printf("$37 <next_args> => , <value> <next_args>\n");
                     printf("---------------------------\n");
                 #endif
                 #ifdef SEMANTIC_CONNECT
