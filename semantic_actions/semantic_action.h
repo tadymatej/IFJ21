@@ -32,10 +32,16 @@ int before_global_fun_call();
 int after_global_fun_call();
 int function_definition(Token *token);
 int init_function_argument(Token *token);
+int fun_arg_definition(Token *token);
 int var_type_assignment(Token *token);
 int ret_val_dec(Token *token);
 int is_dec_eq_to_def();
 int define_local_var(Token *token);
-int prepare_assignment();
+int prepare_def_assignment();
+int start_function_call(Token *token);
+int push_parameter(Token *token);
+int end_function_call();
+int n_assignment_vars(Token *token);
+//int end_n_assignment();
 
 #endif
