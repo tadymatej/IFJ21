@@ -15,6 +15,7 @@ Sym_table_t *TS_init(char *prefix){
 int new_stack_frame(Sym_table_t **table, char *prefix){
   Sym_table_t *temp = TS_init(prefix);
   if (temp == NULL) return 99;
+  globals.nested_count++;
   temp->upper = *table;
   *table = temp;
   return 0;
