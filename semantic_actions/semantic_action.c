@@ -2,7 +2,7 @@
 
 // 1 - require
 int jump_to_exec_point() {
-    if((cg_envelope(cg_require("IFJcode21"))) != 0) return INTERNAL_ERROR;
+    //if((cg_envelope(cg_require("IFJcode21"))) != 0) return INTERNAL_ERROR;
     return cg_envelope(cg_jump(cg_format_label("%%exec_point", NULL, -1, globals.label_idx)));
 }
 
