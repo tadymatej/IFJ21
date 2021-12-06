@@ -257,7 +257,7 @@ char get_stack_operand(simp_stack_t *stack){
   return operand;
 }
 
-int precedence_analyzer(ScannerContext *sc) {
+int precedence_analyzer(ScannerContext *sc, call_type_t call_type) {
   //genrovanie postfixoveho zapisu z vstupného reťazca
   char *postfixExpression = (char *) calloc(MAX_LEN, sizeof(char));
   unsigned postfixExpressionLength = 0;
@@ -379,7 +379,7 @@ int precedence_analyzer(ScannerContext *sc) {
         if (stack_top(stack) != STACK_END) {
           error_code = SYNTAX_ERR;
         }else {
-          error_code = make_assignment(exp_stack);
+          error_code = make_assignment(exp_stack, call_type);
         }
         DEBUG_MACRO(print_exp_stack(exp_stack);)
         break;

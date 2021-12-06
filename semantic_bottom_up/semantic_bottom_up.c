@@ -159,7 +159,7 @@ int do_action(exp_tree_stack_t *stack, Token *token){
   return retval;
 }
 
-int make_assignment(exp_tree_stack_t *stack){
+int make_assignment(exp_tree_stack_t *stack, call_type_t call_type){
   static int as_count = 0;
   static int state_ret = 0; // init point false
   int retval = 0;

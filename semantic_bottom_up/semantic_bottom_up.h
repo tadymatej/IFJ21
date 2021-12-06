@@ -13,11 +13,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "precedence_analyzer.h"
 #include "symtable.h"
 #include "scanner.h"
 #include "expression_tree.h"
 #include "ts_handler.h"
-#include "precedence_analyzer.h"
 #include "semantic_global.h"
 #include "code_generator.h"
 
@@ -105,7 +105,7 @@ int do_action(exp_tree_stack_t *stack, Token *token);
  * @param stack ukazatel na inicilizovaný stack sxpression stromov
  * @return návratová hodnota podľa zadania IFJ
  */
-int make_assignment(exp_tree_stack_t *stack);
+int make_assignment(exp_tree_stack_t *stack, call_type_t call_type);
 
 /**
  * Korektne uvoľní stromy na expression tree

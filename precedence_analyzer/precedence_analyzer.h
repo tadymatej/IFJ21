@@ -13,10 +13,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef enum { AFTER_RET, AFTER_ASSIGN, AFTER_COND } call_type_t;
+
 #include "parser.h"
 #include "simple_stack.h"
 #include "scanner.h"
 #include "semantic_bottom_up.h"
+
+
 
 #define PRECEDENCE_TABLE_SIZE 10
                                 /*  #  |* / //| +  - |  ..  |>< ~ =|  i   | f_id |   (  |   )  |  $  */ /*prichadzajuci token*/
@@ -55,7 +59,7 @@
 
 #define GET_VALID_TOKEN(name, sc) name = GetNextToken(sc);
 
-int precedence_analyzer(ScannerContext *sc);
+int precedence_analyzer(ScannerContext *sc, call_type_t call_type);
 
 #endif
 
