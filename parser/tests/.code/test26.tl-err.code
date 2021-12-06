@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $fc
@@ -32,6 +30,7 @@ PUSHS LF@a_1
 PUSHS LF@b_1
 PUSHS LF@c_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_2
 EQ LF@%cv_2 LF@a_1 int@5
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_2 bool@true
@@ -49,4 +48,5 @@ PUSHS LF@a_1
 PUSHS LF@b_1
 PUSHS LF@c_1
 CALL $fc
+CLEARS
 CREATEFRAME

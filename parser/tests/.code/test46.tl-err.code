@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $fc
@@ -24,6 +22,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_1
 GT LF@%cv_1 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_1 bool@true
@@ -31,6 +30,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_2
 GT LF@%cv_2 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_2 bool@true
@@ -38,6 +38,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_3
 GT LF@%cv_3 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_3 bool@true
@@ -45,6 +46,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_4
 GT LF@%cv_4 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_4 bool@true
@@ -52,6 +54,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_5
 GT LF@%cv_5 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_5 bool@true
@@ -59,6 +62,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_6
 GT LF@%cv_6 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_6 bool@true
@@ -66,6 +70,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_7
 GT LF@%cv_7 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_7 bool@true
@@ -73,6 +78,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_8
 GT LF@%cv_8 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_8 bool@true
@@ -80,6 +86,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_9
 GT LF@%cv_9 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_9 bool@true
@@ -87,6 +94,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_10
 GT LF@%cv_10 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_10 bool@true
@@ -94,6 +102,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_11
 GT LF@%cv_11 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_11 bool@true
@@ -101,6 +110,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_12
 GT LF@%cv_12 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_12 bool@true
@@ -108,6 +118,7 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_13
 GT LF@%cv_13 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_13 bool@true
@@ -115,6 +126,68 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 DEFVAR LF@%cv_14
 GT LF@%cv_14 LF@a_1 int@3
 JUMPIFNEQ funkcia_1_if_2 LF@%cv_14 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_15
+GT LF@%cv_15 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_15 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_16
+GT LF@%cv_16 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_16 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_17
+GT LF@%cv_17 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_17 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_18
+GT LF@%cv_18 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_18 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_19
+GT LF@%cv_19 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_19 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_20
+GT LF@%cv_20 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_20 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
+DEFVAR LF@%cv_21
+GT LF@%cv_21 LF@a_1 int@3
+JUMPIFNEQ funkcia_1_if_2 LF@%cv_21 bool@true
+CREATEFRAME
+PUSHS LF@a_1
+PUSHS LF@b_1
+CALL $fc
+CLEARS
