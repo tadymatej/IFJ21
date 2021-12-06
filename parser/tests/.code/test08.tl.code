@@ -4,10 +4,6 @@ JUMP $%%exec_point_0
 LABEL $main
 PUSHFRAME
 DEFVAR LF@a_0
-MOVE LF@a_0 int@4
-DEFVAR LF@%cv_0
-GT LF@%cv_0 LF@a_0 int@5
-JUMPIFNEQ funkcia_1_if_1 LF@%cv_0 bool@true
 LABEL $%%exec_point_0
 CREATEFRAME
 CALL $main
