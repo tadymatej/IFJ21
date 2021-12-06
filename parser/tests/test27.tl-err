@@ -2,7 +2,7 @@
 
 require "ifj21"
 
-global foo : function(integer, string, number) : number, string, integer
+global foo : function(integer, string, number)
 
 function fuf()
 

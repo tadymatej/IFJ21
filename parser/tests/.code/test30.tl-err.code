@@ -1,3 +1,9 @@
+##########|type: keyword	attribute: require|
+##########|type: string	attribute: "ifj21"|
 .IFJcode21
+$1 <prog> => require
+---------------------------
 JUMP $%%exec_point_0
 
+##########|type: keyword	attribute: function|
+##########|type: id	attribute: main|

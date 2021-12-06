@@ -1,5 +1,24 @@
+##########|type: keyword	attribute: require|
+##########|type: string	attribute: "ifj21"|
 .IFJcode21
+$1 <prog> => require
+---------------------------
 JUMP $%%exec_point_0
 
+##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: main|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
 LABEL $main
 PUSHFRAME
+##########|type: end bracket	attribute: (null)|
+$6 <params_list> => )
+---------------------------
+##########|type: keyword	attribute: if|
+$23 <return_fc> => <function_body>
+---------------------------
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: greater	attribute: (null)|

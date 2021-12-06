@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-//#define DEBUG_USED_RULE
+#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-//#define SHOW_TOKENS
+#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -763,13 +763,13 @@ bool NRet(Token *ptr, ScannerContext *sc){
     ret = NExpressions(ptr, sc);
 
     // $61 <list> => <function_body>
-    #ifdef DEBUG_USED_RULE
+    /*#ifdef DEBUG_USED_RULE
         printf("$61 <list> => <function_body>\n");
         printf("---------------------------\n");
     #endif
 
     // TODO mrtvy kod
-
+    */
     return ret;
 }
 
@@ -996,10 +996,25 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     #endif
 
                     function_body = function_body && NRet(ptr, sc);
+                    /*if(function_body){
+                        *ptr = Next(sc); if(errT != 0){return false;}
+                        //*ptr = Next(sc); if(errT != 0){return false;} // because of TokenStore
+                        if(ptr->token_type == TOKEN_KEYWORD){
+                            if(strcmp(ptr->attribute, "end") == 0){
+                                function_body = true;
+                                break_from_while++;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }*/
+
 
                 } else if(strcmp(ptr->attribute, "end") == 0){
                     // $39 <function_body> => epsilon
-                    function_body = true; /// ???
+                    function_body = true;
                     break_from_while++;
                     /*#ifdef DEBUG_USED_RULE
                         printf("$39 <function_body> => epsilon\n");

@@ -9,13 +9,11 @@ function main()
     if a > 3 then
         if a == 4 then
             a = a + 1
+            return
         elseif a == 5 then
             a = 3
         end
-    end
-
-    return 
+    end 
     
-    a, b = 10, 0.555555555e10256655
-
+    return
 end
