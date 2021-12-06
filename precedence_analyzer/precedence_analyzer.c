@@ -264,18 +264,25 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int error_code = 0;
 
-
   //token štartujúci expression
   Token token;
   Token prev_token;
   prev_token.attribute = NULL;
   GET_VALID_TOKEN(token, sc);
   prev_token = token;
+  printf("typ: %s | string: %s \n", lex2String(token.token_type), token.attribute);
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   if(token.token_type == TOKEN_KEYWORD) {
     free(postfixExpression);
     TokenStore(token, sc);
-    return 0;
+    TS_data_t *temp = q_top(globals.q_assignments);
+    if(temp == NULL) return 0;
+    else{
+      if(temp->name != NULL){ //exp po priradeni
+        return SYNTAX_ERR;
+      }
+      return 0; //exp po returne
+    }
   }
   if(!(token.token_type == TOKEN_ID || token.token_type == TOKEN_START_BRACKET || token.token_type == TOKEN_NULL || token.token_type == TOKEN_NUMBER_INT || token.token_type == TOKEN_NUMBER || token.token_type == TOKEN_STRING || token.token_type == TOKEN_LEN)) {
     return SYNTAX_ERR;
