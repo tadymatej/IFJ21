@@ -1,9 +1,6 @@
 @@ NOTE: use command 'make parser_test' for testing in tests/compiler_tests/IFJ21_programms/ 
 
-
-1. volani funkci, pr. foo("Hello"), fuu(5), atd.
-2. finalni testy
-
+1.
 Lexikalni:
     a) pokud narazi na EOF, pozice chyby je [0, 0]
                 odpovidajici testy:
@@ -21,29 +18,30 @@ Lexikalni:
 
 PSA:
     a) tests/compiler_tests/IFJ21_programms/syntax/syntax-err23.tl, chyba ale neodhali to
-    b) check parser/tests/test52.tl-err, nepresna pozice chyby
 
 Semanticka:
     a) testy v tests/compiler_tests/IFJ21_programms/semantic
     b) zkontrolovat, ze prosly tyto testy:
-                                            parser/tests/test21.tl
-                                            parser/tests/test22.tl
-                                            parser/tests/test23.tl
-                                            parser/tests/test24.tl
-                                            parser/tests/test25.tl
-                                            parser/tests/test26.tl
-                                            parser/tests/test28.tl
-                                            parser/tests/test35.tl
-                                            parser/tests/test60.tl
-                                            parser/tests/test80.tl
+                                            parser/tests/test21.tl - OK
+                                            parser/tests/test22.tl - OK
+                                            parser/tests/test23.tl - OK
+                                            parser/tests/test24.tl - OK
+                                            parser/tests/test25.tl - OK
+                                            parser/tests/test26.tl - OK
+                                            parser/tests/test28.tl - OK
+                                            parser/tests/test35.tl - OK
+                                            parser/tests/test60.tl - OK
+                                            parser/tests/test80.tl - OK
                                             parser/tests/test81.tl
                                             parser/tests/test82.tl
                                             parser/tests/test83.tl
+                                            parser/tests/test45.tl-err
+                                            parser/tests/test46.tl-err
+                                            parser/tests/test47.tl-err
+                                            parser/tests/test48.tl-err
 
-Syntakticka:
-    a) pripojit semantiku
-    b) TODO CG_PROLOG();
 
+2. finalni testy
 3. nutno zkontrolovat testy:
                             parser/tests/test27.tl-err
                             parser/tests/test31.tl-err

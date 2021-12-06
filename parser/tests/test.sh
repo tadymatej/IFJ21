@@ -25,7 +25,8 @@ echo "##########################################################################
 for f in *.tl; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    cat $f | ../parser  > $f.txt
+    #cat $f | ../parser  > .prg/$f.txt
+    cat $f | ../parser > .code/$f.code
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";
@@ -62,8 +63,8 @@ for f in *.tl; do
             ;;
     esac
     
-    diff $f.txt $f.prg
-    #tail -1 $f.txt;
+    #diff .prg/$f.txt .prg/$f.prg
+    #tail -1 .prg/$f.txt;
     echo "";
 done
 echo ""
@@ -74,7 +75,8 @@ echo "##########################################################################
 for f in *.tl-err; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    cat $f | ../parser > $f.txt
+    cat $f | ../parser > .code/$f.code
+    #cat $f | ../parser > .prg/$f.txt
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";
@@ -111,7 +113,7 @@ for f in *.tl-err; do
             ;;
     esac
 
-    diff $f.txt $f.prg
+    #diff .prg/$f.txt .prg/$f.prg
 
 done
 echo ""

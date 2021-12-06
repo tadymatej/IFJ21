@@ -5,6 +5,7 @@
 #include "semantic_bottom_up.h"
 #include "semantic_action.h"
 #include "semantic_global.h"
+#include "code_generator.h"
 
 #define LEX_ERR 1 // chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému)
 #define SYNTAX_ERR 2 // chyba v programu v rámci syntaktické analýzy (chybná syntaxe programu)
@@ -48,6 +49,13 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc);
  * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
  */
 bool NFunction_body(Token *ptr, ScannerContext *sc);
+
+/**
+ * Realizace pravidel: $37.1, $37.2, $37.3, $37.4, $37.5
+ * @param ptr Ukazatel na token
+ * @return Vrací true, pokud program vyhovuje realizovaným pravidlům
+ */
+bool NValue(Token *ptr);
 
 /**
  * Realizace pravidel: $33, $34, $35, $36, $37, $38

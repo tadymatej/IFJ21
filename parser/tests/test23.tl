@@ -1,4 +1,4 @@
--- Should be OK - Semantic fix
+-- Shouldn't be OK (3 Definition error row 13)
 
 require "ifj21"
 

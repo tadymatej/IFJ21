@@ -1,0 +1,13 @@
+.IFJcode21
+.IFJcode21
+
+JUMP $%%exec_point_0
+
+LABEL $main
+PUSHFRAME
+DEFVAR LF@s1_0
+MOVE LF@s1_0 string@Toto\032je\032nejaky\032text
+DEFVAR LF@s2_0
+DEFVAR LF@%cv_0
+CONCAT LF@%cv_0 LF@s1_0 string@,\032ktery\032jeste\032trochu\032obohatime
+MOVE LF@s2_0 LF@%cv_0

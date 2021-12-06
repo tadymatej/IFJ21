@@ -1,0 +1,9 @@
+.IFJcode21
+.IFJcode21
+
+JUMP $%%exec_point_0
+
+LABEL $bar
+PUSHFRAME
+DEFVAR LF@param_0
+POPS LF@param_0

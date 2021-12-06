@@ -1,0 +1,56 @@
+.IFJcode21
+.IFJcode21
+
+JUMP $%%exec_point_0
+
+LABEL $fc
+PUSHFRAME
+DEFVAR LF@a_0
+POPS LF@a_0
+DEFVAR LF@b_0
+POPS LF@b_0
+DEFVAR LF@c_0
+POPS LF@c_0
+LABEL $foo
+PUSHFRAME
+DEFVAR LF@k_1
+POPS LF@k_1
+DEFVAR LF@l_1
+POPS LF@l_1
+DEFVAR LF@m_1
+POPS LF@m_1
+MOVE LF@k_1 int@99
+MOVE LF@l_1 string@ninety-nine
+DEFVAR LF@%av_0
+INT2FLOAT LF@%av_0 int@0
+MOVE LF@m_1 LF@%av_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@a_2
+MOVE LF@a_2 int@10
+DEFVAR LF@b_2
+DEFVAR LF@%av_1
+INT2FLOAT LF@%av_1 int@5
+MOVE LF@b_2 LF@%av_1
+DEFVAR LF@c_2
+MOVE LF@c_2 string@Ho\032Ho\032Ho!
+MOVE LF@a_2 int@456
+DEFVAR LF@%cv_0
+INT2FLOAT LF@%cv_0 LF@a_2
+DEFVAR LF@%cv_1
+GT LF@%cv_1 LF@%cv_0 LF@b_2
+JUMPIFNEQ funkcia_1_if_3 LF@%cv_1 bool@true
+CREATEFRAME
+PUSHS LF@a_2
+PUSHS LF@b_2
+PUSHS LF@c_2
+CALL $fc
+DEFVAR LF@%cv_2
+EQ LF@%cv_2 LF@a_2 int@5
+JUMPIFNEQ funkcia_1_if_3 LF@%cv_2 bool@true
+MOVE LF@a_2 int@5
+DEFVAR LF@%av_2
+INT2FLOAT LF@%av_2 int@5
+MOVE LF@b_2 LF@%av_2
+MOVE LF@c_2 string@five
+LABEL $%%exec_point_0

@@ -11,4 +11,4 @@ function main()
     end
 end
 
-main1()
+main()

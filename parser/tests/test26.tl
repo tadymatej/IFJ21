@@ -1,4 +1,4 @@
--- Should be OK - Semantic fix
+-- Should be OK
 
 require "ifj21"
 
@@ -19,27 +19,25 @@ function main() : integer, number
     elseif a == 5 then
         a, b, c = 5, 5, "five"
     else
-        a = b
+        b = 5
     end
 
     local d : integer
     
-    fc()
-    fc()
-    fc()
+    fc(a, b, c)
 
     if a > b then
         fc(a, b, c)
     elseif a == 5 then
         a, b, c = 5, 5, "five"
     else
-        a = b
+        b = a
     end
 
     --local d : integer
-    fc()
-    fc()
-    fc()
+    fc(a, b, c)
+    fc(a, b, c)
+    fc(a, b, c)
 
     return a, b
 end

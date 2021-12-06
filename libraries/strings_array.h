@@ -15,7 +15,7 @@ typedef struct {
     Queue_t *q;      /**< Fronta allocovaných pointerů */
 } StringsArray;
 
-#define DEFAULT_STRINGS_ARR_LEN 1024
+#define DEFAULT_STRINGS_ARR_LEN 32
 
 /**
  * Přidá do strArr nový znak

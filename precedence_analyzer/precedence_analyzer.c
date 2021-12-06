@@ -264,8 +264,6 @@ int precedence_analyzer(ScannerContext *sc) {
 
   int error_code = 0;
 
-  //inicializacia zasobnika stromov pre reprezentaciu v stromovej strukture
-  exp_tree_stack_t *exp_stack =  bottom_up_init;
 
   //token štartujúci expression
   Token token;
@@ -283,6 +281,9 @@ int precedence_analyzer(ScannerContext *sc) {
     return SYNTAX_ERR;
   }
   char token_operator;
+
+  //inicializacia zasobnika stromov pre reprezentaciu v stromovej strukture
+  exp_tree_stack_t *exp_stack =  bottom_up_init;
 
   static char precedence_table[PRECEDENCE_TABLE_SIZE][PRECEDENCE_TABLE_SIZE] = PRECEDENCE_TABLE;
   static char syntax_table[SYNTAX_TABLE_SIZE][SYNTAX_TABLE_SIZE] = SYNTAX_TABLE;

@@ -1,0 +1,26 @@
+.IFJcode21
+.IFJcode21
+
+JUMP $%%exec_point_0
+
+LABEL $factorial
+PUSHFRAME
+DEFVAR LF@n_0
+POPS LF@n_0
+DEFVAR LF@n1_0
+DEFVAR LF@%cv_0
+SUB LF@%cv_0 LF@n_0 int@1
+MOVE LF@n1_0 LF@%cv_0
+DEFVAR LF@%cv_1
+LT LF@%cv_1 LF@n_0 int@2
+JUMPIFNEQ funkcia_1_if_1 LF@%cv_1 bool@true
+DEFVAR LF@tmp_0
+CREATEFRAME
+PUSHS LF@n1_0
+CALL $factorial
+POPS LF@tmp_0
+CLEARS
+DEFVAR LF@%cv_2
+MUL LF@%cv_2 LF@n_0 LF@tmp_0
+LABEL $main
+PUSHFRAME

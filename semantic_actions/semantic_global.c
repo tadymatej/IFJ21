@@ -30,7 +30,7 @@ void dispose_sem_globals() {
     }
     dispose_queue(&globals.q_assignments, NULL);
     dispose_queue(&globals.q_command, NULL);
-    if(find_function(globals.ft, globals.cur_function->name, NULL, NULL) == NULL) //TODO ak nie je alokovana
+    if(globals.cur_function != NULL && find_function(globals.ft, globals.cur_function->name, NULL, NULL) == NULL)
         dispose_fun_data(globals.cur_function);
     dispose_fun_table(&globals.ft);
     dispose_table(&globals.ts);

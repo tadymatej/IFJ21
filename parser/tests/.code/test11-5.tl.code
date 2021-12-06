@@ -1,0 +1,28 @@
+.IFJcode21
+.IFJcode21
+
+JUMP $%%exec_point_0
+
+LABEL $foo
+PUSHFRAME
+DEFVAR LF@a_0
+POPS LF@a_0
+DEFVAR LF@b_0
+POPS LF@b_0
+DEFVAR LF@%cv_0
+CONCAT LF@%cv_0 LF@a_0 LF@b_0
+LABEL $main
+PUSHFRAME
+DEFVAR LF@d_1
+CREATEFRAME
+PUSHS We\032wish\032you\032Merry\032Christmas
+PUSHS and\032Happy\032New\032Year
+CALL $foo
+POPS LF@d_1
+CLEARS
+LABEL $%%exec_point_0
+CREATEFRAME
+CALL $main
+JUMP $%%exec_point_1
+
+LABEL $%%exec_point_1

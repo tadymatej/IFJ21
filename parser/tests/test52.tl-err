@@ -1,4 +1,4 @@
--- Should be ERR [50, 14] -- PSA check
+-- Should be ERR [51, 1]
 
 require "ifj21"
 
@@ -31,7 +31,7 @@ function main() : integer, number
 
     local d : integer
     
-    a, b, c = fc(a, b, c)
+    fc(a, b, c)
 
     if a > 5 then
         fc(a, b, c)

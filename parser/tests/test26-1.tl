@@ -22,9 +22,6 @@ function main() : integer, number
 
     local d : integer
     
-    fc()
-    fc()
-    fc()
 
     if a < 5 then
         fc(a, b, c)
@@ -35,10 +32,6 @@ function main() : integer, number
     end
 
     a = 456
-    --local d : integer
-    fc()
-    fc()
-    fc()
 
     return 0, 0
 end
