@@ -44,7 +44,7 @@ int main() {
 
 	// q_push(globals.q_assignments, temp_string);
 	// q_push(globals.q_assignments, temp_num);
-	q_push(globals.q_assignments, temp_a);
+	q_push(globals.q_assignments, temp_string);
 	q_push(globals.q_assignments, temp_string);
 	q_push(globals.q_assignments, temp_string);
 
@@ -52,39 +52,39 @@ int main() {
 
 	/* zaciatok testov */
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_RET);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_RET);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_RET);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
-		q_push(globals.q_assignments, temp_c);
+		q_push(globals.q_assignments, temp_b);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_ASSIGN);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 /*
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_ASSIGN);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_ASSIGN);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	error_flag = precedence_analyzer(&sc, AFTER_ASSIGN);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 */
 	printf("koniec testov \n");
