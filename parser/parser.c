@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE
+//#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -755,6 +755,14 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
+    #ifdef SEMANTIC_CONNECT
+        semantic = start_return();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
+    #endif
     // $60 <list> => <expressions>
     #ifdef DEBUG_USED_RULE
         printf("$60 <list> => <expressions>\n");
@@ -813,6 +821,15 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
     #ifdef DEBUG_USED_RULE
         printf("$53 <next_exp> => <function_body>\n");
         printf("---------------------------\n");
+    #endif
+
+    #ifdef SEMANTIC_CONNECT
+    semantic = end_n_assignment();
+    if(semantic){
+        ErrMessage(semantic);
+        ErrMessagePossition(ptr);
+        return false;
+    }
     #endif
 
     return expressions;
@@ -1399,7 +1416,14 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
                         if(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "end") == 0){
                             prog = prog && true;
-
+                            #ifdef SEMANTIC_CONNECT
+                                semantic = end_function_body();
+                                if(semantic){
+                                    ErrMessage(semantic);
+                                    ErrMessagePossition(ptr);
+                                    return false;
+                                }
+                            #endif
                         } else {
                             #ifdef DEBUG_ERROR
                                 printf("ERROR || $2\n");
