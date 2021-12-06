@@ -161,7 +161,6 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 
 int make_assignment(exp_tree_stack_t *stack, call_type_t call_type){
   static int as_count = 0;
-  static int state_ret = 0; // init point false
   int retval = 0;
 
   exp_node_t *right_side = NULL;
@@ -206,7 +205,7 @@ int make_assignment(exp_tree_stack_t *stack, call_type_t call_type){
 
   }
   else {
-    if(state_ret) return SEMANTIC_FUNCTION_ERR;
+    if(call_type == AFTER_RET) return SEMANTIC_FUNCTION_ERR;
   }
   return retval;
 }
