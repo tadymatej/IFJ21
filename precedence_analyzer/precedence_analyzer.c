@@ -270,7 +270,6 @@ int precedence_analyzer(ScannerContext *sc) {
   prev_token.attribute = NULL;
   GET_VALID_TOKEN(token, sc);
   prev_token = token;
-  printf("typ: %s | string: %s \n", lex2String(token.token_type), token.attribute);
   if(token.token_type == TOKEN_NONE) return COMPILER_ERR;
   if(token.token_type == TOKEN_KEYWORD) {
     free(postfixExpression);
