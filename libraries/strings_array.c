@@ -32,7 +32,7 @@ void StringsArrayDelete(StringsArray **strArr) {
 int StringsArrayExtend(StringsArray *strArr) {
     void *tmp = malloc(sizeof(char *) * DEFAULT_STRINGS_ARR_LEN);
     if(tmp != NULL) {
-        q_push(strArr->q, tmp);
+        q_push_front(strArr->q, tmp);
         return 0;
     }
     else return -1;
@@ -58,6 +58,7 @@ int StringsArrayPush(StringsArray *strArr, char c) {
         else {
             strArr->len = 0;
         }
+        strArr->lastValid = 0;
         strArr->arr = dest;
     }
     strArr->arr[strArr->len] = c;

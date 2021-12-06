@@ -689,8 +689,8 @@ int TokenStore(Token token, ScannerContext *sc) {
     return 0;
 }
 
-/*
-#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
+
+//#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #if __STANDALONE__
 int main(int argc, char **argv) {
@@ -699,17 +699,36 @@ int main(int argc, char **argv) {
 
     ScannerContextInit(&sc);
     strArr = StringsArrayCreate('\0');
+    Token *tokenPtr;
     Token token;
     int i = 0;
+    Queue_t *q = init_queue();
     while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
+        tokenPtr = malloc(sizeof(Token));
+        tokenPtr->attribute = token.attribute;
+        tokenPtr->attributeType = token.attributeType;
+        tokenPtr->token_type = token.token_type;
         if(token.token_type == TOKEN_ERR) {
             printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
                 sc.actualState = STATE_START;
         }
         else if(lex2String(token.token_type) != NULL)
                 printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
+        q_push(q, tokenPtr);
+    }
+    printf("-----------------------------------------------");
+    void *top;
+    while((top = q_top(q)) != NULL) {
+        token = *((Token *) top);
+        if(token.token_type == TOKEN_ERR) {
+            printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
+                sc.actualState = STATE_START;
+        }
+        else if(lex2String(token.token_type) != NULL)
+                printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
+        q_pop(q);
     }
     return 0;
 }
 #endif
-*/
+
