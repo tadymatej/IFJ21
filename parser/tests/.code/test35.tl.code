@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $fc
@@ -26,4 +24,5 @@ CREATEFRAME
 PUSHS LF@a_1
 PUSHS LF@b_1
 CALL $fc
+CLEARS
 LABEL $%%exec_point_0

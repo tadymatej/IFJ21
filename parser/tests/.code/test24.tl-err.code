@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $fc
@@ -27,3 +25,4 @@ PUSHS LF@a_1
 PUSHS LF@b_1
 PUSHS LF@c_0
 CALL $fc
+CLEARS
