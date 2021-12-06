@@ -26,7 +26,8 @@ for f in *.tl; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
     #cat $f | ../parser  > .prg/$f.txt
-    cat $f | ../parser > .code/$f.code
+    #cat $f | ../parser > .code/$f.code
+    cat $f | ../parser > .vzor/$f.vzor
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";
@@ -75,8 +76,9 @@ echo "##########################################################################
 for f in *.tl-err; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    cat $f | ../parser > .code/$f.code
+    #cat $f | ../parser > .code/$f.code
     #cat $f | ../parser > .prg/$f.txt
+    cat $f | ../parser > .vzor/$f.vzor
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";

@@ -1,0 +1,44 @@
+##########|type: keyword	attribute: require|
+##########|type: string	attribute: "ifj21"|
+.IFJcode21
+$1 <prog> => require
+---------------------------
+JUMP $%%exec_point_0
+
+##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: fc|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+LABEL $fc
+PUSHFRAME
+##########|type: id	attribute: a|
+$7 <params_list> => <first_param> <next_params>
+---------------------------
+$8 <first_param> => <param>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: integer|
+$19 <type> => integer
+---------------------------
+DEFVAR LF@a_0
+POPS LF@a_0
+##########|type: comma	attribute: (null)|
+##########|type: id	attribute: b|
+$10 <next_params> => <param> <next_params>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: number|
+$21 <type> => number
+---------------------------
+DEFVAR LF@b_0
+POPS LF@b_0
+##########|type: end bracket	attribute: (null)|
+$9 <next_params> => )
+---------------------------
+##########|type: keyword	attribute: function|
+$23 <return_fc> => <function_body>
+---------------------------
