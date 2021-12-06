@@ -21,79 +21,78 @@ int main() {
   init_sem_globals();
   globals.ts = TS_init("LF");
 	globals.label_idx = 4;
-  TS_data_t *temp_data;
+	TS_data_t *temp_a;
+	temp_a = make_var_data(INTEGER, "var1", "7");
+	add_variable(globals.ts, temp_a);
 
-  temp_data = make_var_data(INTEGER, "var1", "7");
-  add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(INTEGER, "var2", "5");
-  add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(STRING, "str1", "ahoj");
-  add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(NUMBER, "num1", "7.85");
-  add_variable(globals.ts, temp_data);
+	TS_data_t *temp_b;
+	temp_b = make_var_data(NUMBER, "num1", "7");
+	add_variable(globals.ts, temp_b);
 
-  globals.nested_count++;
-  new_stack_frame(&(globals.ts), "LF");
-  temp_data = make_var_data(STRING, "str1", "ine");
-  add_variable(globals.ts, temp_data);
-  temp_data = make_var_data(INTEGER, "var3", "4");
-  add_variable(globals.ts, temp_data);
-	temp_data = make_var_data(STRING, "str2", "ahoj");
-  add_variable(globals.ts, temp_data);
+	TS_data_t *temp_c;
+	temp_c = make_var_data(STRING, "str1", "7");
+	add_variable(globals.ts, temp_c);
+
+	TS_data_t *temp_int;
+	temp_int = make_var_data(INTEGER, NULL, "7");
+
+	TS_data_t *temp_num;
+	temp_num = make_var_data(NUMBER, NULL, "7");
+
+	TS_data_t *temp_string;
+	temp_string = make_var_data(STRING, NULL, "7");
+
+	// q_push(globals.q_assignments, temp_string);
+	// q_push(globals.q_assignments, temp_num);
+	q_push(globals.q_assignments, temp_a);
+	q_push(globals.q_assignments, temp_string);
+	q_push(globals.q_assignments, temp_string);
 
   printf("po vkladani\n");
 
-  Sym_table_t *TS_temp;
-	temp_data = find_variable(globals.ts, "str1", &TS_temp);
-  printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
-
-  temp_data = find_variable(globals.ts, "var3", &TS_temp);
-	//q_push(globals.q_assignments, temp_data);
-  printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
-
-	temp_data = find_variable(globals.ts, "str1", &TS_temp);
-	//q_push(globals.q_assignments, temp_data);
-  printf("temp meno: %s || hodnota: %s || v strome: %d\n", temp_data->name, temp_data->value, TS_temp->nested_identifier);
-
 	/* zaciatok testov */
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+
+		q_push(globals.q_assignments, temp_c);
+
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
+	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
+/*
+	GET_VALID_TOKEN(token, &sc);
+	printf("-- Test_%d -----\n", test_no);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
 
 	GET_VALID_TOKEN(token, &sc);
 	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
+	error_flag = precedence_analyzer(&sc, AFTER_OTHER);
 	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
-
-	GET_VALID_TOKEN(token, &sc);
-	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
-	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
-
-	GET_VALID_TOKEN(token, &sc);
-	printf("-- Test_%d -----\n", test_no);
-	error_flag = precedence_analyzer(&sc);
-	printf("-- Test %d | navratova hodnota: %d\n\n", test_no++, error_flag);
-
+*/
 	printf("koniec testov \n");
 
 	/* koniec testov*/
-
+	free(temp_string);
+	free(temp_num);
+	free(temp_int);
 	dispose_sem_globals();
 	return 0;
 }
