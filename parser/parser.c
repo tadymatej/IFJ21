@@ -21,7 +21,7 @@
 // --------------------------------------------------------------------
 
 bool isEnd = false; //?
-
+call_type_t call_type;
 int errT = 0; // Kód chyby, návratová hodnota programu
 int psa = 0; // Návratová hodnota PSA
 int semantic = 0; // Návratová hodnota sémantické analýzy
@@ -486,7 +486,7 @@ bool NExp(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
-    psa = precedence_analyzer(sc);
+    psa = precedence_analyzer(sc, call_type);
     //printf("typ: %s || hodnota: %s\n", lex2String(ptr->token_type), ptr->attribute);
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
 
@@ -562,6 +562,7 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
             return false;
         }
 
+        call_type = AFTER_ASSIGN;
         assignment = NExpression(ptr, sc);
     }
 
@@ -581,8 +582,8 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
     bool exp_cond = true;
 
     // $68 <exp_cond> => call PSA
-
-    psa = precedence_analyzer(sc);
+    call_type = AFTER_COND;
+    psa = precedence_analyzer(sc, call_type);
     *ptr = Next(sc); if(errT != 0){return false;} // aktualizace tokenu
 
     if(psa != 0){
@@ -760,6 +761,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("$60 <list> => <expressions>\n");
         printf("---------------------------\n");
     #endif
+    call_type = AFTER_RET;
     ret = NExpressions(ptr, sc);
 
     // $61 <list> => <function_body>

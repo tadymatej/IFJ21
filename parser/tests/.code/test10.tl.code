@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $main
@@ -11,9 +9,11 @@ GT LF@%cv_0 LF@a_0 int@5
 JUMPIFNEQ funkcia_1_if_1 LF@%cv_0 bool@true
 CREATEFRAME
 CALL $main
+CLEARS
 LABEL $%%exec_point_0
 CREATEFRAME
 CALL $main
+CLEARS
 JUMP $%%exec_point_1
 
 LABEL $%%exec_point_1

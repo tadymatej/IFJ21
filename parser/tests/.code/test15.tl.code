@@ -1,6 +1,4 @@
 .IFJcode21
-.IFJcode21
-
 JUMP $%%exec_point_0
 
 LABEL $main
@@ -10,6 +8,7 @@ MOVE LF@a_0 int@5
 LABEL $%%exec_point_0
 CREATEFRAME
 CALL $main
+CLEARS
 JUMP $%%exec_point_1
 
 LABEL $%%exec_point_1

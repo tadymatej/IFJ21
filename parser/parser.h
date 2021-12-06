@@ -6,6 +6,7 @@
 #include "semantic_action.h"
 #include "semantic_global.h"
 #include "code_generator.h"
+#include "precedence_analyzer.h"
 
 #define LEX_ERR 1 // chyba v programu v rámci lexikální analýzy (chybná struktura aktuálního lexému)
 #define SYNTAX_ERR 2 // chyba v programu v rámci syntaktické analýzy (chybná syntaxe programu)
@@ -17,6 +18,7 @@
 #define RUN_NIL_ERR 8 // běhová chyba při práci s neočekávanou hodnotou nil
 #define DIV_BY_ZERO 9 // běhová chyba celočíselného dělení nulovou konstantou
 #define COMPILER_ERR 99 // interní chyba překladače tj. neovlivněná vstupním programem (např. chyba alokace paměti atd.)
+
 
 /**
  * Realizace pravidel: $1, $2, $3, $4, $5
