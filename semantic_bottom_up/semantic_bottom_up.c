@@ -160,15 +160,19 @@ int do_action(exp_tree_stack_t *stack, Token *token){
 }
 
 int make_assignment(exp_tree_stack_t *stack){
-  int retval = 0;
   static int as_count = 0;
+  static int state_ret = 0; // init point false
+  int retval = 0;
+
   exp_node_t *right_side = NULL;
   right_side = exp_stack_top(stack);
 
   if(right_side->type == TOKEN_EQ || right_side->type == TOKEN_NOTEQ || right_side->type == TOKEN_GEQ ||
-    right_side->type == TOKEN_LEQ || right_side->type == TOKEN_G || right_side->type == TOKEN_L ) {
-
-    if (q_is_empty(globals.q_assignments))return 0;
+    right_side->type == TOKEN_LEQ || right_side->type == TOKEN_G || right_side->type == TOKEN_L ) { //ak je exp_cond, nepriraduj
+    if (q_is_empty(globals.q_assignments)){
+      state_ret = 0;
+      return 0;
+    }
     else return SEMANTIC_TYPE_ERR;
   }
   exp_node_t *left_side = NULL;
@@ -181,10 +185,12 @@ int make_assignment(exp_tree_stack_t *stack){
     CONVERSION_MACRO(right_side, NULL, ret_type, as_count, AS_NAME);
 
     if(left_data->name == NULL){
+      state_ret = 1;
       CODE_PRINT(retval = exp_cg_pushs(right_side));
       destroy_tree(right_side);
     }
     else{
+      state_ret = 0;
       Sym_table_t *temp_table;
       left_data = find_variable(globals.ts, left_data->name, &temp_table);
       if (left_data == NULL) {
@@ -198,6 +204,9 @@ int make_assignment(exp_tree_stack_t *stack){
       CODE_PRINT(retval = exp_cg_set(left_side, right_side));
     }
 
+  }
+  else {
+    if(state_ret) return SEMANTIC_FUNCTION_ERR;
   }
   return retval;
 }
