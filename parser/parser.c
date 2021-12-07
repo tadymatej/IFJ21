@@ -119,7 +119,7 @@ bool Req(Token *ptr){
     if((strcmp(ptr->attribute, "\"ifj21\"") == 0) && (ptr->token_type != TOKEN_NONE)){
         req = true;
 
-        CG_Prolog();
+        if(_CG_GENERATE_) CG_Prolog();
 
     }
 
@@ -377,11 +377,6 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
 
 
     if(ptr->token_type != TOKEN_END_BRACKET){
-        function_call = NValue(ptr);
-        if(!function_call){
-            return false;
-        }
-
         // $35 <args_list> => <first_arg> <next_args>
         #ifdef DEBUG_USED_RULE
             printf("$35 <args_list> => <first_arg> <next_args>\n");
@@ -394,6 +389,11 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
+        function_call = NValue(ptr);
+        if(!function_call){
+            return false;
+        }
+
         #ifdef SEMANTIC_CONNECT
             semantic = push_parameter(ptr);
             if(semantic){
@@ -405,14 +405,14 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
 
         *ptr = Next(sc); if(errT != 0){return false;}
         while(ptr->token_type == TOKEN_COMMA && function_call == true){
+            // $37 <next_args> => , <value> <next_args>
+            #ifdef DEBUG_USED_RULE
+                printf("$37 <next_args> => , <value> <next_args>\n");
+                printf("---------------------------\n");
+            #endif
             *ptr = Next(sc); if(errT != 0){return false;}
             function_call = NValue(ptr);
             if(function_call){
-                // $37 <next_args> => , <value> <next_args>
-                #ifdef DEBUG_USED_RULE
-                    printf("$37 <next_args> => , <value> <next_args>\n");
-                    printf("---------------------------\n");
-                #endif
                 #ifdef SEMANTIC_CONNECT
                     semantic = push_parameter(ptr);
                     if(semantic){
@@ -540,7 +540,6 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 
     *ptr = Next(sc); if(errT != 0){return false;}
 
-
     if(ptr->token_type == TOKEN_SET){
         // $57 <assignment> => = <expression>
         #ifdef DEBUG_USED_RULE
@@ -564,14 +563,14 @@ bool NAssignment(Token *ptr, ScannerContext *sc){
 
         call_type = AFTER_ASSIGN;
         assignment = NExpression(ptr, sc);
+    } else {
+        // $58 <assignment> => epsilon
+        #ifdef DEBUG_USED_RULE
+            printf("$58 <assignment> => epsilon\n");
+            printf("---------------------------\n");
+        #endif
     }
 
-
-    // $58 <assignment> => <function_body>
-    #ifdef DEBUG_USED_RULE
-        printf("$58 <assignment> => <function_body>\n");
-        printf("---------------------------\n");
-    #endif
     assignment = assignment && true;
 
     return assignment;
@@ -591,6 +590,7 @@ bool NExp_cond(Token *ptr, ScannerContext *sc){
         ErrMessagePossition(ptr);
         return false;
     }
+
 
     // zalozni reseni
     /*while(ptr->token_type != TOKEN_KEYWORD){
@@ -687,12 +687,11 @@ bool NIf(Token *ptr, ScannerContext *sc){
     #endif
 
     fi = NExp_cond(ptr, sc);
-
+    
     if(fi){
         if(ptr->token_type == TOKEN_KEYWORD){
             if(strcmp(ptr->attribute, "then") == 0){
                 *ptr = Next(sc); if(errT != 0){return false;}
-
                 fi = fi && NFunction_body(ptr, sc) && NElseif(ptr, sc);
             } else {
                 return false;
@@ -790,7 +789,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
     // TODO mrtvy kod
     */
     return ret;
-}
+} 
 
 bool NExpressions(Token *ptr, ScannerContext *sc){
     bool expressions = true;
@@ -825,14 +824,14 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
         }
         TokenStore(*ptr, sc);
     } else {
+        // $53 <next_exp> => epsilon
+        #ifdef DEBUG_USED_RULE
+            printf("$53 <next_exp> => epsilon\n");
+            printf("---------------------------\n");
+        #endif
         TokenStore(*ptr, sc);
     }
 
-    // $53 <next_exp> => <function_body>
-    #ifdef DEBUG_USED_RULE
-        printf("$53 <next_exp> => <function_body>\n");
-        printf("---------------------------\n");
-    #endif
 
     #ifdef SEMANTIC_CONNECT
     semantic = end_n_assignment();
@@ -927,7 +926,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
         switch(ptr->token_type){
             case TOKEN_KEYWORD:
                 if(strcmp(ptr->attribute, "local") == 0){
-                    // $41 <function_body> => local id : <type> <assignment>
+                    // $41 <function_body> => local id : <type> <assignment> <function_body>
                     *ptr = Next(sc); if(errT != 0){return false;}
 
                     if(ptr->token_type == TOKEN_ID){
@@ -947,7 +946,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                             *ptr = Next(sc); if(errT != 0){return false;}
 
                             #ifdef DEBUG_USED_RULE
-                                printf("$41 <function_body> => local id : <type> <assignment>\n");
+                                printf("$41 <function_body> => local id : <type> <assignment> <function_body>\n");
                                 printf("---------------------------\n");
                             #endif
 
@@ -991,6 +990,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     #endif
 
                     function_body = function_body && NIf(ptr, sc);
+                    
                     if(function_body){
                         *ptr = Next(sc); if(errT != 0){return false;}
                         TokenStore(*ptr, sc);
@@ -1055,9 +1055,9 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                 }
                 break;
             case TOKEN_ID:
-                // $43 <function_body> => <ids> <expressions>
+                // $43 <function_body> => <ids> <expressions> <function_body>
                 #ifdef DEBUG_USED_RULE
-                    printf("$43 <function_body> => <ids> <expressions>\n");
+                    printf("$43 <function_body> => <ids> <expressions> <function_body>\n");
                     printf("---------------------------\n");
                 #endif
 

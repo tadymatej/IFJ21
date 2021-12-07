@@ -31,28 +31,8 @@ $21 <type> => number
 ##########|type: end bracket	attribute: (null)|
 $14 <next_types> => )
 ---------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-$28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: number|
-$29 <fc_ret_first_type> => <type>
----------------------------
-$21 <type> => number
----------------------------
-##########|type: comma	attribute: (null)|
-$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: string|
-$20 <type> => string
----------------------------
-##########|type: comma	attribute: (null)|
-$30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
----------------------------
-##########|type: keyword	attribute: integer|
-$19 <type> => integer
----------------------------
 ##########|type: keyword	attribute: function|
-$31 <fc_ret_next_types> => <prog>
+$32 <fc_decl_ret> => <prog>
 ---------------------------
 ##########|type: keyword	attribute: function|
 ##########|type: id_f	attribute: fuf|
@@ -122,9 +102,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: keyword	attribute: function|
@@ -196,6 +174,4 @@ $55 <exp> => call PSA
 ---------------------------
 ##########|type: comma	attribute: (null)|
 $52 <next_exp> => , <expression> <next_expr>
----------------------------
-$61 <list> => <function_body>
 ---------------------------

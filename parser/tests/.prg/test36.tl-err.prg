@@ -22,4 +22,3 @@ $19 <type> => integer
 $10 <next_params> => <param> <next_params>
 ---------------------------
 ##########|type: keyword	attribute: string|
-Chyba na radku: 6 a sloupci: 31

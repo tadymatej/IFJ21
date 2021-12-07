@@ -122,7 +122,7 @@ $26 <next_rets> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -136,13 +136,11 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: local|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: local|
 ##########|type: id	attribute: b|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: number|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $21 <type> => number
 ---------------------------
@@ -156,13 +154,11 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: local|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: local|
 ##########|type: id	attribute: c|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: string|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $20 <type> => string
 ---------------------------
@@ -176,8 +172,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: if|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: if|
 $45 <function_body> => <if>
 ---------------------------
@@ -194,15 +188,21 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: a|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$36 <first_arg> => id
+$36 <first_arg> => <value>
+---------------------------
+$37.1 <value> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
 ##########|type: id	attribute: b|
-$37 <next_args> => , id <next_args>
+$37.1 <value> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
 ##########|type: id	attribute: c|
-$37 <next_args> => , id <next_args>
+$37.1 <value> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
@@ -214,7 +214,7 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 $68 <exp_cond> => call PSA
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -258,13 +258,11 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: else|
-$53 <next_exp> => <function_body>
----------------------------
 ##########|type: keyword	attribute: else|
 $65 <elseif> => else <function_body> <end>
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -282,7 +280,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 $66 <elseif> => <end>
@@ -294,36 +292,12 @@ $67 <end> => end <function_body>
 ##########|type: id	attribute: d|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
-##########|type: id_f	attribute: fc|
-$58 <assignment> => <function_body>
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
+##########|type: keyword	attribute: if|
+$58 <assignment> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: if|
 $45 <function_body> => <if>
@@ -341,15 +315,21 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: a|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$36 <first_arg> => id
+$36 <first_arg> => <value>
+---------------------------
+$37.1 <value> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
 ##########|type: id	attribute: b|
-$37 <next_args> => , id <next_args>
+$37.1 <value> => id
 ---------------------------
 ##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
 ##########|type: id	attribute: c|
-$37 <next_args> => , id <next_args>
+$37.1 <value> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
@@ -361,7 +341,7 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 $68 <exp_cond> => call PSA
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -405,13 +385,11 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: else|
-$53 <next_exp> => <function_body>
----------------------------
 ##########|type: keyword	attribute: else|
 $65 <elseif> => else <function_body> <end>
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -429,7 +407,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 $66 <elseif> => <end>
@@ -438,7 +416,7 @@ $67 <end> => end <function_body>
 ---------------------------
 ##########|type: id	attribute: a|
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -455,32 +433,8 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-##########|type: id_f	attribute: fc|
-$53 <next_exp> => <function_body>
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
----------------------------
-##########|type: id_f	attribute: fc|
-$42 <function_body> => <function_call> <function_body>
----------------------------
-$33 <function_call> => id_f ( <args_list>
----------------------------
-##########|type: end bracket	attribute: (null)|
-$34 <args_list> => )
+##########|type: keyword	attribute: return|
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: return|
 $40 <function_body> => <return>
@@ -509,10 +463,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
----------------------------
 ##########|type: keyword	attribute: end|
 $4 <prog> => EOF
 ---------------------------

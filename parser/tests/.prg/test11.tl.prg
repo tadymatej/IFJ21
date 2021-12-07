@@ -23,12 +23,12 @@ $26 <next_rets> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
 ##########|type: keyword	attribute: if|
-$58 <assignment> => <function_body>
+$58 <assignment> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: if|
 $45 <function_body> => <if>
@@ -39,7 +39,7 @@ $63 <if> => if <exp_cond> then <function_body> <elseif>
 $68 <exp_cond> => call PSA
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -57,7 +57,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: elseif|
-$53 <next_exp> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: elseif|
 $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
@@ -66,7 +66,7 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 $68 <exp_cond> => call PSA
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -84,13 +84,13 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: else|
-$53 <next_exp> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: else|
 $65 <elseif> => else <function_body> <end>
 ---------------------------
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -108,7 +108,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 $66 <elseif> => <end>
@@ -134,9 +134,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|

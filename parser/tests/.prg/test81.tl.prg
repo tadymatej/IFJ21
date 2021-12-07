@@ -15,18 +15,18 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
 ##########|type: keyword	attribute: local|
-$58 <assignment> => <function_body>
+$58 <assignment> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: local|
 ##########|type: id	attribute: vysl|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -40,11 +40,8 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: id_f	attribute: write|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: id_f	attribute: write|
 $42 <function_body> => <function_call> <function_body>
 ---------------------------
 $33 <function_call> => id_f ( <args_list>
 ---------------------------
-##########|type: string	attribute: "Zadejte cislo pro vypocet faktorialu\n"|

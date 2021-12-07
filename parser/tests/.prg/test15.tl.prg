@@ -23,7 +23,7 @@ $26 <next_rets> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -37,8 +37,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: return|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: return|
 $40 <function_body> => <return>
 ---------------------------
@@ -57,9 +55,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|

@@ -3,6 +3,55 @@
 $1 <prog> => require
 ---------------------------
 ##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: foo|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+##########|type: id	attribute: a|
+$7 <params_list> => <first_param> <next_params>
+---------------------------
+$8 <first_param> => <param>
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$18 <param> => id : <type>
+---------------------------
+##########|type: keyword	attribute: integer|
+$19 <type> => integer
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$9 <next_params> => )
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$22 <return_fc> => : <first_ret> <next_rets>
+---------------------------
+##########|type: keyword	attribute: integer|
+$24 <first_ret> => <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: keyword	attribute: return|
+$26 <next_rets> => <function_body>
+---------------------------
+$40 <function_body> => <return>
+---------------------------
+$59 <return> => return <list>
+---------------------------
+$60 <list> => <expressions>
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: id	attribute: a|
+$54 <expression> => <exp>
+---------------------------
+##########|type: keyword	attribute: return|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: end|
+$53 <next_exp> => epsilon
+---------------------------
+##########|type: keyword	attribute: end|
+##########|type: keyword	attribute: function|
 ##########|type: id_f	attribute: main|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
@@ -23,7 +72,7 @@ $26 <next_rets> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -37,15 +86,13 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: local|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: local|
 ##########|type: id	attribute: b|
 ##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+##########|type: keyword	attribute: number|
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
-$19 <type> => integer
+$21 <type> => number
 ---------------------------
 ##########|type: set	attribute: (null)|
 $57 <assignment> => = <expression>
@@ -60,16 +107,16 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: a|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$36 <first_arg> => id
+$36 <first_arg> => <value>
+---------------------------
+$37.1 <value> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
 ---------------------------
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: end bracket	attribute: (null)|
 ##########|type: id	attribute: a|
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
@@ -100,8 +147,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|
 $5 <prog> => <function_call>

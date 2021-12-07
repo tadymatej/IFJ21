@@ -15,7 +15,7 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: s1|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: string|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $20 <type> => string
 ---------------------------
@@ -29,13 +29,11 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: local|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: local|
 ##########|type: id	attribute: s2|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: string|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $20 <type> => string
 ---------------------------
@@ -48,6 +46,9 @@ $54 <expression> => <exp>
 ##########|type: set	attribute: (null)|
 $55 <exp> => call PSA
 ---------------------------
-##########|type: concat	attribute: (null)|
-$58 <assignment> => <function_body>
+##########|type: id_f	attribute: write|
+##########|type: id_f	attribute: write|
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
 ---------------------------
