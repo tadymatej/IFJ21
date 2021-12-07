@@ -394,7 +394,7 @@ bool NFunction_call(Token *ptr, ScannerContext *sc){
             return false;
         }
 
-        #ifdef SEMANTIC_CONNECT
+        #ifdef SEMANTIC_CONNECT 
             semantic = push_parameter(ptr);
             if(semantic){
                 ErrMessage(semantic);
@@ -770,7 +770,7 @@ bool NRet(Token *ptr, ScannerContext *sc){
     #endif
     call_type = AFTER_RET;
     ret = NExpressions(ptr, sc);
-
+    if(ret == false) return false;
     #ifdef SEMANTIC_CONNECT
         semantic = end_return();
         if(semantic){
@@ -832,7 +832,7 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
         TokenStore(*ptr, sc);
     }
 
-
+    if(expressions == false) return false;
     #ifdef SEMANTIC_CONNECT
     semantic = end_n_assignment();
     if(semantic){
@@ -876,6 +876,7 @@ bool NIds(Token *ptr, ScannerContext *sc){
                     printf("---------------------------\n");
                 #endif
 
+                if(ids == false) return false;
                 #ifdef SEMANTIC_CONNECT
                     semantic = n_assignment_vars(ptr);
                     if(semantic){
@@ -931,6 +932,7 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
 
                     if(ptr->token_type == TOKEN_ID){
                         //41 - id
+                        if(function_body == false) return false;
                         #ifdef SEMANTIC_CONNECT
                             semantic = define_local_var(ptr);
                             if(semantic){
@@ -1165,6 +1167,7 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
+        if(return_fc == false) return false;
         #ifdef SEMANTIC_CONNECT
             semantic = is_dec_eq_to_def();
             if(semantic){
@@ -1413,6 +1416,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                         #endif
 
                         // je volana nad tokenem  2 - id_f
+                        if(prog == false) return false;
                         #ifdef SEMANTIC_CONNECT
                             semantic = function_definition(ptr);
                             if(semantic){
@@ -1427,6 +1431,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
                         if(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "end") == 0){
                             prog = prog && true;
+                            if(prog == false) return false;
                             #ifdef SEMANTIC_CONNECT
                                 semantic = end_function_body();
                                 if(semantic){
@@ -1473,6 +1478,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
                 #endif
 
                 // 5 - <function_call>
+                if(prog == false) return false;
                 #ifdef SEMANTIC_CONNECT
                     semantic = before_global_fun_call();
                     if(semantic){
@@ -1514,6 +1520,7 @@ bool NProg(Token *ptr, ScannerContext *sc){
     #endif
 
     // 4 - EOF
+    if(prog == false) return false;
     #ifdef SEMANTIC_CONNECT
         semantic = end_program();
         if(semantic){
@@ -1565,6 +1572,8 @@ int Parse(){
 
     // tokens trough PARSER
     OK = NProg(token, &sc);
+
+    //printf("%d\n", semantic);
 
     if(psa == 0 && OK != true && semantic == 0){
         ErrMessage(SYNTAX_ERR);
