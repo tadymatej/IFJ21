@@ -511,6 +511,7 @@ Token nextToken(ScannerContext *sc) {
     Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     int row = sc->row;
     int col = sc->col;
+    TokenSetPosition(&token, row, col);
     char c;
     sc->actualState = STATE_START;
     if(sc->lastReadedChar != -1) {  //Musím podruhé přečíst již přečtený znak
@@ -523,7 +524,9 @@ Token nextToken(ScannerContext *sc) {
     }
 
     while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
-        if(token.token_type == TOKEN_NONE) updateScannerPosition(c, sc);
+        if(token.token_type == TOKEN_NONE) {
+            updateScannerPosition(c, sc);
+        }
 
         token = FSM(c, sc, &row, &col);
         if(sc->actualState == STATE_ERR) {
@@ -550,6 +553,10 @@ Token nextToken(ScannerContext *sc) {
                 return token;
             }
         }
+    }
+    if(c == EOF) {
+        sc->row = row;
+        sc->col = col;
     }
     TokenSetPosition(&token, row, col);
     return token;
@@ -649,8 +656,8 @@ Token TokenGetStored(ScannerContext *sc) {
         tk.attribute = NULL;
         tk.attributeType = ATTRIBUTE_NONE;
         tk.token_type = TOKEN_NONE;
-        tk.startPosRow = 0;
-        tk.startPosCol = 0;
+        tk.startPosRow = sc->row;
+        tk.startPosCol = sc->col;
     }
     else {
         tk.attribute = token->attribute;
@@ -689,8 +696,8 @@ int TokenStore(Token token, ScannerContext *sc) {
     return 0;
 }
 
-
-//#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
+/*
+#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
 
 #if __STANDALONE__
 int main(int argc, char **argv) {
@@ -716,7 +723,8 @@ int main(int argc, char **argv) {
                 printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
         q_push(q, tokenPtr);
     }
-    printf("-----------------------------------------------");
+    printf("TOKEN NONE: %d, %d\n", token.startPosRow, token.startPosCol);
+    /*printf("-----------------------------------------------");
     void *top;
     while((top = q_top(q)) != NULL) {
         token = *((Token *) top);
@@ -727,8 +735,9 @@ int main(int argc, char **argv) {
         else if(lex2String(token.token_type) != NULL)
                 printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
         q_pop(q);
-    }
+    }*//*
     return 0;
 }
 #endif
 
+*/

@@ -42,8 +42,8 @@ $19 <type> => integer
 ##########|type: comma	attribute: (null)|
 $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
 ---------------------------
-##########|type: keyword	attribute: number|
-$21 <type> => number
+##########|type: keyword	attribute: string|
+$20 <type> => string
 ---------------------------
 ##########|type: comma	attribute: (null)|
 $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
@@ -175,42 +175,4 @@ $19 <type> => integer
 ---------------------------
 ##########|type: keyword	attribute: return|
 $26 <next_rets> => <function_body>
----------------------------
-$40 <function_body> => <return>
----------------------------
-$59 <return> => return <list>
----------------------------
-$60 <list> => <expressions>
----------------------------
-$49 <expressions> => <exp_first> <next_expr>
----------------------------
-$51 <exp_first> => <expression>
----------------------------
-##########|type: number int	attribute: 0|
-$54 <expression> => <exp>
----------------------------
-##########|type: keyword	attribute: return|
-$55 <exp> => call PSA
----------------------------
-##########|type: comma	attribute: (null)|
-$52 <next_exp> => , <expression> <next_expr>
----------------------------
-##########|type: number int	attribute: 0|
-$54 <expression> => <exp>
----------------------------
-##########|type: comma	attribute: (null)|
-$55 <exp> => call PSA
----------------------------
-##########|type: comma	attribute: (null)|
-$52 <next_exp> => , <expression> <next_expr>
----------------------------
-##########|type: number int	attribute: 0|
-$54 <expression> => <exp>
----------------------------
-##########|type: comma	attribute: (null)|
-$55 <exp> => call PSA
----------------------------
-##########|type: keyword	attribute: end|
-##########|type: keyword	attribute: end|
-$4 <prog> => EOF
 ---------------------------

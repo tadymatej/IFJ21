@@ -21,6 +21,28 @@ int after_global_fun_call() {
     return cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx)));
 }
 
+// 3 - id
+int function_declaration(Token *token){
+    //printf("%s\n", token->attribute);
+    globals.cur_function = init_fun_data(token->attribute);
+    RET_IF_NOT_SUCCESS(add_function_dec(globals.ft, globals.cur_function));
+    return SEM_CORRECT;
+}
+
+// 12 - <first_type> / 15 - <type>
+int dec_init_arg_types(Token *token){
+    TS_data_t *arg = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
+    if (arg == NULL)
+        return INTERNAL_ERROR;
+    RET_IF_NOT_SUCCESS(fun_add_param(globals.cur_function, arg));
+    return SEM_CORRECT;
+}
+
+// 29 - <type> / 30 - <type>
+int dec_init_ret_vals(Token *token){
+    return ret_val_dec(token);
+}
+
 //je volana nad tokenem  2 - id_f
 int function_definition(Token *token) {
     globals.cur_function = init_fun_data(token->attribute);
@@ -69,6 +91,7 @@ int fun_arg_assignment(){
         if(data != NULL)
             RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, data->name, tmp))));
     }
+    return SEM_CORRECT;
 }
 
 // 41 - <type>
@@ -82,11 +105,10 @@ int var_type_assignment(Token *token) {
 
 //24 - <type> / 25 - <type>
 int ret_val_dec(Token *token) {
-    globals.var = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
-    if (globals.var == NULL)
+    TS_data_t *ret_val = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
+    if (ret_val == NULL)
         return INTERNAL_ERROR;
-    RET_IF_NOT_SUCCESS(fun_add_ret_val(globals.cur_function, globals.var));
-    globals.var = NULL;
+    RET_IF_NOT_SUCCESS(fun_add_ret_val(globals.cur_function, ret_val));
     return SEM_CORRECT;
 }
 

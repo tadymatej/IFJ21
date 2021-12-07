@@ -34,16 +34,16 @@ $14 <next_types> => )
 ##########|type: colon - dvojtecka	attribute: (null)|
 $28 <fc_decl_ret> => : <fc_ret_first_type> <fc_ret_next_types>
 ---------------------------
-##########|type: keyword	attribute: number|
+##########|type: keyword	attribute: integer|
 $29 <fc_ret_first_type> => <type>
 ---------------------------
-$21 <type> => number
+$19 <type> => integer
 ---------------------------
 ##########|type: comma	attribute: (null)|
 $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
 ---------------------------
-##########|type: keyword	attribute: string|
-$20 <type> => string
+##########|type: keyword	attribute: number|
+$21 <type> => number
 ---------------------------
 ##########|type: comma	attribute: (null)|
 $30 <fc_ret_next_types> => , <type> <fc_ret_next_types>
@@ -215,7 +215,7 @@ $55 <exp> => call PSA
 ##########|type: comma	attribute: (null)|
 $52 <next_exp> => , <expression> <next_expr>
 ---------------------------
-##########|type: number int	attribute: 0|
+##########|type: number	attribute: 0.1e12222|
 $54 <expression> => <exp>
 ---------------------------
 ##########|type: comma	attribute: (null)|
