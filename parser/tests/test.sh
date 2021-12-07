@@ -25,60 +25,12 @@ echo "##########################################################################
 for f in *.tl; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    #cat $f | ../parser  > .prg/$f.txt
     #cat $f | ../parser > .code/$f.code
-    cat $f | ../parser > .vzor/$f.vzor
-    case $? in
-        0)
-            echo "$GREEN OK $NORMAL [0]";
-            ;;
-        1)
-            echo "$RED ERR $NORMAL [1]";
-            ;;
-        2)
-            echo "$RED ERR $NORMAL [2]";
-            ;;
-        3)
-            echo "$RED ERR $NORMAL [3]";
-            ;;
-        4)
-            echo "$RED ERR $NORMAL [4]";
-            ;;
-        5)
-            echo "$RED ERR $NORMAL [5]";
-            ;;
-        6)
-            echo "$RED ERR $NORMAL [6]";
-            ;;
-        7)
-            echo "$RED ERR $NORMAL [7]";
-            ;;
-        8)
-            echo "$RED ERR $NORMAL [8]";
-            ;;
-        9)
-            echo "$RED ERR $NORMAL [9]";
-            ;;
-        99)
-            echo "$BLUE ERR $NORMAL [99]";
-            ;;
-    esac
-    
-    #diff .prg/$f.txt .prg/$f.prg
-    #tail -1 .prg/$f.txt;
-    echo "";
-done
-echo ""
-echo ""
-echo "$RED#########################################################################################" ;
-echo "# *.tl-err ERROR Testing $RED" ;
-echo "#########################################################################################$NORMAL" ;
-for f in *.tl-err; do
-    echo "----------------------------- $f -------------------------------" ;
-    head -1 $f;
-    #cat $f | ../parser > .code/$f.code
-    #cat $f | ../parser > .prg/$f.txt
-    cat $f | ../parser > .vzor/$f.vzor
+    #cat $f | ../parser > .vzor/$f.vzor
+
+    # pro testovani po uprave PSA
+    cat $f | ../parser  > .vzor/$f.txt
+
     case $? in
         0)
             echo "$GREEN OK $NORMAL [0]";
@@ -115,7 +67,65 @@ for f in *.tl-err; do
             ;;
     esac
 
-    #diff .prg/$f.txt .prg/$f.prg
+    diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
+
+    #diff ./prg/$f.txt .prg/$f.prg
+    #tail -1 .prg/$f.txt;
+    echo "";
+done
+echo ""
+echo ""
+echo "$RED#########################################################################################" ;
+echo "# *.tl-err ERROR Testing $RED" ;
+echo "#########################################################################################$NORMAL" ;
+for f in *.tl-err; do
+    echo "----------------------------- $f -------------------------------" ;
+    head -1 $f;
+    #cat $f | ../parser > .code/$f.code
+    #cat $f | ../parser > .vzor/$f.vzor
+
+    # pro testovani po uprave PSA
+    cat $f | ../parser > .vzor/$f.txt
+
+    case $? in
+        0)
+            echo "$GREEN OK $NORMAL [0]";
+            ;;
+        1)
+            echo "$RED ERR $NORMAL [1]";
+            ;;
+        2)
+            echo "$RED ERR $NORMAL [2]";
+            ;;
+        3)
+            echo "$RED ERR $NORMAL [3]";
+            ;;
+        4)
+            echo "$RED ERR $NORMAL [4]";
+            ;;
+        5)
+            echo "$RED ERR $NORMAL [5]";
+            ;;
+        6)
+            echo "$RED ERR $NORMAL [6]";
+            ;;
+        7)
+            echo "$RED ERR $NORMAL [7]";
+            ;;
+        8)
+            echo "$RED ERR $NORMAL [8]";
+            ;;
+        9)
+            echo "$RED ERR $NORMAL [9]";
+            ;;
+        99)
+            echo "$BLUE ERR $NORMAL [99]";
+            ;;
+    esac
+
+    diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
+
+    #diff ./prg/$f.txt .prg/$f.prg
 
 done
 echo ""
