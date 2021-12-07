@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE
+//#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -1106,6 +1106,15 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
+        #ifdef SEMANTIC_CONNECT
+            semantic = fun_arg_assignment();
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        #endif
+
         *ptr = Next(sc); if(errT != 0){return false;}
 
         // $24 <first_ret> => <type>
@@ -1190,6 +1199,12 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
     #endif
 
     #ifdef SEMANTIC_CONNECT
+        semantic = fun_arg_assignment();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
         semantic = is_dec_eq_to_def();
         if(semantic){
             ErrMessage(semantic);
