@@ -338,6 +338,21 @@ char *CG_JumpEQStack(char *label);
  */
 char *CG_JumpNEQStack(char *label);
 
+void cg_reads();
+
+void cg_readi();
+
+void cg_readn();
+
+void cg_tointeger();
+
+void cg_substr();
+
+void cg_ord();
+
+void cg_chr();
+
+void cg_write();
 /**
  * Obálka pre príkazy
  * Kontrluje výpis inštrukcií na konzolu
