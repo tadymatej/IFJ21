@@ -1,4 +1,4 @@
--- Should be ERR [21, 5]
+-- Should be ERR [22, 5]
 
 require "ifj21"
 
@@ -11,6 +11,7 @@ end
 function main() : integer, number
     local a : integer = 10
     local b : number = 5
+    local c : string
     
     if a > 8 then
         fc(a, b, c)

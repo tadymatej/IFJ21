@@ -1,4 +1,4 @@
--- Should be OK
+-- Should be ERR [13, 11]
 
 require "ifj21"
 
@@ -9,7 +9,6 @@ end
 function main() : integer, number
     local a : integer = 10
     local b : number = 5
-    local c : string
 
     a, b, c = 456, 45, "Santa"
 

@@ -1,4 +1,4 @@
--- Shouldn't be OK (3 Definition error row 13)
+-- Should be OK
 
 require "ifj21"
 
@@ -9,6 +9,7 @@ end
 function main() : integer, number
     local a : integer = 10
     local b : number = 5
+    local c : string
 
     a, b, c = 456, 45, "Santa"
     
