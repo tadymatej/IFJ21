@@ -2,7 +2,7 @@
 
 require "ifj21"
 
-global foo : function(integer, string, number) : number, string, integer
+global foo : function(integer, string, number) : integer, number, integer
 
 function fuf()
 
@@ -17,5 +17,5 @@ function fuuf()
 end
 
 function foo(k : integer, l : string, m : number) : integer, number, integer
-    return 0, 0, 0
+    return 0, 0.1e12222, 0
 end
