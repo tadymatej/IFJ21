@@ -21,13 +21,19 @@ int new_stack_frame(Sym_table_t **table, char *prefix){
   return 0;
 }
 
-void dispose_table(Sym_table_t **table){
-  Sym_table_t *temp = NULL;
-  while (*table != NULL){
+void dispose_stack_frame(Sym_table_t **table){
+  if(*table != NULL){
+    Sym_table_t *temp = NULL;
     BinaryTreeDestroy((*table)->tree, free);
     temp = (*table)->upper;
     free(*table);
     *table = temp;
+  }
+}
+
+void dispose_table(Sym_table_t **table){
+  while (*table != NULL){
+    dispose_stack_frame(table);
   }
 }
 
