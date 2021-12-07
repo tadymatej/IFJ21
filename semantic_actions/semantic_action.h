@@ -5,6 +5,7 @@
 #include "semantic_bottom_up.h"
 #include "code_generator.h"
 #include "scanner.h"
+#include "limits.h"
 #include <stdlib.h>
 
 #define DEFINITON_ERROR 3
@@ -33,6 +34,7 @@ int after_global_fun_call();
 int function_definition(Token *token);
 int init_function_argument(Token *token);
 int fun_arg_definition(Token *token);
+int fun_arg_assignment();
 int var_type_assignment(Token *token);
 int ret_val_dec(Token *token);
 int is_dec_eq_to_def();

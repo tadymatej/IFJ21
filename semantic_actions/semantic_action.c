@@ -56,9 +56,19 @@ int fun_arg_definition(Token *token) {
         return INTERNAL_ERROR;
     RET_IF_NOT_SUCCESS(fun_add_param(globals.cur_function, copy));
     ITOA(tmp, globals.ts->nested_identifier);
+    RET_IF_NOT_SUCCESS(q_push_front(globals.q_assignments, globals.var));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
-    RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
     return SEM_CORRECT;
+}
+
+// 23 - <function_body> / 22 - :
+int fun_arg_assignment(){
+    ITOA(tmp, globals.ts->nested_identifier);
+    while(!q_is_empty(globals.q_assignments)){
+        TS_data_t *data = q_pop(globals.q_assignments);
+        if(data != NULL)
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, data->name, tmp))));
+    }
 }
 
 // 41 - <type>
@@ -77,7 +87,6 @@ int ret_val_dec(Token *token) {
         return INTERNAL_ERROR;
     RET_IF_NOT_SUCCESS(fun_add_ret_val(globals.cur_function, globals.var));
     globals.var = NULL;
-    //RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL)))); PRIDAT DO RETURN PRED PUSHNUTIM NAVRATOVYCH HODNOT
     return SEM_CORRECT;
 }
 
@@ -112,9 +121,7 @@ int prepare_def_assignment() {
 // 33 - id_f
 int start_function_call(Token *token) {
     bool isOnlyDeclared, isBuiltin;
-    //printf("\nB : %s \t ft = %p\t defTree->data = %p \t defTree = %p \n", token->attribute, globals.ft, globals.ft->defFunTree->data, globals.ft->defFunTree);
     globals.calling_fun = find_function(globals.ft, token->attribute, &isOnlyDeclared, &isBuiltin);
-    //printf("A : %p \n\n", globals.calling_fun);
     if (globals.calling_fun == NULL)
         return DEFINITON_ERROR;
     if (!isBuiltin)
@@ -124,6 +131,7 @@ int start_function_call(Token *token) {
 
 // 36 - id / 37 - id
 int push_parameter(Token *token) {
+    // if(globals.calling_fun->params->length == INT_MAX) // funkce s promennym poctem parametru
     if (globals.tmp >= globals.calling_fun->params->length)
         return FUN_CALL_ERROR;
     Sym_table_t *foundIn;
@@ -167,15 +175,15 @@ int push_parameter(Token *token) {
 
 // 34 - )/ 38 - )
 int end_function_call() {
-    if (globals.calling_fun->params->length != globals.tmp)
+    if (globals.calling_fun->params->length != globals.tmp /*&& globals.calling_fun->params->length != INT_MAX*/)
         return FUN_CALL_ERROR;
     RET_IF_NOT_SUCCESS(cg_envelope(cg_call_fun(globals.calling_fun->name)));
     globals.tmp = 0;
     if (globals.q_assignments->length != 0) {
         if (globals.q_assignments->length > globals.calling_fun->ret_vals->length)
             return FUN_CALL_ERROR;
-        for (int i = 0; i < globals.calling_fun->ret_vals->length && globals.q_assignments->length != 0; i++) {
-            TS_data_t *left = q_pop(globals.q_assignments);
+        for (int i = globals.calling_fun->ret_vals->length-1 ; i >= 0 && globals.q_assignments->length != 0; i--) {
+            TS_data_t *left = q_pop_back(globals.q_assignments);
             Sym_table_t *foundIn;
             find_variable(globals.ts, left->name, &foundIn);
             ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
@@ -190,7 +198,6 @@ int end_function_call() {
 // 46 - id / 47 - id
 int n_assignment_vars(Token *token) {
     TS_data_t *id = find_variable(globals.ts, token->attribute, NULL);
-    //printf("%s %p %s \t %p\n", ((TS_data_t*)globals.ts->tree->data)->name, id, token->attribute, ((TS_data_t*)globals.ts->tree->data));
     if (id == NULL)
         return DEFINITON_ERROR;
     RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, id));
