@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE
+//#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -771,6 +771,15 @@ bool NRet(Token *ptr, ScannerContext *sc){
     #endif
     call_type = AFTER_RET;
     ret = NExpressions(ptr, sc);
+
+    #ifdef SEMANTIC_CONNECT
+        semantic = end_return();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
+    #endif
 
     // $61 <list> => <function_body>
     /*#ifdef DEBUG_USED_RULE
