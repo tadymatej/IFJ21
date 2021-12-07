@@ -312,8 +312,7 @@ int precedence_analyzer(ScannerContext *sc, call_type_t call_type) {
     top = stack_top(stack);
     syntax_check = syntax_table[symb_syntax_index(top)][symb_syntax_index(token_operator)];
     if(!syntax_check){
-    //if((symb_syntax_index(top) == 1) && (symb_syntax_index(token_operator) == 1)){
-      printf("top: %c | token: %c\n", top, token_operator);
+      TokenStore(token, sc);
       error_code = SYNTAX_ERR;
       break;
     }
