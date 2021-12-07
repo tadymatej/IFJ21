@@ -38,4 +38,3 @@ $23 <return_fc> => <function_body>
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
 ##########|type: colon - dvojtecka	attribute: (null)|
-Chyba na radku: 9 a sloupci: 16

@@ -1,4 +1,4 @@
--- Should be ERR -- ???
+-- Should be ERR [17, 5]
 
 require "ifj21"
 
@@ -6,16 +6,16 @@ function main()
     local a : integer = 10
     local b : number = 5
 
-    if a > b then
-        if a > 4 then
+    if a > 3 then
+        if a == 4 then
             a = a + 1
             
         else
             return
         end
     end 
-    
+    #
     return
-    $
+    
 
 end

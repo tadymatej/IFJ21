@@ -67,10 +67,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
----------------------------
 ##########|type: keyword	attribute: end|
 $4 <prog> => EOF
 ---------------------------

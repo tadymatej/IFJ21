@@ -48,9 +48,7 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: keyword	attribute: function|
@@ -63,10 +61,28 @@ $6 <params_list> => )
 ##########|type: keyword	attribute: local|
 $23 <return_fc> => <function_body>
 ---------------------------
+##########|type: id	attribute: a|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: integer|
+$41 <function_body> => local id : <type> <assignment> <function_body>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: set	attribute: (null)|
+$57 <assignment> => = <expression>
+---------------------------
+##########|type: null	attribute: nil|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: local|
+##########|type: keyword	attribute: local|
 ##########|type: id	attribute: d|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -83,12 +99,12 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: id	attribute: a|
 $35 <args_list> => <first_arg> <next_args>
 ---------------------------
-$36 <first_arg> => id
+$36 <first_arg> => <value>
+---------------------------
+$37.1 <value> => id
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 $38 <next_args> => )
----------------------------
-$58 <assignment> => <function_body>
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
 ##########|type: keyword	attribute: end|

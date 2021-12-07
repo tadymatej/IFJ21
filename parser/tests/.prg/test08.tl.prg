@@ -15,13 +15,20 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
-##########|type: keyword	attribute: if|
-$58 <assignment> => <function_body>
+##########|type: set	attribute: (null)|
+$57 <assignment> => = <expression>
 ---------------------------
+##########|type: number int	attribute: 4|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: if|
 ##########|type: keyword	attribute: if|
 $45 <function_body> => <if>
 ---------------------------

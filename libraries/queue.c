@@ -63,6 +63,32 @@ void* q_pop(Queue_t* q) {
     return NULL;
 }
 
+void* q_pop_back(Queue_t* q){
+    Q_elem_t *cur = q->first;
+    if(q->first == q->last)
+    {
+        void *data = q->first->data;
+        free(q->first);
+        q->first = NULL;
+        q->last = NULL;
+        q->length--;
+        return data;
+    }
+    while(cur != NULL && cur->next!= q->last)
+    {
+        cur = cur->next;
+    }
+    if(cur != NULL){
+        void *data = q->last->data;
+        free(q->last);
+        q->last = cur;
+        cur->next = NULL;
+        q->length--;
+        return data;
+    }
+    return NULL;
+}
+
 bool q_is_empty(Queue_t* q) {
     if (q->first == NULL)
         return true;
