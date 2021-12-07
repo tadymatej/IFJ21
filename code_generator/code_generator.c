@@ -606,7 +606,7 @@ void cg_ord(){
                     "RETURN\n"));
 }
 
-void chr(){
+void cg_chr(){
   CODE_PRINT(printf("LABEL chr\n"
                     "PUSHFRAME\n \n"
                     "DEFVAR LF@i\n"
@@ -621,6 +621,23 @@ void chr(){
                     "INT2CHAR LF@ret_val LF@i \n"
                     "PUSHS LF@ret_val\n \n"
                     "LABEL %%AFTER_FC_CHR\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_write(){
+  CODE_PRINT(printf("LABEL write\n"
+                    "PUSHFRAME\n\n"
+                    "DEFVAR LF@value\n"
+                    "POPS LF@value\n"
+                    "DEFVAR LF@cv_0\n"
+                    "LABEL %%START_LOOP_WRITE\n"
+                    "EQ LF@cv_0 LF@value nil@nil\n"
+                    "JUMPIFEQ %%AFTER_FC_WRITE LF@cv_0 bool@true\n\n"
+                    "WRITE LF@value\n"
+                    "POPS LF@value\n\n"
+                    "JUMP %%START_LOOP_WRITE\n\n"
+                    "LABEL %%AFTER_FC_WRITE\n"
                     "POPFRAME\n"
                     "RETURN\n"));
 }

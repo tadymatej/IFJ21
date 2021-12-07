@@ -350,8 +350,9 @@ void cg_substr();
 
 void cg_ord();
 
-void chr();
+void cg_chr();
 
+void cg_write();
 /**
  * Obálka pre príkazy
  * Kontrluje výpis inštrukcií na konzolu
