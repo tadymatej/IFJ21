@@ -45,5 +45,6 @@ int n_assignment_vars(Token *token);
 int end_n_assignment();
 int end_function_body();
 int start_return();
+int end_return();
 
 #endif

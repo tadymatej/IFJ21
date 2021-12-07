@@ -213,15 +213,24 @@ int end_function_body() {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
     }
     RET_IF_NOT_SUCCESS(cg_envelope(cg_return()));
+    dispose_stack_frame(&globals.ts);
+    globals.var = NULL;
     return SEM_CORRECT;
 }
 
 // 59 - return
 int start_return(){
-    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));
     for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
         RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, fun_get_ret(globals.cur_function, i)));
     }
+    return SEM_CORRECT;
+}
+
+int end_return(){
+    while(!q_is_empty(globals.q_assignments))
+        q_pop(globals.q_assignments);
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_return()));
     return SEM_CORRECT;
 }
