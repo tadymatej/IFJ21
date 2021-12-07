@@ -7,7 +7,7 @@ function foo(a : integer) : integer
 end
 
 function main()
-    
+    local a : integer = nil
     local d : integer = foo(a)
 
 end
