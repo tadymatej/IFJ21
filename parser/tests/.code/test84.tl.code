@@ -1,11 +1,8 @@
 ##########|type: keyword	attribute: require|
 ##########|type: string	attribute: "ifj21"|
 .IFJcode21
-<<<<<<< HEAD
-=======
 $1 <prog> => require
 ---------------------------
->>>>>>> ece1984fac1a9296cf5f22befaac475f978f3599
 JUMP $%%exec_point_0
 
 ##########|type: keyword	attribute: global|

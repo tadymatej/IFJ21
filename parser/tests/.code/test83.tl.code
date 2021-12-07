@@ -1,11 +1,8 @@
 ##########|type: keyword	attribute: require|
 ##########|type: string	attribute: "ifj21"|
 .IFJcode21
-<<<<<<< HEAD
-=======
 $1 <prog> => require
 ---------------------------
->>>>>>> ece1984fac1a9296cf5f22befaac475f978f3599
 JUMP $%%exec_point_0
 
 ##########|type: keyword	attribute: function|
@@ -22,9 +19,6 @@ $23 <return_fc> => <function_body>
 ---------------------------
 ##########|type: id	attribute: s1|
 DEFVAR LF@s1_0
-<<<<<<< HEAD
-DEFVAR LF@s2_0
-=======
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: string|
 $41 <function_body> => local id : <type> <assignment>
@@ -73,4 +67,3 @@ $42 <function_body> => <function_call> <function_body>
 ---------------------------
 $33 <function_call> => id_f ( <args_list>
 ---------------------------
->>>>>>> ece1984fac1a9296cf5f22befaac475f978f3599
