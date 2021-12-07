@@ -3,6 +3,8 @@
 require "ifj21"
 
 function main()
+    local a : integer
+    
     if a > 5 
     if a == 4 then
     

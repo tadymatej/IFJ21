@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-//#define DEBUG_USED_RULE
+#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-//#define SHOW_TOKENS
+#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
