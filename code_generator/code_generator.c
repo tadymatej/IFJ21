@@ -493,6 +493,155 @@ char *CG_JumpNEQStack(char *label){
   function_templ(strlen(label) + strlen("JUMPIFNEQS %s\n") , (sprintf(str, "JUMPIFNEQS %s\n", label), free(label)));
 }
 
+void cg_reads(){
+  CODE_PRINT(printf("LABEL reads\n"
+                    "PUSHFRAME\n"
+                    "DEFVAR LF@ret_string\n"
+                    "READ LF@ret_string string\n"
+                    "PUSHS LF@ret_string\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_readi(){
+  CODE_PRINT(printf("LABEL readi\n"
+                    "PUSHFRAME\n"
+                    "DEFVAR LF@ret_int\n"
+                    "READ LF@ret_int int\n"
+                    "PUSHS LF@ret_int\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_readn(){
+  CODE_PRINT(printf("LABEL readn\n"
+                    "PUSHFRAME\n"
+                    "DEFVAR LF@ret_num\n"
+                    "READ LF@ret_num float\n"
+                    "PUSHS LF@ret_num\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_tointeger(){
+  CODE_PRINT(printf("LABEL tointeger\n"
+                    "PUSHFRAME\n \n"
+                    "DEFVAR LF@number\n"
+                    "DEFVAR LF@cv_0\n"
+                    "DEFVAR LF@ret_val\n \n"
+                    "POPS LF@number\n"
+                    "EQ LF@cv_0 LF@number nil@nil\n"
+                    "JUMPIFEQ %%IS_NIL LF@cv_0 bool@true\n \n"
+                    "FLOAT2INT LF@ret_val LF@number\n"
+                    "JUMP %%AFTER_IF\n"
+                    "LABEL %%IS_NIL\n"
+                    "MOVE LF@ret_val nil@nil\n"
+                    "LABEL %%AFTER_IF\n"
+                    "PUSHS LF@ret_val\n \n"
+                    "POPFRAME\n"
+                    "RETURN \n"));
+}
+
+void cg_substr(){
+  CODE_PRINT(printf("LABEL substr\n"
+                    "PUSHFRAME\n\n"
+                    "DEFVAR LF@s\n"
+                    "POPS LF@s\n"
+                    "DEFVAR LF@i\n"
+                    "POPS LF@i\n"
+                    "DEFVAR LF@j\n"
+                    "POPS LF@j\n \n"
+                    "PUSHS nil@nil\n"
+                    "DEFVAR LF@cv_0\n"
+                    "EQ LF@cv_0 LF@s nil@nil \n"
+                    "JUMPIFEQ %%AFTER_FC_SUBSTR LF@cv_0 bool@true # kontrola ci je platny retazec \n \n"
+                    "LT LF@cv_0 LF@i int@1\n"
+                    "JUMPIFEQ %%AFTER_FC_SUBSTR LF@cv_0 bool@true #kontrola podtecenia parametru i \n \n"
+                    "DEFVAR LF@s_len\n"
+                    "STRLEN LF@s_len LF@s \n"
+                    "GT LF@cv_0 LF@j LF@s_len\n"
+                    "JUMPIFEQ %%AFTER_FC_SUBSTR LF@cv_0 bool@true # kontrola dlzky retazca a j parametru \n \n"
+                    "SUB LF@i LF@i int@1\n"
+                    "SUB LF@j LF@j int@1\n \n"
+                    "DEFVAR LF@ret_string\n"
+                    "DEFVAR LF@temp_char\n"
+                    "MOVE LF@ret_string string@\\000 \n"
+                    "LABEl %%START_LOOP_SUBSTR\n"
+                    "GT LF@cv_0 LF@i LF@j\n"
+                    "JUMPIFEQ %%AFTER_LOOP_SUBSTR LF@cv_0 bool@true\n \n"
+                    "GETCHAR Lf@temp_char LF@s LF@i\n"
+                    "CONCAT LF@ret_string LF@ret_string LF@temp_char\n \n"
+                    "ADD LF@i LF@i int@1\n"
+                    "JUMP %%START_LOOP_SUBSTR\n \n"
+                    "LABEL %%AFTER_LOOP_SUBSTR\n"
+                    "PUSHS LF@ret_string\n \n"
+                    "LABEL %%AFTER_FC_SUBSTR\n"
+                    "POPFRAME\n"
+                    "RETURN \n"));
+}
+
+void cg_ord(){
+  CODE_PRINT(printf("LABEL ord\n"
+                    "PUSHFRAME\n"
+                    "DEFVAR LF@s\n"
+                    "POPS LF@s\n"
+                    "DEFVAR LF@i\n"
+                    "POPS LF@i\n"
+                    "PUSHS nil@nil\n \n"
+                    "DEFVAR LF@cv_0\n"
+                    "EQ LF@cv_0 LF@s nil@nil\n"
+                    "JUMPIFEQ %%AFTER_FC_ORD LF@cv_0 bool@true # kontrola ci je platny retazec \n \n"
+                    "LT LF@cv_0 LF@i int@1\n"
+                    "JUMPIFEQ %%AFTER_FC_SUBSTR LF@cv_0 bool@true #kontrola podtecenia parametru i\n \n"
+                    "DEFVAR LF@s_len\n"
+                    "STRLEN LF@s_len LF@s\n"
+                    "GT LF@cv_0 LF@i LF@s_len\n"
+                    "JUMPIFEQ %%AFTER_FC_ORD LF@cv_0 bool@true # kontrola dlzky retazca a i parametru\n \n"
+                    "SUB LF@i LF@i int@1\n"
+                    "DEFVAR LF@ret_val\n"
+                    "STRI2INT LF@ret_val LF@s LF@i\n"
+                    "PUSHS LF@ret_val\n \n"
+                    "LABEL %%AFTER_FC_ORD\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_chr(){
+  CODE_PRINT(printf("LABEL chr\n"
+                    "PUSHFRAME\n \n"
+                    "DEFVAR LF@i\n"
+                    "POPS LF@i \n"
+                    "PUSHS nil@nil\n \n"
+                    "DEFVAR LF@cv_0\n"
+                    "LT LF@cv_0 LF@i int@0\n"
+                    "JUMPIFEQ %%AFTER_FC_CHR LF@cv_0 bool@true #kontrola podtecenia parametru i\n \n"
+                    "GT LF@cv_0 LF@i int@255\n"
+                    "JUMPIFEQ %%AFTER_FC_ORD LF@cv_0 bool@true # kontrola ci je cislo viac ako 255\n \n"
+                    "DEFVAR LF@ret_val\n"
+                    "INT2CHAR LF@ret_val LF@i \n"
+                    "PUSHS LF@ret_val\n \n"
+                    "LABEL %%AFTER_FC_CHR\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
+void cg_write(){
+  CODE_PRINT(printf("LABEL write\n"
+                    "PUSHFRAME\n\n"
+                    "DEFVAR LF@value\n"
+                    "POPS LF@value\n"
+                    "DEFVAR LF@cv_0\n"
+                    "LABEL %%START_LOOP_WRITE\n"
+                    "EQ LF@cv_0 LF@value nil@nil\n"
+                    "JUMPIFEQ %%AFTER_FC_WRITE LF@cv_0 bool@true\n\n"
+                    "WRITE LF@value\n"
+                    "POPS LF@value\n\n"
+                    "JUMP %%START_LOOP_WRITE\n\n"
+                    "LABEL %%AFTER_FC_WRITE\n"
+                    "POPFRAME\n"
+                    "RETURN\n"));
+}
+
 int cg_envelope(char *str) {
     if (str == NULL)
         return 99;

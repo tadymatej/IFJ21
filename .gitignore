@@ -1,4 +1,7 @@
 .local_gitignore
 *.txt
 *.diff
-./build/
+build
+.vscode
+parser/parser
+scanner/scanner
