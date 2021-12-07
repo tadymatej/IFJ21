@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE
+//#define DEBUG_USED_RULE
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -1244,6 +1244,14 @@ bool NTypes_list(Token *ptr, ScannerContext *sc){
         types_list = NType(ptr);
 
         if(types_list){
+            #ifdef SEMANTIC_CONNECT
+                semantic = dec_init_arg_types(ptr);
+                if(semantic){
+                    ErrMessage(semantic);
+                    ErrMessagePossition(ptr);
+                    return false;
+                }
+            #endif
             *ptr = Next(sc); if(errT != 0){return false;}
             while(ptr->token_type == TOKEN_COMMA && types_list == true){
                 // $15 <next_types> => , <type> <next_types>
@@ -1255,6 +1263,14 @@ bool NTypes_list(Token *ptr, ScannerContext *sc){
                 *ptr = Next(sc); if(errT != 0){return false;}
                 types_list = types_list && NType(ptr);
                 if(types_list){
+                    #ifdef SEMANTIC_CONNECT
+                        semantic = dec_init_arg_types(ptr);
+                        if(semantic){
+                            ErrMessage(semantic);
+                            ErrMessagePossition(ptr);
+                            return false;
+                        }
+                    #endif
                     *ptr = Next(sc); if(errT != 0){return false;}
                 } else {
                     return false;
@@ -1291,6 +1307,16 @@ bool NFc_decl_ret(Token *ptr, ScannerContext *sc){
     #endif
 
     fc_decl_ret = NType(ptr);
+    #ifdef SEMANTIC_CONNECT
+        if(fc_decl_ret){
+            semantic = dec_init_ret_vals(ptr);
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        }
+    #endif
 
     *ptr = Next(sc); if(errT != 0){return false;}
 
@@ -1306,6 +1332,14 @@ bool NFc_decl_ret(Token *ptr, ScannerContext *sc){
         fc_decl_ret = fc_decl_ret && NType(ptr);
 
         if(fc_decl_ret){
+            #ifdef SEMANTIC_CONNECT
+                semantic = dec_init_ret_vals(ptr);
+                if(semantic){
+                    ErrMessage(semantic);
+                    ErrMessagePossition(ptr);
+                    return false;
+                }
+            #endif
             *ptr = Next(sc); if(errT != 0){return false;}
         }
     }
@@ -1324,6 +1358,14 @@ bool NGlobal(Token *ptr, ScannerContext *sc){
 
     // $3 <prog> => global id_f : function ( <types_list> <fc_decl_ret>
     if(ptr->token_type == TOKEN_ID){
+        #ifdef SEMANTIC_CONNECT
+            semantic = function_declaration(ptr);
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        #endif
         *ptr = Next(sc); if(errT != 0){return false;}
 
         if(ptr->token_type == TOKEN_COLON){
