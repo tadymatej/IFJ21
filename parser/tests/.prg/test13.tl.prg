@@ -26,6 +26,62 @@ $19 <type> => integer
 $31 <fc_ret_next_types> => <prog>
 ---------------------------
 ##########|type: keyword	attribute: function|
+##########|type: id_f	attribute: fc|
+$2 <prog> => function id_f ( <params_list> <return_fc> end
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$6 <params_list> => )
+---------------------------
+##########|type: colon - dvojtecka	attribute: (null)|
+$22 <return_fc> => : <first_ret> <next_rets>
+---------------------------
+##########|type: keyword	attribute: integer|
+$24 <first_ret> => <type>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: keyword	attribute: local|
+$26 <next_rets> => <function_body>
+---------------------------
+##########|type: id	attribute: b|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: integer|
+$41 <function_body> => local id : <type> <assignment> <function_body>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: set	attribute: (null)|
+$57 <assignment> => = <expression>
+---------------------------
+##########|type: number int	attribute: 0|
+$54 <expression> => <exp>
+---------------------------
+##########|type: set	attribute: (null)|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: return|
+##########|type: keyword	attribute: return|
+$40 <function_body> => <return>
+---------------------------
+$59 <return> => return <list>
+---------------------------
+$60 <list> => <expressions>
+---------------------------
+$49 <expressions> => <exp_first> <next_expr>
+---------------------------
+$51 <exp_first> => <expression>
+---------------------------
+##########|type: number int	attribute: 10|
+$54 <expression> => <exp>
+---------------------------
+##########|type: keyword	attribute: return|
+$55 <exp> => call PSA
+---------------------------
+##########|type: keyword	attribute: end|
+$53 <next_exp> => epsilon
+---------------------------
+##########|type: keyword	attribute: end|
+##########|type: keyword	attribute: function|
 ##########|type: id_f	attribute: main|
 $2 <prog> => function id_f ( <params_list> <return_fc> end
 ---------------------------
@@ -46,7 +102,7 @@ $26 <next_rets> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -60,8 +116,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: return|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: return|
 $40 <function_body> => <return>
 ---------------------------
@@ -83,71 +137,9 @@ $33 <function_call> => id_f ( <args_list>
 ##########|type: end bracket	attribute: (null)|
 $34 <args_list> => )
 ---------------------------
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
+$53 <next_exp> => epsilon
 ---------------------------
 ##########|type: end bracket	attribute: (null)|
-##########|type: keyword	attribute: end|
-##########|type: keyword	attribute: function|
-##########|type: id_f	attribute: fc|
-$2 <prog> => function id_f ( <params_list> <return_fc> end
----------------------------
-##########|type: end bracket	attribute: (null)|
-$6 <params_list> => )
----------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-$22 <return_fc> => : <first_ret> <next_rets>
----------------------------
-##########|type: keyword	attribute: integer|
-$24 <first_ret> => <type>
----------------------------
-$19 <type> => integer
----------------------------
-##########|type: keyword	attribute: local|
-$26 <next_rets> => <function_body>
----------------------------
-##########|type: id	attribute: b|
-##########|type: colon - dvojtecka	attribute: (null)|
-##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
----------------------------
-$19 <type> => integer
----------------------------
-##########|type: set	attribute: (null)|
-$57 <assignment> => = <expression>
----------------------------
-##########|type: number int	attribute: 0|
-$54 <expression> => <exp>
----------------------------
-##########|type: set	attribute: (null)|
-$55 <exp> => call PSA
----------------------------
-##########|type: keyword	attribute: return|
-$58 <assignment> => <function_body>
----------------------------
-##########|type: keyword	attribute: return|
-$40 <function_body> => <return>
----------------------------
-$59 <return> => return <list>
----------------------------
-$60 <list> => <expressions>
----------------------------
-$49 <expressions> => <exp_first> <next_expr>
----------------------------
-$51 <exp_first> => <expression>
----------------------------
-##########|type: number int	attribute: 10|
-$54 <expression> => <exp>
----------------------------
-##########|type: keyword	attribute: return|
-$55 <exp> => call PSA
----------------------------
-##########|type: keyword	attribute: end|
-$53 <next_exp> => <function_body>
----------------------------
-$61 <list> => <function_body>
----------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|
 $5 <prog> => <function_call>

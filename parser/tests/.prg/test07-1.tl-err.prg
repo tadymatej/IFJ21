@@ -12,9 +12,7 @@ $6 <params_list> => )
 ##########|type: id	attribute: a|
 $23 <return_fc> => <function_body>
 ---------------------------
-$43 <function_body> => <ids> <expressions>
+$43 <function_body> => <ids> <expressions> <function_body>
 ---------------------------
 $46 <ids> => id <next_id>
 ---------------------------
-##########|type: colon - dvojtecka	attribute: (null)|
-Chyba na radku: 6 a sloupci: 7

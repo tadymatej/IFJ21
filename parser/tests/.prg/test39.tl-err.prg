@@ -33,4 +33,3 @@ $9 <next_params> => )
 ##########|type: keyword	attribute: function|
 $23 <return_fc> => <function_body>
 ---------------------------
-Chyba na radku: 8 a sloupci: 1

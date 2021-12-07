@@ -28,4 +28,3 @@ $18 <param> => id : <type>
 $20 <type> => string
 ---------------------------
 ##########|type: id	attribute: m|
-Chyba na radku: 5 a sloupci: 39

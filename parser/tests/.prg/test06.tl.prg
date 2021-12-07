@@ -15,12 +15,12 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
 ##########|type: keyword	attribute: end|
-$58 <assignment> => <function_body>
+$58 <assignment> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|

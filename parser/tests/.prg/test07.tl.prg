@@ -15,7 +15,7 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
@@ -29,8 +29,6 @@ $54 <expression> => <exp>
 $55 <exp> => call PSA
 ---------------------------
 ##########|type: keyword	attribute: end|
-$58 <assignment> => <function_body>
----------------------------
 ##########|type: keyword	attribute: end|
 ##########|type: id_f	attribute: main|
 $5 <prog> => <function_call>

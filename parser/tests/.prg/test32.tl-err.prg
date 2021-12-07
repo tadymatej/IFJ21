@@ -15,12 +15,12 @@ $23 <return_fc> => <function_body>
 ##########|type: id	attribute: a|
 ##########|type: colon - dvojtecka	attribute: (null)|
 ##########|type: keyword	attribute: integer|
-$41 <function_body> => local id : <type> <assignment>
+$41 <function_body> => local id : <type> <assignment> <function_body>
 ---------------------------
 $19 <type> => integer
 ---------------------------
 ##########|type: keyword	attribute: if|
-$58 <assignment> => <function_body>
+$58 <assignment> => epsilon
 ---------------------------
 ##########|type: keyword	attribute: if|
 $45 <function_body> => <if>
@@ -44,4 +44,3 @@ $64 <elseif> => elseif <exp_cond> then <function_body> <elseif>
 ##########|type: id_f	attribute: main|
 $68 <exp_cond> => call PSA
 ---------------------------
-Chyba na radku: 11 a sloupci: 9
