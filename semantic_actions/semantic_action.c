@@ -23,7 +23,7 @@ int after_global_fun_call() {
 
 // 3 - id
 int function_declaration(Token *token){
-    printf("%s\n", token->attribute);
+    //printf("%s\n", token->attribute);
     globals.cur_function = init_fun_data(token->attribute);
     RET_IF_NOT_SUCCESS(add_function_dec(globals.ft, globals.cur_function));
     return SEM_CORRECT;
