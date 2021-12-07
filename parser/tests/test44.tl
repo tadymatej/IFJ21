@@ -1,4 +1,4 @@
--- Should be OK -- ??????
+-- Should be OK
 
 require "ifj21"
 

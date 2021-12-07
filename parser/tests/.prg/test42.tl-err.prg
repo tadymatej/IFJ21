@@ -119,5 +119,3 @@ $37 <next_args> => , <value> <next_args>
 $37.1 <value> => id
 ---------------------------
 ##########|type: keyword	attribute: end|
-$4 <prog> => EOF
----------------------------

@@ -728,5 +728,3 @@ $55 <exp> => call PSA
 ##########|type: keyword	attribute: end|
 $53 <next_exp> => epsilon
 ---------------------------
-$4 <prog> => EOF
----------------------------
