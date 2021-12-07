@@ -756,6 +756,14 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("---------------------------\n");
     #endif
 
+    #ifdef SEMANTIC_CONNECT
+        semantic = start_return();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
+    #endif
     // $60 <list> => <expressions>
     #ifdef DEBUG_USED_RULE
         printf("$60 <list> => <expressions>\n");
@@ -765,13 +773,13 @@ bool NRet(Token *ptr, ScannerContext *sc){
     ret = NExpressions(ptr, sc);
 
     // $61 <list> => <function_body>
-    #ifdef DEBUG_USED_RULE
+    /*#ifdef DEBUG_USED_RULE
         printf("$61 <list> => <function_body>\n");
         printf("---------------------------\n");
     #endif
 
     // TODO mrtvy kod
-
+    */
     return ret;
 }
 
@@ -815,6 +823,15 @@ bool NExpressions(Token *ptr, ScannerContext *sc){
     #ifdef DEBUG_USED_RULE
         printf("$53 <next_exp> => <function_body>\n");
         printf("---------------------------\n");
+    #endif
+
+    #ifdef SEMANTIC_CONNECT
+    semantic = end_n_assignment();
+    if(semantic){
+        ErrMessage(semantic);
+        ErrMessagePossition(ptr);
+        return false;
+    }
     #endif
 
     return expressions;
@@ -998,10 +1015,25 @@ bool NFunction_body(Token *ptr, ScannerContext *sc){
                     #endif
 
                     function_body = function_body && NRet(ptr, sc);
+                    /*if(function_body){
+                        *ptr = Next(sc); if(errT != 0){return false;}
+                        //*ptr = Next(sc); if(errT != 0){return false;} // because of TokenStore
+                        if(ptr->token_type == TOKEN_KEYWORD){
+                            if(strcmp(ptr->attribute, "end") == 0){
+                                function_body = true;
+                                break_from_while++;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }*/
+
 
                 } else if(strcmp(ptr->attribute, "end") == 0){
                     // $39 <function_body> => epsilon
-                    function_body = true; /// ???
+                    function_body = true;
                     break_from_while++;
                     /*#ifdef DEBUG_USED_RULE
                         printf("$39 <function_body> => epsilon\n");
@@ -1386,7 +1418,14 @@ bool NProg(Token *ptr, ScannerContext *sc){
 
                         if(ptr->token_type == TOKEN_KEYWORD && strcmp(ptr->attribute, "end") == 0){
                             prog = prog && true;
-
+                            #ifdef SEMANTIC_CONNECT
+                                semantic = end_function_body();
+                                if(semantic){
+                                    ErrMessage(semantic);
+                                    ErrMessagePossition(ptr);
+                                    return false;
+                                }
+                            #endif
                         } else {
                             #ifdef DEBUG_ERROR
                                 printf("ERROR || $2\n");

@@ -3,22 +3,22 @@
 // 1 - require
 int jump_to_exec_point() {
     //if((cg_envelope(cg_require("IFJcode21"))) != 0) return INTERNAL_ERROR;
-    return cg_envelope(cg_jump(cg_format_label("%%exec_point", NULL, -1, globals.label_idx)));
+    return cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx)));
 }
 
 // 4 - EOF
 int end_program() {
-    return cg_envelope(cg_label(cg_format_label("%%exec_point", NULL, -1, globals.label_idx)));
+    return cg_envelope(cg_label(cg_format_label("%exec_point", NULL, -1, globals.label_idx)));
 }
 
 // 5 - <function_call>
 int before_global_fun_call() {
-    return cg_envelope(cg_label(cg_format_label("%%exec_point", NULL, -1, globals.label_idx++)));
+    return cg_envelope(cg_label(cg_format_label("%exec_point", NULL, -1, globals.label_idx++)));
 }
 
 // 5 - <prog>
 int after_global_fun_call() {
-    return cg_envelope(cg_jump(cg_format_label("%%exec_point", NULL, -1, globals.label_idx)));
+    return cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx)));
 }
 
 //je volana nad tokenem  2 - id_f

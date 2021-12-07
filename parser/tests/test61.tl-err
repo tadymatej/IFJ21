@@ -1,0 +1,10 @@
+-- Should be ERR
+
+require "ifj21"
+
+
+function main()
+    local a : integer = 5
+    local b : integer = local c : integer  
+
+end
