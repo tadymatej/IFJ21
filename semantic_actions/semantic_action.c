@@ -6,6 +6,7 @@ int jump_to_exec_point() {
     RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx))));
     if (INCLUDE_BUILTIN)
         cg_builtin();
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var("GF", "%cs", NULL))));
     return SEM_CORRECT;
 }
 
@@ -200,8 +201,8 @@ int push_parameter(Token *token) {
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, globals.var->type, FUN_CALL_ERROR);
         ITOA(tmp, foundIn->nested_identifier);
         if (fun_get_param(globals.calling_fun, globals.tmp)->type != globals.var->type)
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_int2float(cg_format_var(foundIn->prefix, globals.var->name, tmp), cg_format_var(foundIn->prefix, globals.var->name, tmp))));
-        string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_int2float(cg_format_var("GF", "%cs", NULL), cg_format_var(foundIn->prefix, globals.var->name, tmp))));
+        string = cg_stack_push(cg_format_var("GF", "%cs", NULL));
         RET_IF_NULL(string);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
