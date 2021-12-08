@@ -392,4 +392,6 @@ void cg_builtin();
  */
 int cg_envelope(char *str);
 
+void print_command_queue(Queue_t *q);
+
 #endif
