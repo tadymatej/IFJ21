@@ -191,7 +191,13 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             char *ptr = StringsArrayGetLastPointer(strArr);
             StringsArrayPush(strArr, strArr->separator);
             updateScannerPosition(actualChar, sc);
-            return TokenCreate(TOKEN_ID_F, ATTRIBUTE_STRING, ptr);
+            if(BinaryTreeFindByStr(sc->kw, ptr) != NULL) {
+                sc->col--;
+                sc->lastReadedChar = (int) actualChar;
+                if(strcmp(ptr, "nil") == 0) return TokenCreate(TOKEN_NULL, ATTRIBUTE_STRING, ptr);
+                else return TokenCreate(TOKEN_KEYWORD, ATTRIBUTE_STRING, ptr);
+            }
+            else return TokenCreate(TOKEN_ID_F, ATTRIBUTE_STRING, ptr);
         } break;
         case STATE_LEN: {
             sc->actualState = STATE_START;
