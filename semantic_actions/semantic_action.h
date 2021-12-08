@@ -16,6 +16,8 @@
 #define INTERNAL_ERROR 99
 #define SEM_CORRECT 0
 
+#define INCLUDE_BUILTIN 1
+
 #define NOT_SUCCESS(expr) expr != SEM_CORRECT
 
 /* 7 - assignment*/
