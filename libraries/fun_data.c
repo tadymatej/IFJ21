@@ -1,6 +1,6 @@
 /**
- * @brief 
- * @author
+ * @brief Implementace funkcí pro praci se strukturou reprezentující funkci v programu
+ * @author Igar Sauchanka (xsauch00)
  * @file fun_data.c
  */ 
 

@@ -1,16 +1,28 @@
 /**
- * @author TODO
- * @brief TODO
+ * @author Igar Sauchanka (xsauch00)
+ * @brief Implementace funkcí pro práci s tabulkou funkci
  * @file fun_table.c
  */ 
 #include "fun_table.h"
 
+/**
+ * Přídává vestavěnou funkci do tabulky
+ * 
+ * @param table  tabulka funkcí
+ * @param fun  funkce, která bude přídána
+ * @return Vrácí 0 v případě úspěchu. Jinak 0
+ */
 int __add_bultin_func(Fun_table_t *table, Fun_data_t *fun) {
     if (BinaryTreeInsertNode(&(table->builtinFunTree), charSumHash(fun->name), (void *)fun) == -1)
         return 1;
     return 0;
 }
 
+/**
+ * Uvolnuje pamet alokovanou pro vestavěnou funkci
+ * 
+ * @param data  ukazatel na vestavěnou funkci
+ */
 void __dispose_builtin(void *data) {
     if (data != NULL) {
         free(((Fun_data_t *)data)->name);
@@ -19,6 +31,13 @@ void __dispose_builtin(void *data) {
         free(data);
     }
 }
+
+/**
+ * Incializuje vestavěné funkce
+ * 
+ * @param table  tabulka funkci
+ * @return Vrací 0 v případě úspěchu. Jinak 1
+ */
 
 int __init_builtin(Fun_table_t *table) {
     char *builtin_names[BUILTIN_COUNT] = {"reads", "readi", "readn", "write",
@@ -34,7 +53,7 @@ int __init_builtin(Fun_table_t *table) {
                                         substrPars,
                                         ordPars,
                                         chrPars};
-    int par_count[BUILTIN_COUNT] = {0, 0, 0, -1, 1, 3, 2, 1};
+    int par_count[BUILTIN_COUNT] = {0, 0, 0, -1, 1, 3, 2, 1}; //pocet parametru pro funkce s proměnným počtem parametrů = -1
     for (int i = 0; i < BUILTIN_COUNT; i++) {
         char *tmp = malloc(strlen(builtin_names[i]) + 1);
         if (tmp == NULL) {
