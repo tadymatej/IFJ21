@@ -7,7 +7,7 @@ int main() {
     Array_t *arr = init_array();
     
     for(int i = 0; i < 10; ++i) {
-        arr_add(arr, &data[i]);
+        arr_add(&arr, &data[i]);
     }
     char *c;
     for(int i = 0; i < 10; ++i) {
