@@ -23,7 +23,7 @@ typedef struct {
 #define DEF_COM_SIZE 128
 #define ESCAPE_LEN 4
 
-#define _CG_GENERATE_ 0
+#define _CG_GENERATE_ 1
 #define CODE_PRINT(command) if(_CG_GENERATE_) {command;}
 
 #define TRUE_CONSTANT "bool@true"
@@ -353,6 +353,8 @@ void cg_ord();
 void cg_chr();
 
 void cg_write();
+
+void cg_builtin();
 /**
  * Obálka pre príkazy
  * Kontrluje výpis inštrukcií na konzolu
