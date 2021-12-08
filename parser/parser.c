@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE 
+//#define DEBUG_USED_RULE 
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -99,7 +99,6 @@ Token Next(ScannerContext *sc){
     else if(token.token_type == TOKEN_NONE){
         // doceten vstup do konce
 
-        // TODO
         isEnd = true;
     } else {
         #ifdef SHOW_TOKENS
@@ -833,8 +832,6 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("$61 <list> => <function_body>\n");
         printf("---------------------------\n");
     #endif
-
-    // TODO mrtvy kod
     */
     return ret;
 } 
