@@ -495,7 +495,7 @@ char *CG_JumpNEQStack(char *label){
 }
 
 void cg_reads(){
-  CODE_PRINT(printf("\nLABEL reads\n"
+  CODE_PRINT(printf("\nLABEL $reads\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_string\n"
                     "READ LF@ret_string string\n"
@@ -505,7 +505,7 @@ void cg_reads(){
 }
 
 void cg_readi(){
-  CODE_PRINT(printf("\nLABEL readi\n"
+  CODE_PRINT(printf("\nLABEL $readi\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_int\n"
                     "READ LF@ret_int int\n"
@@ -515,7 +515,7 @@ void cg_readi(){
 }
 
 void cg_readn(){
-  CODE_PRINT(printf("\nLABEL readn\n"
+  CODE_PRINT(printf("\nLABEL $readn\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_num\n"
                     "READ LF@ret_num float\n"
@@ -525,7 +525,7 @@ void cg_readn(){
 }
 
 void cg_tointeger(){
-  CODE_PRINT(printf("\nLABEL tointeger\n"
+  CODE_PRINT(printf("\nLABEL $tointeger\n"
                     "PUSHFRAME\n \n"
                     "DEFVAR LF@number\n"
                     "DEFVAR LF@cv_0\n"
@@ -544,7 +544,7 @@ void cg_tointeger(){
 }
 
 void cg_substr(){
-  CODE_PRINT(printf("\nLABEL substr\n"
+  CODE_PRINT(printf("\nLABEL $substr\n"
                     "PUSHFRAME\n\n"
                     "DEFVAR LF@s\n"
                     "POPS LF@s\n"
@@ -582,7 +582,7 @@ void cg_substr(){
 }
 
 void cg_ord(){
-  CODE_PRINT(printf("\nLABEL ord\n"
+  CODE_PRINT(printf("\nLABEL $ord\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@s\n"
                     "POPS LF@s\n"
@@ -608,7 +608,7 @@ void cg_ord(){
 }
 
 void cg_chr(){
-  CODE_PRINT(printf("\nLABEL chr\n"
+  CODE_PRINT(printf("\nLABEL $chr\n"
                     "PUSHFRAME\n \n"
                     "DEFVAR LF@i\n"
                     "POPS LF@i \n"
@@ -627,7 +627,7 @@ void cg_chr(){
 }
 
 void cg_write(){
-  CODE_PRINT(printf("\nLABEL write\n"
+  CODE_PRINT(printf("\nLABEL $write\n"
                     "PUSHFRAME\n\n"
                     "DEFVAR LF@value\n"
                     "POPS LF@value\n"
