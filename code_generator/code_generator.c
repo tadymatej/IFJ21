@@ -309,7 +309,7 @@ char *cg_jumpeq(char *label, char *left, char *right){
     free(left);
     return NULL;
   }
-  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ %s %s %s\n") , (sprintf(str, "JUMPIFEQ %s %s %s\n", label, left, right), free(label), free(left)));
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ $%s %s %s\n") , (sprintf(str, "JUMPIFEQ $%s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *cg_jumpneq(char *label, char *left, char *right){
@@ -318,7 +318,7 @@ char *cg_jumpneq(char *label, char *left, char *right){
     free(left);
     return NULL;
   }
-  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ %s %s %s\n") , (sprintf(str, "JUMPIFNEQ %s %s %s\n", label, left, right), free(label), free(left)));
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ $%s %s %s\n") , (sprintf(str, "JUMPIFNEQ $%s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *CG_GetChar(char *dest, char *string, char *index){
