@@ -656,7 +656,7 @@ void cg_builtin(){
 int cg_envelope(char *str) {
     if (str == NULL)
         return 99;
-    if (!globals.inside_while || strncmp(str, "DEFVAR", 6) == 0) {
+    if (globals.inside_while == 0 || strncmp(str, "DEFVAR", 6) == 0) {
         print_command_queue(globals.q_command);
         CODE_PRINT(printf("%s", str));
         free(str);
