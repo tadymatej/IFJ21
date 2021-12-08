@@ -1,3 +1,8 @@
+/**
+ * @authors Igar Sauchanka (xsauch00), Matěj Žalmánek (xzalma00)
+ * @file scanner.c
+ */ 
+
 #include "queue.h"
 
 Queue_t* init_queue() {

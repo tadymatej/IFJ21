@@ -1,3 +1,9 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00)
+ * @file array.h
+ */ 
+
+
 #ifndef STACK_H
 #define STACK_H 1
 /**

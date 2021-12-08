@@ -1,3 +1,8 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00)
+ * @file stack.c
+ */ 
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

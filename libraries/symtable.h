@@ -1,3 +1,7 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00), Igar Sauchanka (xsauch00)
+ * @file symtable.h
+ */ 
 #ifndef SYMTABLE_H
 #define SYMTABLE_H 1
 #define SAME_HASH_LEFT_STEP 2000

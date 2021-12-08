@@ -1,3 +1,7 @@
+/**
+ * @author Matěj Žalmánek (xzalma00)
+ * @file strings_array.c
+ */ 
 #include "strings_array.h"
 
 StringsArray* StringsArrayCreate(char separator) {

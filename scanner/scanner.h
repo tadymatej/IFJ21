@@ -1,3 +1,8 @@
+/**
+ * @author Matěj Žalmánek (xzalma00)
+ * @file scanner.h
+ */ 
+
 #ifndef SCANNER_H
 #define SCANNER_H 1
 #include <assert.h>

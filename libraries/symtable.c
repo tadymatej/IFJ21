@@ -1,3 +1,7 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00), Igar Sauchanka (xsauch00)
+ * @file symtable.c
+ */ 
 #include "symtable.h"
 
 TreeNode *TreeNodeCreate() {

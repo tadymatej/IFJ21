@@ -1,3 +1,8 @@
+/**
+ * @author Matěj Žalmánek (xzalma00)
+ * @file strings_array.h
+ */ 
+
 #ifndef STRINGS_ARRAY
 #define STRINGS_ARRAY 1
 

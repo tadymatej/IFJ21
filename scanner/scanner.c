@@ -1,3 +1,7 @@
+/**
+ * @author Matěj Žalmánek (xzalma00)
+ * @file scanner.c
+ */ 
 #include "scanner.h"
 
 StringsArray *strArr;
@@ -623,8 +627,29 @@ void NextTokens(ScannerContext *sc) {
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
             if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
             else token.token_type = TOKEN_KEYWORD;
+            __TokenStore(token, sc);
         }
-        __TokenStore(token, sc);
+        else {
+            Token token2 = nextToken(sc);
+            if(token2.attribute != NULL && BinaryTreeFindByStr(sc->kw, token2.attribute) != NULL) {
+                if(strcmp(token2.attribute, "nil") == 0) token2.token_type = TOKEN_NULL;
+                else token2.token_type = TOKEN_KEYWORD;
+            }
+            if(sc->actualState == STATE_ERR) {
+                sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
+                token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
+                __TokenStore(token, sc);
+                __TokenStore(token2, sc);
+                return;
+            }
+
+            if(token2.token_type == TOKEN_START_BRACKET)
+                token.token_type = TOKEN_ID_F;
+            
+            __TokenStore(token, sc);
+            if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
+            token = token2;
+        }
     }
     else if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
 }
