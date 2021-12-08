@@ -26,22 +26,27 @@
 #define BASE 10
 
 /**
- * TODO 
- */ 
+ * Štruktúra popisuje uzol v abstraktnom syntaktickom strome pre výrazy
+ * @param data odkaz na štruktúru obsahujúcu dáta premennej
+ * @param nested_identifier identifikátor zanorenia, zdedený od tabuľky symbolov, v ktorej sa nachádza
+ * @param type typ daného uzlu. uzol môže predstavovať premennú, konštantu aj združovať operáciu
+ * @param prefix prefix premennej v IFJcode21, Môže byť LF, GF, string, integer, float
+ * @param left ukaztel na ľavý podstrom
+ * @param right ukazateľ na pravý podstrom
+ */
 typedef struct exp_node_s{
-  TS_data_t *data;      /**< TODO */
-  int nested_identifier; /**< TODO */
-  TOKEN_TYPES type;     /**< TODO */
-  char prefix[DATA_TYPE_LEN]; /**< TODO */
-  struct exp_node_s *right; /**< TODO */
-  struct exp_node_s *left;  /**< TODO */
+  TS_data_t *data;
+  int nested_identifier;
+  TOKEN_TYPES type;
+  char prefix[DATA_TYPE_LEN];
+  struct exp_node_s *right;
+  struct exp_node_s *left;
 }exp_node_t;
 
 typedef Stack exp_tree_stack_t;
 
 typedef enum direction { left, right, none } direction_t;
 
-//#define Stack_top(name) (StackGetLast(name))->value
 #define Stack_empty(name) ((StackGetLast(name) == NULL) ? 1 : 0)
 
 /**
