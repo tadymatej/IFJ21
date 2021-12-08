@@ -766,6 +766,8 @@ bool NWhile(Token *ptr, ScannerContext *sc){
 
             *ptr = Next(sc); if(errT != 0){return false;}
             w = w && NFunction_body(ptr, sc);
+        } else {
+            return false;
         }
     }
 

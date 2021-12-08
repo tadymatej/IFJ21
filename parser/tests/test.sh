@@ -26,7 +26,11 @@ for f in *.tl; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
     #cat $f | ../parser > code/$f.code
+    
     cat $f | ../parser > prg/$f.txt
+
+    #cat $f | valgrind --leak-check=full ../parser > prg/$f.txt
+
     #cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
     #cat $f | ../parser  > vzor/$f.txt
@@ -84,6 +88,9 @@ for f in *.tl-err; do
     head -1 $f;
     #cat $f | ../parser > code/$f.code
     cat $f | ../parser > prg/$f.txt
+
+    #cat $f | valgrind --leak-check=full ../parser > prg/$f.txt
+
     #cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
     #cat $f | ../parser > vzor/$f.txt
