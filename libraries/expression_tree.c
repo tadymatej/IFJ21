@@ -35,7 +35,7 @@ DataTypes_t get_second_type(Stack *stack){
   if(Stack_empty(stack)) return NO_TYPE;
   if(stack->stackPointer >= 2) {
     exp_node_t *temp = stack->stack[stack->stackPointer-2]->value;
-    return temp->data->type; //zavisle na implenetacii stack TODO
+    return temp->data->type; //zavisle na implenetacii stack
   }
   return NO_TYPE;
 }

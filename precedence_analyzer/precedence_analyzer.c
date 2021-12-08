@@ -326,7 +326,7 @@ int precedence_analyzer(ScannerContext *sc, call_type_t call_type) {
 
     //na zasobniku sa moze objavovat STACK_END, <, (, ), *, /, +, -, NT, LTE, GTE, NEQ, EQ, CONCAT, identifier,
     switch (operator) {
-      case '<':  //TODO doriesit operator a prev operator
+      case '<':  
         top = stack_top(stack);
         if(top == NT) { //ak top stacku vyzerá ako $E a má byť $<E*
           stack_pop(stack);
