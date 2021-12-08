@@ -14,7 +14,7 @@ Stack *exp_tree_init(){
 
 int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type, char *prefix){
   exp_node_t *temp = malloc(sizeof(exp_node_t));
-  if(temp == NULL) return 99; //TODO error handling
+  if(temp == NULL) return 99; 
   temp->data = data;
   temp->nested_identifier = nested_identifier;
   temp->type = type;
@@ -35,7 +35,7 @@ DataTypes_t get_second_type(Stack *stack){
   if(Stack_empty(stack)) return NO_TYPE;
   if(stack->stackPointer >= 2) {
     exp_node_t *temp = stack->stack[stack->stackPointer-2]->value;
-    return temp->data->type; //zavisle na implenetacii stack 
+    return temp->data->type; //zavisle na implenetacii stack
   }
   return NO_TYPE;
 }
