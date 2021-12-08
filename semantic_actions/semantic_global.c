@@ -16,7 +16,8 @@ int init_sem_globals() {
     globals.ft = init_fun_table();
     globals.blockStack = stack_init();
     globals.q_command = init_queue();
-    if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL) {
+    globals.q_args = init_queue();
+    if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL || globals.q_args == NULL) {
         dispose_sem_globals();
         return 99;
     }
@@ -30,6 +31,7 @@ void dispose_sem_globals() {
     }
     dispose_queue(&globals.q_assignments, NULL);
     dispose_queue(&globals.q_command, NULL);
+    dispose_queue(&globals.q_args, free);
     if(globals.cur_function != NULL && find_function(globals.ft, globals.cur_function->name, NULL, NULL) == NULL)
         dispose_fun_data(globals.cur_function);
     dispose_fun_table(&globals.ft);

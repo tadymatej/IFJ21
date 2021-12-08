@@ -22,6 +22,7 @@ typedef struct SemanticGlobals{
     int inside_while;
     simp_stack_t *blockStack;
     Queue_t *q_command;
+    Queue_t *q_args;
 }SemanticGlobals;
 
 int init_sem_globals();
