@@ -15,6 +15,7 @@ StringsArray* StringsArrayCreate(char separator) {
         return NULL;
     }
     q_push(strArr->q, strArr->arr);
+    strArr->arr[0] = '\0';
     strArr->len = 0;
     strArr->lastValid = 0;
     strArr->separator = separator;
@@ -47,7 +48,7 @@ void StringsArrayInvalidateLast(StringsArray *strArr) {
 }
 
 int StringsArrayPush(StringsArray *strArr, char c) {
-    if(DEFAULT_STRINGS_ARR_LEN < strArr->len + 1) {
+    if(DEFAULT_STRINGS_ARR_LEN < strArr->len + 2) {
         if(StringsArrayExtend(strArr) == -1) return -1;
         void *dest = q_top(strArr->q);
         if(strArr->arr[strArr->len - 1] != strArr->separator) { //Musím od lastValid pozice přenést data do nového pole
@@ -63,6 +64,7 @@ int StringsArrayPush(StringsArray *strArr, char c) {
     }
     strArr->arr[strArr->len] = c;
     strArr->len++;
+    strArr->arr[strArr->len] = '\0';
     if(c == strArr->separator) strArr->lastValid = strArr->len;
     return 0;
 }

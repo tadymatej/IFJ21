@@ -1,8 +1,8 @@
--- Should be OK
+-- Should be ERR
 
 require "ifj21"
 
-global foo : function(integer, string, number) : integer, number, integer
+global foo : function(integer, string, number) : integer, string, integer
 
 function fuf()
 

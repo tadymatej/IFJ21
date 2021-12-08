@@ -9,7 +9,7 @@ print_success = "typ: {} || hodnota: {}"
 print_error = "Lexikalni chyba na radku: {} a sloupci: {}\n"
 
 def test(command, expected_lines, testname):
-    res = os.popen('echo "{}" | ./scanner'.format(command))
+    res = os.popen('echo "{}" | ./scanner 0'.format(command))
     #print(os.popen('echo "{}"'.format(command)).read())
     i = 0
     len_expected_lines = len(expected_lines)
