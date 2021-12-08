@@ -92,7 +92,7 @@
 
 /**
  * Vykoná sémantickú operáciu podľa zadaného tokenu.
- * Generuje kód do obálky pre generáciu kódu TODO
+ * Generuje kód do obálky pre generáciu kódu
  * @param stack ukazatel na inicilizovaný stack sxpression stromov
  * @param token token, ktorý je aktuálne v postfixovom poradí na spracovanie
  * @return návratová hodnota podľa zadania IFJ
