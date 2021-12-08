@@ -115,15 +115,22 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             else if(actualChar == ',') sc->actualState = STATE_COMMA;
             else if(b(actualChar)) sc->actualState = STATE_NF1;
             else if(!whiteSpace(actualChar)) sc->actualState = STATE_ERR;
-            else if(row != NULL && col != NULL) {
-                if(actualChar == '\n') (*row)++;
-                else (*col)++;
+            else {
+                if(actualChar == '\n') {
+                    *row = (*row) + 1;
+                    *col = 1;
+                }
+                else *col = (*col) + 1;
             }
         } break;
         case STATE_ID1: {
             if(a(actualChar)) sc->actualState = STATE_ID2;
             else if(b(actualChar)) sc->actualState = STATE_ID3;
-            else //if(whiteSpace(actualChar))
+            else if(actualChar == '(') {
+                sc->actualState = STATE_ID_F;
+                return FSM(actualChar, sc, row, col);
+            }
+            else if(!whiteSpace(actualChar))
             {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
@@ -131,12 +138,47 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 StringsArrayPush(strArr, strArr->separator);
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
+            else sc->actualState = STATE_ID_SPACE;
         } break;
         case STATE_ID2: {
             if(a(actualChar)) sc->actualState = STATE_ID2;
             else if(b(actualChar)) sc->actualState = STATE_ID3;
-            else //if(whiteSpace(actualChar))
+            else if(actualChar == '(') {
+                sc->actualState = STATE_ID_F;
+                return FSM(actualChar, sc, row, col);
+            }
+            else if(!whiteSpace(actualChar))
             {
+                sc->actualState = STATE_START;
+                sc->lastReadedChar = (int) actualChar;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
+                return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
+            }
+            else sc->actualState = STATE_ID_SPACE;
+        } break;
+        case STATE_ID3: {
+            if(a(actualChar)) sc->actualState = STATE_ID2;
+            else if(b(actualChar)) sc->actualState = STATE_ID3;
+            else if(actualChar == '(') {
+                sc->actualState = STATE_ID_F;
+                return FSM(actualChar, sc, row, col);
+            }
+            else if(!whiteSpace(actualChar))
+            {
+                sc->actualState = STATE_START;
+                sc->lastReadedChar = (int) actualChar;
+                char *ptr = StringsArrayGetLastPointer(strArr);
+                StringsArrayPush(strArr, strArr->separator);
+                return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
+            }
+            else sc->actualState = STATE_ID_SPACE;
+        } break;
+        case STATE_ID_SPACE: {
+            if(actualChar == '(') {
+                sc->actualState = STATE_ID_F;
+                return FSM(actualChar, sc, row, col);
+            } else if(!whiteSpace(actualChar)) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
@@ -144,17 +186,18 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
         } break;
-        case STATE_ID3: {
-            if(a(actualChar)) sc->actualState = STATE_ID2;
-            else if(b(actualChar)) sc->actualState = STATE_ID3;
-            else //if(whiteSpace(actualChar))
-            {
-                sc->actualState = STATE_START;
+        case STATE_ID_F: {
+            sc->actualState = STATE_START;
+            char *ptr = StringsArrayGetLastPointer(strArr);
+            StringsArrayPush(strArr, strArr->separator);
+            updateScannerPosition(actualChar, sc);
+            if(BinaryTreeFindByStr(sc->kw, ptr) != NULL) {
+                sc->col--;
                 sc->lastReadedChar = (int) actualChar;
-                char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
-                return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
+                if(strcmp(ptr, "nil") == 0) return TokenCreate(TOKEN_NULL, ATTRIBUTE_STRING, ptr);
+                else return TokenCreate(TOKEN_KEYWORD, ATTRIBUTE_STRING, ptr);
             }
+            else return TokenCreate(TOKEN_ID_F, ATTRIBUTE_STRING, ptr);
         } break;
         case STATE_LEN: {
             sc->actualState = STATE_START;
@@ -397,7 +440,6 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 StringsArrayInvalidateLast(strArr);
-                //return TokenCreate(COMMENT, ATTRIBUTE_NONE, NULL);
             }
         } break;
         case STATE_CF2: {
@@ -405,7 +447,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             else {
                 sc->lastReadedChar = (int) actualChar;
                 StringsArrayInvalidateLast(strArr);
-                sc->actualState = STATE_START; //return TokenCreate(COMMENT, ATTRIBUTE_NONE, NULL);
+                sc->actualState = STATE_START;
             }
         } break;
         case STATE_C2: {
@@ -468,7 +510,62 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         } break;
 
     }
+    if(sc->lastReadedChar == -1) updateScannerPosition(actualChar, sc);
     return TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
+}
+
+
+Token nextToken(ScannerContext *sc) {
+    Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
+    int row = sc->row;
+    int col = sc->col;
+    char c;
+    sc->actualState = STATE_START;
+    if(sc->lastReadedChar != -1) {  //Musím podruhé přečíst již přečtený znak
+        token = processOnceReadedChar(sc, &row, &col);
+        if(sc->actualState == STATE_ERR) {
+            token.token_type = TOKEN_ERR;
+            TokenSetPosition(&token, row, col);
+            return token;
+        }
+    }
+
+    while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
+        token = FSM(c, sc, &row, &col);
+        if(sc->actualState == STATE_ERR) {
+            token.token_type = TOKEN_ERR;
+            TokenSetPosition(&token, row, col);
+            return token;
+        }
+        if(statePushChar(sc)) {
+            if(StringsArrayPush(strArr, c) == -1) {
+                sc->actualState = STATE_ERR;
+                sc->errorMalloc = true;
+                TokenSetPosition(&token, row, col);
+                return token;
+            }
+        }
+        if(token.token_type != TOKEN_NONE) break;
+        else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
+            token = processOnceReadedChar(sc, &row, &col);
+            col = sc->col;
+            row = sc->row;
+            if(sc->actualState == STATE_ERR) {
+                token.token_type = TOKEN_ERR;
+                TokenSetPosition(&token, row, col - 1);
+                return token;
+            }
+        }
+    }
+    if(c == EOF) {
+        if(sc->actualState == STATE_ID_SPACE) { //NA ID čekal na not Whitespace, ale nedočkal se, tak ho donutím zde
+            char *ptr = StringsArrayGetLastPointer(strArr);
+            StringsArrayPush(strArr, strArr->separator);
+            token = TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
+        }
+    }
+    TokenSetPosition(&token, row, col);
+    return token;
 }
 
 void updateScannerPosition(char c, ScannerContext *sc) {
@@ -488,9 +585,9 @@ bool statePushChar(ScannerContext *sc) {
     return false;
 }
 
-Token processOnceReadedChar(ScannerContext *sc) {
+Token processOnceReadedChar(ScannerContext *sc, int *row, int *col) {
         char tmp = (char) sc->lastReadedChar;
-        Token token = FSM(tmp, sc, NULL, NULL);
+        Token token = FSM(tmp, sc, row, col);
         if(statePushChar(sc)) {
             if(StringsArrayPush(strArr, tmp) == -1) {
                 token.token_type = TOKEN_ERR;
@@ -507,61 +604,6 @@ void TokenSetPosition(Token *token, int row, int col) {
     token->startPosCol = col;
 }
 
-Token nextToken(ScannerContext *sc) {
-    Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-    int row = sc->row;
-    int col = sc->col;
-    TokenSetPosition(&token, row, col);
-    char c;
-    sc->actualState = STATE_START;
-    if(sc->lastReadedChar != -1) {  //Musím podruhé přečíst již přečtený znak
-        token = processOnceReadedChar(sc);
-        if(sc->actualState == STATE_ERR) {
-            token.token_type = TOKEN_ERR;
-            TokenSetPosition(&token, row, col);
-            return token;
-        }
-    }
-
-    while(token.token_type == TOKEN_NONE && (c = getc(stdin)) != EOF) {
-        if(token.token_type == TOKEN_NONE) {
-            updateScannerPosition(c, sc);
-        }
-
-        token = FSM(c, sc, &row, &col);
-        if(sc->actualState == STATE_ERR) {
-            token.token_type = TOKEN_ERR;
-            TokenSetPosition(&token, row, col);
-            return token;
-        }
-        if(statePushChar(sc)) {
-            if(StringsArrayPush(strArr, c) == -1) {
-                sc->actualState = STATE_ERR;
-                sc->errorMalloc = true;
-                TokenSetPosition(&token, row, col);
-                return token;
-            }
-        }
-        if(token.token_type != TOKEN_NONE) break;
-        else if(sc->actualState == STATE_START && sc->lastReadedChar != -1) {    //U komentáře by se nikdy nečetl již přečtený znak, proto tento řádek
-            token = processOnceReadedChar(sc);
-            col = sc->col;
-            row = sc->row;
-            if(sc->actualState == STATE_ERR) {
-                token.token_type = TOKEN_ERR;
-                TokenSetPosition(&token, row, col - 1);
-                return token;
-            }
-        }
-    }
-    if(c == EOF) {
-        sc->row = row;
-        sc->col = col;
-    }
-    TokenSetPosition(&token, row, col);
-    return token;
-}
-
 void NextTokens(ScannerContext *sc) {
     Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     token = nextToken(sc);
@@ -571,58 +613,18 @@ void NextTokens(ScannerContext *sc) {
         sc->errorMalloc = true;
         return;
     }
-    //strArr->lastValid++;
     
     if(sc->actualState == STATE_ERR) {
         __TokenStore(token, sc);
         return;
     }
 
-    Token token2 = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
     if(token.token_type == TOKEN_ID) {
-        if(StringsArrayPush(strArr, '\0') == -1) {
-            token.token_type = TOKEN_ERR;
-            sc->actualState = STATE_ERR;
-            sc->errorMalloc = true;
-            return;
-        }
-        //strArr->lastValid++;
-
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
             if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
             else token.token_type = TOKEN_KEYWORD;
-            __TokenStore(token, sc);
         }
-        else {
-            do {
-                token2 = nextToken(sc);
-                if(token2.attribute != NULL && BinaryTreeFindByStr(sc->kw, token2.attribute) != NULL) {
-                    if(strcmp(token2.attribute, "nil") == 0) token2.token_type = TOKEN_NULL;
-                    else token2.token_type = TOKEN_KEYWORD;
-                }
-                if(StringsArrayPush(strArr, '\0') == -1) {
-                    token.token_type = TOKEN_ERR;
-                    sc->actualState = STATE_ERR;
-                    sc->errorMalloc = true;
-                    return;
-                }
-                //strArr->lastValid++;
-                if(sc->actualState == STATE_ERR) {
-                    sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
-                    token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
-                    __TokenStore(token, sc);
-                    __TokenStore(token2, sc);
-                    return;
-                }
-
-                if(token2.token_type == TOKEN_START_BRACKET)
-                    token.token_type = TOKEN_ID_F;
-                
-                __TokenStore(token, sc);
-                if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET && token2.token_type != TOKEN_ID) __TokenStore(token2, sc);
-                token = token2;
-            } while(token2.token_type == TOKEN_ID);
-        }
+        __TokenStore(token, sc);
     }
     else if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
 }
@@ -695,49 +697,3 @@ int TokenStore(Token token, ScannerContext *sc) {
     q_push_front(sc->tokens, (void *) t);
     return 0;
 }
-
-/*
-#define __STANDALONE__ 1  //TODO Remove.. pro visual studio jenom
-
-#if __STANDALONE__
-int main(int argc, char **argv) {
-    ScannerContext sc;
-    sc.lastReadedChar = -1;
-
-    ScannerContextInit(&sc);
-    strArr = StringsArrayCreate('\0');
-    Token *tokenPtr;
-    Token token;
-    int i = 0;
-    Queue_t *q = init_queue();
-    while((token = GetNextToken(&sc)).token_type != TOKEN_NONE || sc.actualState == STATE_ERR) {
-        tokenPtr = malloc(sizeof(Token));
-        tokenPtr->attribute = token.attribute;
-        tokenPtr->attributeType = token.attributeType;
-        tokenPtr->token_type = token.token_type;
-        if(token.token_type == TOKEN_ERR) {
-            printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
-                sc.actualState = STATE_START;
-        }
-        else if(lex2String(token.token_type) != NULL)
-                printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
-        q_push(q, tokenPtr);
-    }
-    printf("TOKEN NONE: %d, %d\n", token.startPosRow, token.startPosCol);
-    /*printf("-----------------------------------------------");
-    void *top;
-    while((top = q_top(q)) != NULL) {
-        token = *((Token *) top);
-        if(token.token_type == TOKEN_ERR) {
-            printf("Lexikalni chyba na radku: %d a sloupci: %d\n", token.startPosRow, token.startPosCol);
-                sc.actualState = STATE_START;
-        }
-        else if(lex2String(token.token_type) != NULL)
-                printf("typ: %s || hodnota: %s\n", lex2String(token.token_type), token.attribute);
-        q_pop(q);
-    }*//*
-    return 0;
-}
-#endif
-
-*/
