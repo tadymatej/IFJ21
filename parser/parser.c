@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-#define DEBUG_USED_RULE 
+//#define DEBUG_USED_RULE 
 //#define DEBUG_ERROR
-#define SHOW_TOKENS
+//#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -618,6 +618,14 @@ bool NElseif(Token *ptr, ScannerContext *sc){
              printf("$64 <elseif> => elseif <exp_cond> then <function_body> <elseif>\n");
             printf("---------------------------\n");
         #endif
+        #ifdef SEMANTIC_CONNECT
+            semantic = next_cond_block();
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        #endif
         elseif = NExp_cond(ptr, sc);
         if(ptr->token_type == TOKEN_KEYWORD){
             if(strcmp(ptr->attribute, "then") == 0){
@@ -652,7 +660,14 @@ bool NElseif(Token *ptr, ScannerContext *sc){
             printf("$65 <elseif> => else <function_body> <end>\n");
              printf("---------------------------\n");
         #endif
-
+        #ifdef SEMANTIC_CONNECT
+            semantic = next_cond_block();
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        #endif
         *ptr = Next(sc); if(errT != 0){return false;}
 
         elseif = elseif && NFunction_body(ptr, sc);
@@ -670,6 +685,15 @@ bool NElseif(Token *ptr, ScannerContext *sc){
             printf("$67 <end> => end <function_body>\n");
             printf("---------------------------\n");
         #endif
+        #ifdef SEMANTIC_CONNECT
+            semantic = exit_construction();
+            if(semantic){
+                ErrMessage(semantic);
+                ErrMessagePossition(ptr);
+                return false;
+            }
+        #endif
+
     }
 
     return elseif;
@@ -684,6 +708,15 @@ bool NIf(Token *ptr, ScannerContext *sc){
     #ifdef DEBUG_USED_RULE
         printf("$63 <if> => if <exp_cond> then <function_body> <elseif>\n");
         printf("---------------------------\n");
+    #endif
+
+    #ifdef SEMANTIC_CONNECT
+        semantic = enter_if();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
     #endif
 
     fi = NExp_cond(ptr, sc);
@@ -720,7 +753,14 @@ bool NWhile(Token *ptr, ScannerContext *sc){
         printf("$62 <while> => while <exp_cond> do <function_body> <end>\n");
         printf("---------------------------\n");
     #endif
-
+    #ifdef SEMANTIC_CONNECT
+        semantic = enter_while();
+        if(semantic){
+            ErrMessage(semantic);
+            ErrMessagePossition(ptr);
+            return false;
+        }
+    #endif
     w = NExp_cond(ptr, sc);
     if(ptr->token_type == TOKEN_KEYWORD){
         if(strcmp(ptr->attribute, "do") == 0){
@@ -736,6 +776,14 @@ bool NWhile(Token *ptr, ScannerContext *sc){
             #ifdef DEBUG_USED_RULE
                 printf("$67 <end> => end <function_body>\n");
                 printf("---------------------------\n");
+            #endif
+            #ifdef SEMANTIC_CONNECT
+                semantic = exit_construction();
+                if(semantic){
+                    ErrMessage(semantic);
+                    ErrMessagePossition(ptr);
+                    return false;
+                }
             #endif
             w = w && true;
         }
