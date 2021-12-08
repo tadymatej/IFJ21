@@ -6,7 +6,6 @@
 
 #ifndef SCANNER_H
 #define SCANNER_H 1
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,10 +65,7 @@ typedef struct {
     BinaryTree *kw;
 } ScannerContext;
 
-typedef unsigned long long ptrInt;
-
-extern StringsArray *strArr; //TODO global variable, why? moved it from scanner.c here so it cannot be redefined. Functions rely on this variable to be global for now
-
+extern StringsArray *strArr;
 
 /**
  * Vytvoří nový token
@@ -193,5 +189,11 @@ Token processOnceReadedChar(ScannerContext *sc, int *row, int *col);
  * @param col Sloupec, na kterém se token nachází
  */ 
 void TokenSetPosition(Token *token, int row, int col);
+
+/**
+ * Nastaví ve scannerContextu, že nastala chyba mallocu
+ * @param sc ScannerContext, kterému se má nastavit chyba mallocu
+ */ 
+void ScSetMallocError(ScannerContext *sc);
 
 #endif

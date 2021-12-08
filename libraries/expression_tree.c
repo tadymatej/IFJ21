@@ -14,7 +14,7 @@ Stack *exp_tree_init(){
 
 int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type, char *prefix){
   exp_node_t *temp = malloc(sizeof(exp_node_t));
-  if(temp == NULL) return 99; //TODO error handling
+  if(temp == NULL) return 99;
   temp->data = data;
   temp->nested_identifier = nested_identifier;
   temp->type = type;
