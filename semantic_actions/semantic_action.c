@@ -253,7 +253,9 @@ int end_function_call() {
     if (globals.calling_fun->params->length == -1) {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
     }
-    print_command_queue(globals.q_args);
+    while(!q_is_empty(globals.q_args)){
+        cg_envelope((char*)q_pop(globals.q_args));
+    }
     if (globals.calling_fun->params->length != globals.tmp && globals.calling_fun->params->length != -1)
         return FUN_CALL_ERROR;
     RET_IF_NOT_SUCCESS(cg_envelope(cg_call_fun(globals.calling_fun->name)));
@@ -336,7 +338,7 @@ int end_return() {
 //63 - if
 int enter_if() {
     RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
-    if (Stack_push(globals.label_stack, (void *)globals.label_idx, sizeof(int)) == -1)
+    if (Stack_push(globals.label_stack, NULL, globals.label_idx) == -1)
         return INTERNAL_ERROR;
     globals.label_idx = 0;
     stack_push(globals.blockStack, 'i');
@@ -354,7 +356,7 @@ int next_cond_block() {
 // 62 - while
 int enter_while() {
     RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
-    if (Stack_push(globals.label_stack, (void *)globals.label_idx, sizeof(int)) == -1)
+    if (Stack_push(globals.label_stack, NULL, globals.label_idx) == -1)
         return INTERNAL_ERROR;
     globals.label_idx = 0;
     stack_push(globals.blockStack, 'w');
@@ -385,7 +387,7 @@ int exit_construction() {
     }
     StackItem *tmp = StackGetLast(globals.label_stack);
     RET_IF_NULL(tmp);
-    globals.label_idx = (int)tmp->value;
+    globals.label_idx = tmp->dataType;
     dispose_stack_frame(&globals.ts);
     stack_pop(globals.blockStack);
     if (stack_empty(globals.blockStack))
