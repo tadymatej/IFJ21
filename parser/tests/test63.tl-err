@@ -6,7 +6,7 @@ function main()
 
     if a > 5 then
         while b > 0 do
-            elseif a < 0 then
+            if a == 0 then
         end
     end 
 

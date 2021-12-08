@@ -149,3 +149,172 @@ $42 <function_body> => <function_call> <function_body>
 ---------------------------
 $33 <function_call> => id_f ( <args_list>
 ---------------------------
+##########|type: string	attribute: "Zadejte cislo pro vypocet faktorialu: "|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$36 <first_arg> => <value>
+---------------------------
+$37.2 <value> => string_value
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$38 <next_args> => )
+---------------------------
+##########|type: keyword	attribute: local|
+##########|type: id	attribute: a|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: integer|
+$41 <function_body> => local id : <type> <assignment> <function_body>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: set	attribute: (null)|
+$57 <assignment> => = <expression>
+---------------------------
+##########|type: id_f	attribute: readi|
+##########|type: set	attribute: (null)|
+##########|type: id_f	attribute: readi|
+$56 <expression> => <function_call>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$34 <args_list> => )
+---------------------------
+##########|type: end bracket	attribute: (null)|
+##########|type: keyword	attribute: if|
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: keyword	attribute: then|
+$68 <exp_cond> => call PSA
+---------------------------
+##########|type: keyword	attribute: if|
+$45 <function_body> => <if>
+---------------------------
+$63 <if> => if <exp_cond> then <function_body> <elseif>
+---------------------------
+##########|type: keyword	attribute: then|
+$68 <exp_cond> => call PSA
+---------------------------
+##########|type: id_f	attribute: write|
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: string	attribute: "Faktorial nejde spocitat!"|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$36 <first_arg> => <value>
+---------------------------
+$37.2 <value> => string_value
+---------------------------
+##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
+##########|type: string	attribute: "\n"|
+$37.2 <value> => string_value
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$38 <next_args> => )
+---------------------------
+##########|type: keyword	attribute: else|
+$65 <elseif> => else <function_body> <end>
+---------------------------
+##########|type: keyword	attribute: local|
+##########|type: id	attribute: vysl|
+##########|type: colon - dvojtecka	attribute: (null)|
+##########|type: keyword	attribute: integer|
+$41 <function_body> => local id : <type> <assignment> <function_body>
+---------------------------
+$19 <type> => integer
+---------------------------
+##########|type: set	attribute: (null)|
+$57 <assignment> => = <expression>
+---------------------------
+##########|type: id_f	attribute: factorial|
+##########|type: set	attribute: (null)|
+##########|type: id_f	attribute: factorial|
+$56 <expression> => <function_call>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: id	attribute: a|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$36 <first_arg> => <value>
+---------------------------
+$37.1 <value> => id
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$38 <next_args> => )
+---------------------------
+##########|type: end bracket	attribute: (null)|
+##########|type: id_f	attribute: write|
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: string	attribute: "Vysledek je "|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$36 <first_arg> => <value>
+---------------------------
+$37.2 <value> => string_value
+---------------------------
+##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
+##########|type: id	attribute: vysl|
+$37.1 <value> => id
+---------------------------
+##########|type: comma	attribute: (null)|
+$37 <next_args> => , <value> <next_args>
+---------------------------
+##########|type: string	attribute: "\n"|
+$37.2 <value> => string_value
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$38 <next_args> => )
+---------------------------
+##########|type: keyword	attribute: end|
+$66 <elseif> => <end>
+---------------------------
+$67 <end> => end <function_body>
+---------------------------
+##########|type: keyword	attribute: else|
+##########|type: keyword	attribute: else|
+$65 <elseif> => else <function_body> <end>
+---------------------------
+##########|type: id_f	attribute: write|
+$42 <function_body> => <function_call> <function_body>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: string	attribute: "Chyba pri nacitani celeho cisla!\n"|
+$35 <args_list> => <first_arg> <next_args>
+---------------------------
+$36 <first_arg> => <value>
+---------------------------
+$37.2 <value> => string_value
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$38 <next_args> => )
+---------------------------
+##########|type: keyword	attribute: end|
+$66 <elseif> => <end>
+---------------------------
+$67 <end> => end <function_body>
+---------------------------
+##########|type: keyword	attribute: end|
+##########|type: keyword	attribute: end|
+##########|type: id_f	attribute: main|
+$5 <prog> => <function_call>
+---------------------------
+$33 <function_call> => id_f ( <args_list>
+---------------------------
+##########|type: end bracket	attribute: (null)|
+$34 <args_list> => )
+---------------------------
+$4 <prog> => EOF
+---------------------------

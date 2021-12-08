@@ -12,9 +12,9 @@
 
 // ---------------------- Show debug information ---------------------
 
-//#define DEBUG_USED_RULE 
+#define DEBUG_USED_RULE 
 //#define DEBUG_ERROR
-//#define SHOW_TOKENS
+#define SHOW_TOKENS
 #define SEMANTIC_CONNECT
 //#define ERR_TESTING
 
@@ -1680,7 +1680,7 @@ int Parse(){
 
     //printf("%d\n", semantic);
 
-    if(psa == 0 && OK != true && semantic == 0){
+    if(psa == 0 && OK != true && semantic == 0 && errT != 1){
         ErrMessage(SYNTAX_ERR);
         ErrMessagePossition(token);
     }
