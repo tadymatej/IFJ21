@@ -217,9 +217,9 @@ int end_function_call() {
             for (int i = 0; i < globals.calling_fun->ret_vals->length && globals.q_assignments->length != 0; i++) {
                 TS_data_t *left = q_pop(globals.q_assignments);
                 Sym_table_t *foundIn;
-                find_variable(globals.ts, left->name, &foundIn);
+                //find_variable(globals.ts, left->name, &foundIn);
                 ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
-                ITOA(suffix, foundIn->nested_identifier);
+                //ITOA(suffix, foundIn->nested_identifier);
                 // if (left->name != NULL)
                 //     RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(foundIn->prefix, left->name, suffix))));
             }
