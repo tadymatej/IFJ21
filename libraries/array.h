@@ -11,10 +11,11 @@ typedef struct Inflatable_Array{
     void **arr; 
     int size;
     int length;
+    void (*dataDestroyHandler)(void *);
 }Array_t;
 
 Array_t* init_array();
-int arr_add(Array_t *arr, void *element);
+int arr_add(Array_t **arr, void *element);
 void* arr_get_element_at(Array_t *arr, int idx);
 void dispose_array(Array_t **arr, bool dispose_elements);
 
