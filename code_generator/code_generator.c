@@ -110,10 +110,12 @@ char *cg_format_string(char *string) {
                       memcpy(&string_format[output_index], &string[input_index], ESCAPE_LEN);
                       output_index += ESCAPE_LEN - 1;
                       input_index += ESCAPE_LEN - 1;
+                      /*
                       if(strtol(&string_format[output_index - 2], NULL, 10) > 255) {
                           free(string_format);
                           return NULL;
                       }
+                      */
                     }
             }
         }
