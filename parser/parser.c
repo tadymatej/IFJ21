@@ -761,6 +761,10 @@ bool NWhile(Token *ptr, ScannerContext *sc){
         }
     #endif
     w = NExp_cond(ptr, sc);
+    if(!w){
+        return false;
+    }
+
     if(ptr->token_type == TOKEN_KEYWORD){
         if(strcmp(ptr->attribute, "do") == 0){
 
