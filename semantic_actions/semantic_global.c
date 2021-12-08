@@ -17,7 +17,7 @@ int init_sem_globals() {
     globals.blockStack = stack_init();
     globals.q_command = init_queue();
     if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL) {
-
+        dispose_sem_globals();
         return 99;
     }
     return 0;

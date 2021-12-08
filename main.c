@@ -7,29 +7,30 @@
 #include <stdbool.h>
 
 int main(){
-    init_sem_globals();
-    globals.ts = TS_init("LF");
+    if(init_sem_globals() != 0)
+        return 99;
+    // globals.ts = TS_init("LF");
 
-    TS_data_t *temp_a;
-    temp_a = make_var_data(STRING, "x", "7");
-    //add_variable(globals.ts, temp_a);
+    // TS_data_t *temp_a;
+    // temp_a = make_var_data(STRING, "x", "7");
+    // //add_variable(globals.ts, temp_a);
 
-    TS_data_t *temp_b;
-    temp_b = make_var_data(STRING, "y", "7");
-    //add_variable(globals.ts, temp_b);
+    // TS_data_t *temp_b;
+    // temp_b = make_var_data(STRING, "y", "7");
+    // //add_variable(globals.ts, temp_b);
 
-    TS_data_t *temp_c;
-    temp_c = make_var_data(STRING, "c", "7");
-    //add_variable(globals.ts, temp_c);
+    // TS_data_t *temp_c;
+    // temp_c = make_var_data(STRING, "c", "7");
+    // //add_variable(globals.ts, temp_c);
 
-    TS_data_t *temp_int;
-    temp_int = make_var_data(INTEGER, NULL, "7");
+    // TS_data_t *temp_int;
+    // temp_int = make_var_data(INTEGER, NULL, "7");
 
-    TS_data_t *temp_num;
-    temp_num = make_var_data(NUMBER, NULL, "7");
+    // TS_data_t *temp_num;
+    // temp_num = make_var_data(NUMBER, NULL, "7");
 
-    TS_data_t *temp_string;
-    temp_string = make_var_data(STRING, NULL, "7");
+    // TS_data_t *temp_string;
+    // temp_string = make_var_data(STRING, NULL, "7");
 
     // q_push(globals.q_assignments, temp_string);
     // q_push(globals.q_assignments, temp_num);
@@ -39,12 +40,12 @@ int main(){
 
     int retVal = Parse();
     //printf("retVal: %d\n", retVal);
-    free(temp_string);
-    free(temp_num);
-    free(temp_c);
-    free(temp_b);
-    free(temp_a);
-    free(temp_int);
+    // free(temp_string);
+    // free(temp_num);
+    // free(temp_c);
+    // free(temp_b);
+    // free(temp_a);
+    // free(temp_int);
     return retVal;
     //printf("syntax OK: %d\n", syntaxOK);
 }

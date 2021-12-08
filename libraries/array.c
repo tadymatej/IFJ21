@@ -26,16 +26,17 @@ Array_t *init_array() {
         free(arr);
         return NULL;
     }
+    arr->dataDestroyHandler = NULL;
     return arr;
 }
 
-int arr_add(Array_t *arr, void *element) {
-    if (arr->length == arr->size)
-        if (__resize_array(arr) == 1) {
-            dispose_array(&arr, true); // PRIPADNE MEMORY LEAKY
+int arr_add(Array_t **arr, void *element) {
+    if ((*arr)->length == (*arr)->size)
+        if (__resize_array(*arr) == 1) {
+            dispose_array(arr, true); 
             return 1;
         }
-    arr->arr[arr->length++] = element;
+    (*arr)->arr[(*arr)->length++] = element;
     return 0;
 }
 
@@ -51,7 +52,10 @@ void dispose_array(Array_t **arr, bool dispose_elements) {
     if (arr != NULL && *arr != NULL) {
         if (dispose_elements) {
             for (int i = 0; i < (*arr)->length; i++) {
-                free((*arr)->arr[i]);
+                if((*arr)->dataDestroyHandler != NULL)
+                    (*arr)->dataDestroyHandler((*arr)->arr[i]);
+                else
+                    free((*arr)->arr[i]);
             }
         }
         free((*arr)->arr);

@@ -642,6 +642,17 @@ void cg_write(){
                     "RETURN\n"));
 }
 
+void cg_builtin(){
+  cg_reads();
+  cg_readi();
+  cg_readn();
+  cg_tointeger();
+  cg_substr();
+  cg_ord();
+  cg_chr();
+  cg_write();
+}
+
 int cg_envelope(char *str) {
     if (str == NULL)
         return 99;

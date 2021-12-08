@@ -17,12 +17,11 @@ Fun_data_t *init_fun_data(char *name) {
         free(ptr);
         return NULL;
     }
-    //ptr->isCalledBeforeDefinition = false;
     return ptr;
 }
 
 int fun_add_param(Fun_data_t *data, TS_data_t *param) {
-    return arr_add(data->params, (void *)param);
+    return arr_add(&data->params, (void *)param);
 }
 
 TS_data_t *fun_get_param(Fun_data_t *data, int idx) {
@@ -32,7 +31,7 @@ TS_data_t *fun_get_param(Fun_data_t *data, int idx) {
 }
 
 int fun_add_ret_val(Fun_data_t *data, TS_data_t *retval) {
-    return arr_add(data->ret_vals, (void *)retval);
+    return arr_add(&data->ret_vals, (void *)retval);
 }
 
 TS_data_t* fun_get_ret(Fun_data_t *data, int idx){
