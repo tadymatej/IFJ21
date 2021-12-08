@@ -657,15 +657,19 @@ int cg_envelope(char *str) {
     if (str == NULL)
         return 99;
     if (!globals.inside_while || strncmp(str, "DEFVAR", 6) == 0) {
-        while (q_top(globals.q_command) != NULL) {
-            char *tmp = (char *)q_pop(globals.q_command);
-            CODE_PRINT(printf("%s", tmp));
-            free(tmp);
-        }
+        print_command_queue(globals.q_command);
         CODE_PRINT(printf("%s", str));
         free(str);
     } else {
         q_push(globals.q_command, str);
     }
     return 0;
+}
+
+void print_command_queue(Queue_t *q){
+  while (q_top(q) != NULL) {
+    char *tmp = (char *)q_pop(q);
+    CODE_PRINT(printf("%s", tmp));
+    free(tmp);
+  }
 }
