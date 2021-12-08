@@ -69,7 +69,8 @@ for f in *.tl; do
 
     #diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
 
-    diff .prg/$f.txt .prg/$f.prg
+    #diff .prg/$f.txt .prg/$f.prg
+    diff .prg/comments/$f.txt .prg/$f.prg
     #tail -1 .prg/$f.txt;
     echo "";
 done
@@ -125,7 +126,8 @@ for f in *.tl-err; do
 
     #diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
 
-    diff .prg/$f.txt .prg/$f.prg
+    #diff .prg/$f.txt .prg/$f.prg
+    diff .prg/comments/$f.txt .prg/$f.prg
 
 done
 echo ""
