@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: expression_tree.h
- *  Popis: Implementácia stromovej štruktúry s metódami pre vytvárenie výrazových stromov
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file expression_tree.h
+ *  @brief Implementácia stromovej štruktúry s metódami pre vytvárenie výrazových stromov
+ *  @author Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 
@@ -25,13 +25,16 @@
 #define BUFFER_LEN 128
 #define BASE 10
 
+/**
+ * TODO 
+ */ 
 typedef struct exp_node_s{
-  TS_data_t *data;
-  int nested_identifier;
-  TOKEN_TYPES type;
-  char prefix[DATA_TYPE_LEN];
-  struct exp_node_s *right;
-  struct exp_node_s *left;
+  TS_data_t *data;      /**< TODO */
+  int nested_identifier; /**< TODO */
+  TOKEN_TYPES type;     /**< TODO */
+  char prefix[DATA_TYPE_LEN]; /**< TODO */
+  struct exp_node_s *right; /**< TODO */
+  struct exp_node_s *left;  /**< TODO */
 }exp_node_t;
 
 typedef Stack exp_tree_stack_t;
@@ -41,14 +44,14 @@ typedef enum direction { left, right, none } direction_t;
 //#define Stack_top(name) (StackGetLast(name))->value
 #define Stack_empty(name) ((StackGetLast(name) == NULL) ? 1 : 0)
 
-/*
+/**
  * Inicializuje stack obsahujúci stromy s výrazmi
  * Zatiaľ bez jediného stromu
  * @returns ukazateľ na inicializovaný stack
  */
 Stack *exp_tree_init();
 
-/*
+/**
  * Pridá nový strom na vsrchol zásobníku, zatiaľ obsahujúci len uzol identifikátora
  * @param stack ukazateľ na inicializovaný stack
  * @param data štruktúra nad dátovým typom z TS, má to by priamo odkaz z TS pre daný identifikátor
@@ -57,26 +60,26 @@ Stack *exp_tree_init();
  */
 int add_id_node(Stack *stack, TS_data_t *data, int nested_identifier, TOKEN_TYPES type, char *prefix);
 
-/*
+/**
  * Vráti dátový typ stromu, ktorý je najvyššie v stacku
  * @param stack inicializovaný stack stromov
  */
 DataTypes_t get_top_type(Stack *stack);
 
-/*
+/**
  * Vráti dátový typ stromu druhého od vrchu zásobníku
  * @param stack inicializovaný stack stromov
  */
 DataTypes_t get_second_type(Stack *stack);
 
-/*
+/**
  * Vloží medziuzol reprezentujúci príkaz na explicitnú konverziu
  * Takto sa to premietne ako konverzia už priamo do kódu
  * Sémantický analyzátor musí zistiť, či je konverzia možná a až potom zavolať konverziu
  */
 exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int nested_id, char *prefix);
 
-/*
+/**
  * Funkcia vezme dva stromy zo zásobníku a spojí ich pomocou zadaného operátora
  * Novovzniknutý strom uloži na vrchol zásobníku
  * @param stack ukazateľ na inicializovaný stack
@@ -90,20 +93,20 @@ exp_node_t *make_conversion_node(exp_node_t *operand, TS_data_t *data, int neste
  */
 exp_node_t *operator_merge(Stack *stack, TOKEN_TYPES operator, TS_data_t *data, int nested_identifier, char *prefix, exp_node_t *left_side, exp_node_t *right_side);
 
-/*
+/**
  * Funkcia vypíše stromy výrazov na konzolu
  * Použiva vnútornú štrukuru stacku
  * @param stack ukazateľ na inicializovaný ďstruktúru stacku
  */
 void print_exp_stack(Stack *stack);
 
-/*
+/**
  * Korektne uvoľní z pamäťe celý jeden strom na vrchole zásobníka
  * @param stack ukazateľ na inicializovaný stack
  */
 void destroy_top_tree(Stack *stack);
 
-/*
+/**
  * Vráti ukazateľ na prvok v zásobníku na vrchu
  * @param stack ukazateľ na inicializovaný stack
  */
@@ -115,7 +118,7 @@ exp_node_t *exp_stack_top(Stack *stack);
  */
 void destroy_tree(exp_node_t *tree);
 
-/*
+/**
  * Uvoľní všetky zdroje alokované v stacku
  * @param stack Ukazateľ na inicializovaný stack
  */

@@ -1,6 +1,7 @@
 /**
  * @authors Matěj Žalmánek (xzalma00), Igar Sauchanka (xsauch00)
  * @file symtable.h
+ * @brief deklarace struktur a funkcí pro práci s tabulkou symbolů 
  */ 
 #ifndef SYMTABLE_H
 #define SYMTABLE_H 1

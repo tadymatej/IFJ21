@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: expression_tree.c
- *  Popis: Implementácia stromovej štruktúry s metódami pre vytvárenie výrazových stromov
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file expression_tree.c
+ *  @brief Implementácia stromovej štruktúry s metódami pre vytvárenie výrazových stromov
+ *  @author Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 

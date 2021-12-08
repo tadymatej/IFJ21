@@ -1,3 +1,8 @@
+/**
+ * @author TODO
+ * @brief TODO
+ * @file fun_table.c
+ */ 
 #include "fun_table.h"
 
 Fun_table_t *init_fun_table() {

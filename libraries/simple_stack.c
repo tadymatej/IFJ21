@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: simple_stack.c
- *  Popis: Implementácia knižnice extended_stack.
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file simple_stack.c
+ *  @brief Implementácia knižnice extended_stack.
+ *  @author Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 #include "simple_stack.h"
@@ -28,14 +28,6 @@ void realloc_stack(simp_stack_t *stack){
   return;
 }
 
-/**
- * Funkcia alokuje miesto na zásobník.
- * Alokácia prebieha na dva kroky, najprv na štruktúru potom na pole zásobníka
- * Alokuje sa na dva krát, pretože je potom lahšia realokácia
- * Ak sa nepodarí alokovať pamäť, vráti NULL a zapíše do error_e_stack
- *
- * @returns ukazateľ na inicializovaný zásobník
- */
 simp_stack_t *stack_init(){
   simp_stack_t *stack;
   stack = malloc(sizeof(struct ext_stack_struct));
@@ -56,13 +48,6 @@ simp_stack_t *stack_init(){
   return NULL;
 }
 
-/**
- * Vracia True ak je zásobník prázdny.
- * Ak je dodaný neplatný ukazateľ, vráti hodnotu 1 a zapíše do error_e_stack 1. Túto vlastnosť využivajú iné funkcie.
- *
- * @param stack Ukazateľ na inicializovanú štruktúru stack
- * @returns True hodnotu ak je zásobník prázdny, inak 0
- */
 int stack_empty(simp_stack_t *stack){
   if (stack == NULL) {
     ERROR_MSG(EMPTY_STACK);
@@ -72,13 +57,6 @@ int stack_empty(simp_stack_t *stack){
   return !(stack->top_index+1);
 }
 
-/**
- * Uloži hodnotu symbolu na vrch zásobníku.
- * Ak je dodaný neplatný ukazateľ, funkcia nič neurobí
- * Ak by sa symbol nevošiel do zásobníka, automaticky sa zväčší
- *
- * @param stack Ukazateľ na inicializovanú štruktúru stack
- */
 void stack_push(simp_stack_t *stack, char symbol){
   if (stack == NULL) return;
   if (stack->top_index+1 == stack->size) {
@@ -91,35 +69,16 @@ void stack_push(simp_stack_t *stack, char symbol){
   stack->array[stack->top_index] = symbol;
 }
 
-/**
- * Vyhodí hodnotu z vrcholu zásobniku.
- * Ak je dodaný neplatný Ukazateľ, nestane sa nič, ale zapíše sa do error_e_stack
- *
- * @param stack Ukazateľ na inicializovanú štruktúru stack
- */
 void stack_pop(simp_stack_t *stack){
   if (stack_empty(stack)) return;
   stack->top_index--;
 }
 
-/**
- * Vráti symbol na vrchole zásobníka
- * Ak je dodaný neplatný ukazateľ, vráti -1 a zapíše do error_e_stack
- *
- * @param stack Ukazateľ na inicializovanú štruktúru stack
- * @returns symbol na vrchole zásobníka
- */
 char stack_top(simp_stack_t *stack){
   if (stack_empty(stack)) return -1;
   return stack->array[stack->top_index];
 }
 
-/**
- * Na stdout vypíše prvky v zásobníku
- *
- * @param stack Ukazateľ na inicializovanú štruktúru stack
- * @param wide je minimálna šírka výpisu
- */
 void stack_print(simp_stack_t *stack, int wide){
   int i;
   for (i = 0; i <= stack->top_index; i++) {
@@ -129,10 +88,7 @@ void stack_print(simp_stack_t *stack, int wide){
     putchar(' ');
   }
 }
- /*
-  * Funkcia korektne uvoľní všetky zdroje alokované stackom a zapíše do premennej NULL
-  * @param **stack ukazateľ na ukazateľ na štruktúru stacku
-  */
+
 void stack_destroy(simp_stack_t **stack){
   if(stack == NULL || *stack == NULL) return;
   free((*stack)->array);

@@ -1,6 +1,7 @@
 /**
  * @author Matěj Žalmánek (xzalma00)
  * @file scanner.c
+ * @brief Implementace scanneru do projektu IFJ 21
  */ 
 #include "scanner.h"
 

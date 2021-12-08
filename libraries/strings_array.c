@@ -1,6 +1,7 @@
 /**
  * @author Matěj Žalmánek (xzalma00)
  * @file strings_array.c
+ * @brief Implementace datové struktury pro pole stringů
  */ 
 #include "strings_array.h"
 

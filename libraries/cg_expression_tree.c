@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: cg_expression_tree.c
- *  Popis: Implementácia generátoru kódu z ASS
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file: cg_expression_tree.c
+ *  @brief Implementácia generátoru kódu z ASS
+ *  @author Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 

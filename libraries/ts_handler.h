@@ -1,5 +1,7 @@
-/*
- * Knižnica je nadstavbou nad symtable.h. Poskytuje podporné funkcia na prácu s premennými
+/**
+ * @author TODO
+ * @file ts_handler.h
+ * @brief Knižnica je nadstavbou nad symtable.h. Poskytuje podporné funkcia na prácu s premennými
  */
 #ifndef _TS_HANDLER_
 #define _TS_HANDLER_
@@ -12,13 +14,13 @@
 #include "symtable.h"
 #include "semantic_global.h"
 
-/*
+/**
  * Inicializuje prvý level Stack framu, obsahuje zatiaľ prázdny strom
  * returns Ukazateľ na koreň stack framu
  */
 Sym_table_t *TS_init(char *prefix);
 
-/*
+/**
  * Alokuje dalšiu položku Sym_table_t  a zreťazí to
  * @param table Ukazatel na alokovanú tabuľku symbolov
  * @param prefix retazec ktory ukazuje ci je to v TF alebo LF
@@ -32,13 +34,13 @@ int new_stack_frame(Sym_table_t **table, char *prefix);
  */
 void dispose_stack_frame(Sym_table_t **table);
 
-/*
+/**
  * Korektne uvoľní celú tabuľku z pamaťe
  * params table Ukazateľ na alokovanú tabuľku symbolov
  */
 void dispose_table(Sym_table_t **table);
 
-/*
+/**
  * Korektne uvoľní strom na najvyššej úrovni a aj najvyššǐ koreň
  * params table Ukazateľ na alokovanú tabuľku symbolov
  */
@@ -46,7 +48,7 @@ void dispose_table(Sym_table_t **table);
   Sym_table_t *temp = name->upper; free(name); name = temp }while(0);
 
 
-/*
+/**
  * Nájde premennú podľa zadného kľúča, mena premennej
  * Hľadá od najvyššieho stack framu po najnižši, definovaný ako prvý
  * params table Ukazateľ na alokovanú tabuľku symbolov

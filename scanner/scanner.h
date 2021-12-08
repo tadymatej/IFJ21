@@ -1,6 +1,7 @@
 /**
  * @author Matěj Žalmánek (xzalma00)
  * @file scanner.h
+ * @brief Deklarace struktur, datových typů a funkcí pro implementaci scanneru do projektu IFJ 21
  */ 
 
 #ifndef SCANNER_H

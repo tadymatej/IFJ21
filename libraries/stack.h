@@ -1,5 +1,6 @@
 /**
  * @authors Matěj Žalmánek (xzalma00)
+ * @brief Deklarace struktur a funkcí pro práci se zásobníkem
  * @file array.h
  */ 
 
