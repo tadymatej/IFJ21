@@ -16,7 +16,7 @@ typedef enum STATES {STATE_START, STATE_ID1, STATE_ID2, STATE_ID3, STATE_NF1, ST
                     STATE_N6, STATE_CF1, STATE_CF2, STATE_CF3, STATE_C1, STATE_C2, STATE_C3, STATE_C4, STATE_C5, STATE_C6,
                     STATE_S1, STATE_S2, STATE_SE, STATE_S3, STATE_SF, STATE_SB1, STATE_SB2, STATE_SUB, STATE_LEN, STATE_DIV_MOD, STATE_MOD, STATE_DIV, STATE_DOT,
                     STATE_DOTF, STATE_ADD, STATE_MUL, STATE_NOT, STATE_NOTEQ, STATE_L_EQL, STATE_L, STATE_LEQ, STATE_G_GEQ, STATE_G, STATE_GEQ, STATE_EQ_SET,
-                    STATE_EQ, STATE_SET, STATE_START_BRACKET, STATE_END_BRACKET, STATE_SEMICOLON, STATE_COMMA, STATE_COLON, STATE_ERR};
+                    STATE_EQ, STATE_SET, STATE_START_BRACKET, STATE_END_BRACKET, STATE_SEMICOLON, STATE_COMMA, STATE_COLON, STATE_ERR, STATE_ID_F, STATE_ID_SPACE};
 
 /**
  * Typy tokenů
@@ -178,7 +178,7 @@ bool statePushChar(ScannerContext *sc);
  * Tj. zavolá FSM a v případě potřeby vloží znak do pole řetězců
  * @param sc ScannerContext, ze kterého se načítá naposledy načtený znak
  */
-Token processOnceReadedChar(ScannerContext *sc);
+Token processOnceReadedChar(ScannerContext *sc, int *row, int *col);
 
 
 #endif
