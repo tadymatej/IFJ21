@@ -25,6 +25,12 @@
     if (ret_types_table[7][(left)][(right)] == NO_TYPE)     \
         return error_code;
 
+#define RET_IF_NULL_ERR(expr, errCode) \
+    if(expr == NULL) return errCode
+
+#define RET_IF_NULL(expr) \
+    RET_IF_NULL_ERR(expr, (INTERNAL_ERROR))
+
 #define RET_IF_NOT_SUCCESS(expr) \
     if (NOT_SUCCESS(expr))       \
     return INTERNAL_ERROR
@@ -53,5 +59,9 @@ int end_n_assignment();
 int end_function_body();
 int start_return();
 int end_return();
+int enter_if();
+int next_cond_block();
+int enter_while();
+int exit_construction();
 
 #endif

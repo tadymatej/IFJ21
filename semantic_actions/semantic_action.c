@@ -34,8 +34,7 @@ int function_declaration(Token *token) {
 // 12 - <first_type> / 15 - <type>
 int dec_init_arg_types(Token *token) {
     TS_data_t *arg = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
-    if (arg == NULL)
-        return INTERNAL_ERROR;
+    RET_IF_NULL(arg);
     RET_IF_NOT_SUCCESS(fun_add_param(globals.cur_function, arg));
     return SEM_CORRECT;
 }
@@ -64,8 +63,7 @@ int init_function_argument(Token *token) {
     if (find_variable(globals.ts, token->attribute, NULL) != NULL)
         return DEFINITON_ERROR;
     globals.var = make_var_data(NO_TYPE, token->attribute, NULL);
-    if (globals.var == NULL)
-        return INTERNAL_ERROR;
+    RET_IF_NULL(globals.var);
     RET_IF_NOT_SUCCESS(add_variable(globals.ts, globals.var));
     return SEM_CORRECT;
 }
@@ -76,8 +74,7 @@ int fun_arg_definition(Token *token) {
     if (code != 0)
         return code;
     TS_data_t *copy = make_var_data(globals.var->type, globals.var->name, NULL);
-    if (copy == NULL)
-        return INTERNAL_ERROR;
+    RET_IF_NULL(copy);
     RET_IF_NOT_SUCCESS(fun_add_param(globals.cur_function, copy));
     ITOA(tmp, globals.ts->nested_identifier);
     RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
@@ -98,8 +95,7 @@ int fun_arg_assignment() {
 
 // 41 - <type>
 int var_type_assignment(Token *token) {
-    if (globals.var == NULL)
-        return OTHER_SEM_ERRORS;
+    RET_IF_NULL_ERR(globals.var, OTHER_SEM_ERRORS);
     globals.var->type = string_to_data_type(token->attribute);
     //7 se nikdy nema vratit za podminkou ze lexikalni a. a syntakticka a. funguji spravne.
     return (globals.var->type == NO_TYPE) ? OTHER_SEM_ERRORS : SEM_CORRECT;
@@ -108,8 +104,7 @@ int var_type_assignment(Token *token) {
 //24 - <type> / 25 - <type>
 int ret_val_dec(Token *token) {
     TS_data_t *ret_val = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
-    if (ret_val == NULL)
-        return INTERNAL_ERROR;
+    RET_IF_NULL(ret_val);
     RET_IF_NOT_SUCCESS(fun_add_ret_val(globals.cur_function, ret_val));
     return SEM_CORRECT;
 }
@@ -128,8 +123,7 @@ int define_local_var(Token *token) {
     if (find_variable(globals.ts, token->attribute, &foundIn) != NULL && foundIn == globals.ts)
         return DEFINITON_ERROR;
     globals.var = make_var_data(NO_TYPE, token->attribute, NULL);
-    if (globals.var == NULL)
-        return INTERNAL_ERROR;
+    RET_IF_NULL(globals.var);
     RET_IF_NOT_SUCCESS(add_variable(globals.ts, globals.var));
     ITOA(tmp, globals.ts->nested_identifier);
     RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
@@ -146,8 +140,7 @@ int prepare_def_assignment() {
 int start_function_call(Token *token) {
     bool isOnlyDeclared, isBuiltin;
     globals.calling_fun = find_function(globals.ft, token->attribute, &isOnlyDeclared, &isBuiltin);
-    if (globals.calling_fun == NULL)
-        return DEFINITON_ERROR;
+    RET_IF_NULL_ERR(globals.calling_fun, DEFINITON_ERROR);
     RET_IF_NOT_SUCCESS(cg_envelope(cg_create_frame()));
     return SEM_CORRECT;
 }
@@ -160,38 +153,31 @@ int push_parameter(Token *token) {
         switch (token->token_type) {
         case TOKEN_ID:
             globals.var = find_variable(globals.ts, token->attribute, &foundIn);
-            if (globals.var == NULL)
-                return DEFINITON_ERROR;
+            RET_IF_NULL_ERR(globals.var, DEFINITON_ERROR);
             ITOA(tmp, foundIn->nested_identifier);
             string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
-            if(string == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(string);
             RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
             break;
         case TOKEN_STRING:
             string = cg_format_string(token->attribute);
-            if (string == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(string);
             str2 = cg_stack_push(cg_format_var("string", string, NULL));
-            if(str2 == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(str2);
             RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
             free(string);
             break;
         case TOKEN_NUMBER:
             string = cg_format_float(token->attribute);
-            if (string == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(string);
             str2 = cg_stack_push(cg_format_var("float", string, NULL));
-            if(str2 == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(str2);
             RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
             free(string);
             break;
         case TOKEN_NUMBER_INT:
             string = cg_stack_push(cg_format_var("int", token->attribute, NULL));
-            if(string == NULL)
-                return INTERNAL_ERROR;
+            RET_IF_NULL(string);
             RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
             break;
         case TOKEN_NULL:
@@ -210,54 +196,48 @@ int push_parameter(Token *token) {
     switch (token->token_type) {
     case TOKEN_ID:
         globals.var = find_variable(globals.ts, token->attribute, &foundIn);
-        if (globals.var == NULL)
-            return DEFINITON_ERROR;
+        RET_IF_NULL_ERR(globals.var, DEFINITON_ERROR);
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, globals.var->type, FUN_CALL_ERROR);
         ITOA(tmp, foundIn->nested_identifier);
         if (fun_get_param(globals.calling_fun, globals.tmp)->type != globals.var->type)
             RET_IF_NOT_SUCCESS(cg_envelope(cg_int2float(cg_format_var(foundIn->prefix, globals.var->name, tmp), cg_format_var(foundIn->prefix, globals.var->name, tmp))));
         string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
-        if(string == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(string);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     case TOKEN_STRING:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, STRING, FUN_CALL_ERROR);
         string = cg_format_string(token->attribute);
-        if (string == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(string);
         str2 = cg_stack_push(cg_format_var("string", string, NULL));
-        if(str2 == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(str2);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
         free(string);
         break;
     case TOKEN_NUMBER:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, NUMBER, FUN_CALL_ERROR);
         string = cg_format_float(token->attribute);
-        if (string == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(string);
         str2 = cg_stack_push(cg_format_var("float", string, NULL));
-        if(str2 == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(str2);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
         free(string);
         break;
     case TOKEN_NUMBER_INT:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, INTEGER, FUN_CALL_ERROR);
         if ((fun_get_param(globals.calling_fun, globals.tmp)->type) != INTEGER) {
-            string = cg_stack_push(cg_format_var("float", token->attribute, NULL));
+            str2 = cg_format_float(token->attribute);
+            RET_IF_NULL(str2);
+            string = cg_stack_push(cg_format_var("float", str2, NULL));
         } else {
             string = cg_stack_push(cg_format_var("int", token->attribute, NULL));
         }
-        if(string == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(string);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     case TOKEN_NULL:
         string = cg_stack_push(cg_format_var("nil", "nil", NULL));
-        if(string == NULL)
-            return INTERNAL_ERROR;
+        RET_IF_NULL(string);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     default:
@@ -294,12 +274,7 @@ int end_function_call() {
         } else {
             for (int i = 0; i < globals.calling_fun->ret_vals->length && globals.q_assignments->length != 0; i++) {
                 TS_data_t *left = q_pop(globals.q_assignments);
-                Sym_table_t *foundIn;
-                //find_variable(globals.ts, left->name, &foundIn);
-                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
-                //ITOA(suffix, foundIn->nested_identifier);
-                // if (left->name != NULL)
-                //     RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(foundIn->prefix, left->name, suffix))));
+                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);;
             }
         }
     } else {
@@ -312,8 +287,7 @@ int end_function_call() {
 // 46 - id / 47 - id
 int n_assignment_vars(Token *token) {
     TS_data_t *id = find_variable(globals.ts, token->attribute, NULL);
-    if (id == NULL)
-        return DEFINITON_ERROR;
+    RET_IF_NULL_ERR(id, DEFINITON_ERROR);
     RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, id));
     return SEM_CORRECT;
 }
@@ -329,6 +303,7 @@ int end_n_assignment() {
 // 2 - end
 int end_function_body() {
     globals.nested_count = 0;
+    globals.label_idx = 0;
     RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));  // Musi byt proveden pred zpracovanim return
     for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
@@ -355,5 +330,69 @@ int end_return() {
     }
     RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_return()));
+    return SEM_CORRECT;
+}
+
+//63 - if
+int enter_if(){
+    RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
+    if(!stack_empty(globals.blockStack)){
+        if(Stack_push(globals.label_stack, (void*)globals.label_idx, sizeof(int)) == -1)
+            return INTERNAL_ERROR;
+        globals.label_idx = 0;
+    }
+    stack_push(globals.blockStack, 'i');
+    RET_IF_NOT_SUCCESS(error_e_stack);
+    return SEM_CORRECT;
+}
+
+// 64 - elseif / 65 - else
+int next_cond_block(){
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label(globals.cur_function->name, "end", globals.ts->nested_identifier, -1))));
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
+    return SEM_CORRECT;
+}
+
+// 62 - while
+int enter_while(){
+    RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
+    if(!stack_empty(globals.blockStack)){
+        if(Stack_push(globals.label_stack, (void*)globals.label_idx, sizeof(int)) == -1)
+            return INTERNAL_ERROR;
+        globals.label_idx = 0;
+    }
+    stack_push(globals.blockStack, 'w');
+    RET_IF_NOT_SUCCESS(error_e_stack);
+    globals.inside_while++;
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, "startWhile", globals.ts->nested_identifier, -1))));
+    return SEM_CORRECT;
+}
+
+// 67 - end
+int exit_construction(){
+    switch(stack_top(globals.blockStack)){
+        case 'i':
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, "end", globals.ts->nested_identifier, -1))));
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
+            break;
+        case 'w':
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label(globals.cur_function->name, "startWhile", globals.ts->nested_identifier, -1))));
+            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
+            globals.inside_while--;
+            // if((--globals.inside_while) == 0){
+            //     print_command_queue()
+            // }
+            break;
+        default:
+            return OTHER_SEM_ERRORS;
+            break;
+    }
+    StackItem *tmp = StackGetLast(globals.label_stack);
+    RET_IF_NULL(tmp);
+    globals.label_idx = (int)tmp->value;
+    dispose_stack_frame(&globals.ts);
+    stack_pop(globals.blockStack);
+    if(stack_empty(globals.blockStack))
+        globals.label_idx = 0;
     return SEM_CORRECT;
 }

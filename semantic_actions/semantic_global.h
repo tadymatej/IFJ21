@@ -6,6 +6,7 @@
 #include "fun_table.h"
 #include "fun_data.h"
 #include "simple_stack.h"
+#include "stack.h"
 #include "queue.h"
 
 typedef struct SemanticGlobals{
@@ -15,6 +16,7 @@ typedef struct SemanticGlobals{
     TS_data_t *var;
     int tmp;
     int label_idx;
+    Stack *label_stack;
     int exec_point_id;
     Queue_t *q_assignments;
     Sym_table_t *ts;

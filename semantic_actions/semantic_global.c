@@ -12,12 +12,13 @@ int init_sem_globals() {
     globals.ts = NULL;
     globals.exec_point_id = 0;
     globals.label_idx = 0;
+    globals.label_stack = Stack_create();
     globals.inside_while = 0;
     globals.ft = init_fun_table();
     globals.blockStack = stack_init();
     globals.q_command = init_queue();
     globals.q_args = init_queue();
-    if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL || globals.q_args == NULL) {
+    if (globals.q_assignments == NULL || globals.ft == NULL || globals.blockStack == NULL || globals.q_command == NULL || globals.q_args == NULL || globals.label_stack == NULL) {
         dispose_sem_globals();
         return 99;
     }
@@ -37,4 +38,5 @@ void dispose_sem_globals() {
     dispose_fun_table(&globals.ft);
     dispose_table(&globals.ts);
     stack_destroy(&globals.blockStack);
+    Stack_delete(globals.label_stack);
 }

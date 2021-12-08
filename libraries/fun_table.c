@@ -27,7 +27,7 @@ int __init_builtin(Fun_table_t *table) {
                                             INTEGER, STRING, INTEGER, STRING};
     TS_data_t toIntPars[1] = {(TS_data_t){"f", NUMBER, NULL}};
     TS_data_t substrPars[3] = {(TS_data_t){"s", STRING, NULL}, (TS_data_t){"i", NUMBER, NULL}, (TS_data_t){"j", NUMBER, NULL}};
-    TS_data_t ordPars[2] = {(TS_data_t){"s", STRING, NULL}, (TS_data_t){"i", NUMBER, NULL}};
+    TS_data_t ordPars[2] = {(TS_data_t){"s", STRING, NULL}, (TS_data_t){"i", INTEGER, NULL}};
     TS_data_t chrPars[1] = {(TS_data_t){"i", INTEGER, NULL}};
     TS_data_t *params[BUILTIN_COUNT] = {NULL, NULL, NULL, NULL,
                                         toIntPars,
