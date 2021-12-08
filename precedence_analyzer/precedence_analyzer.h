@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: precedence_analyzer.h
- *  Popis: Program syntakticky analyzuje výrazy príchádzajúce v podobe tokenov
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file precedence_analyzer.h
+ *  @brief Program syntakticky analyzuje výrazy príchádzajúce v podobe tokenov
+ *  @author Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 

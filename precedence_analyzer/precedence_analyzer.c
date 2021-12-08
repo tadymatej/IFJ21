@@ -1,8 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: precedence_analyzer.c
- *  Popis: Implementácia precedenčného analyzátoru
- *  Zodpovedný študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
+ *  @file precedence_analyzer.c
+ *  @brief Implementácia precedenčného analyzátoru
+ *  @author študent: Juraj Novosád email: xnovos13 @stud.fit.vutbr.cz
  ********************************************************************************
 */
 
@@ -26,7 +26,7 @@ void string_decode(char *source, char *dest, int source_len, int dest_len){
   int index_source = 0;
   int dest_index = 0;
   while(source[index_source]){
-    if (dest_index+3 >= dest_len) { // pridanie 3 aby sa vošli dva znaky operátora a ukon%cujúca \0
+    if (dest_index+3 >= dest_len) { // pridanie 3 aby sa vošli dva znaky operátora a ukoncujúca \0
       fprintf(stderr, "too long string to decode\n");
       break;
     }
