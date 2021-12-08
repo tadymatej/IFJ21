@@ -1,5 +1,5 @@
 /**
- * @author TODO
+ * @author Igar Sauchanka (xsauch00) Juraj Novosád(xnovos13)
  * @file ts_handler.h
  * @brief Knižnica je nadstavbou nad symtable.h. Poskytuje podporné funkcia na prácu s premennými
  */

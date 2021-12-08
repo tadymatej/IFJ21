@@ -1,7 +1,8 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: code_generator.h
- *  Popis: Metódy na výpis a formátovanie inštrukcíi kódu
+ *  @file: code_generator.h
+ *  @brief: Metódy na výpis a formátovanie inštrukcíi kódu
+ *  @author Igar Sauchanka (xsauch00) Juraj Novosád(xnovos13)
  ********************************************************************************
 */
 
