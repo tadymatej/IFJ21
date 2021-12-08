@@ -1,3 +1,9 @@
+/**
+ * @author Matěj Žalmánek (xzalma00)
+ * @brief Deklarace struktur a funckí pro práci s datovou strukturou pro pole stringů
+ * @file strings_array.h
+ */ 
+
 #ifndef STRINGS_ARRAY
 #define STRINGS_ARRAY 1
 

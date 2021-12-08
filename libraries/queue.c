@@ -1,3 +1,9 @@
+/**
+ * @authors Igar Sauchanka (xsauch00), Matěj Žalmánek (xzalma00)
+ * @file scanner.c
+ * @brief Implementace fronty
+ */ 
+
 #include "queue.h"
 
 Queue_t* init_queue() {

@@ -25,11 +25,11 @@ echo "##########################################################################
 for f in *.tl; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    #cat $f | ../parser > .code/$f.code
-    cat $f | ../parser > .prg/$f.txt
-
+    #cat $f | ../parser > code/$f.code
+    cat $f | ../parser > prg/$f.txt
+    cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
-    #cat $f | ../parser  > .vzor/$f.txt
+    #cat $f | ../parser  > vzor/$f.txt
 
     case $? in
         0)
@@ -67,10 +67,11 @@ for f in *.tl; do
             ;;
     esac
 
-    #diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
+    #diff vzor/$f.txt vzor/$f.vzor > $f.diff
 
-    diff .prg/$f.txt .prg/$f.prg
-    #tail -1 .prg/$f.txt;
+    #diff prg/$f.txt prg/$f.prg
+    diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
+    #tail -1 prg/$f.txt;
     echo "";
 done
 echo ""
@@ -81,11 +82,11 @@ echo "##########################################################################
 for f in *.tl-err; do
     echo "----------------------------- $f -------------------------------" ;
     head -1 $f;
-    #cat $f | ../parser > .code/$f.code
-    cat $f | ../parser > .prg/$f.txt
-
+    #cat $f | ../parser > code/$f.code
+    cat $f | ../parser > prg/$f.txt
+    cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
-    #cat $f | ../parser > .vzor/$f.txt
+    #cat $f | ../parser > vzor/$f.txt
 
     case $? in
         0)
@@ -123,9 +124,10 @@ for f in *.tl-err; do
             ;;
     esac
 
-    #diff .vzor/$f.txt .vzor/$f.vzor > $f.diff
+    #diff vzor/$f.txt vzor/$f.vzor > $f.diff
 
-    diff .prg/$f.txt .prg/$f.prg
+    #diff prg/$f.txt prg/$f.prg
+    diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
 
 done
 echo ""

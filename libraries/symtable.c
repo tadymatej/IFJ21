@@ -1,3 +1,8 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00), Igar Sauchanka (xsauch00)
+ * @file symtable.c
+ * @brief Soubor sloužící jako implementace tabulky symbolů překladače
+ */ 
 #include "symtable.h"
 
 TreeNode *TreeNodeCreate() {

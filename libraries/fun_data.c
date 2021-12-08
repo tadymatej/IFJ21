@@ -1,3 +1,9 @@
+/**
+ * @brief 
+ * @author
+ * @file fun_data.c
+ */ 
+
 #include "fun_data.h"
 
 Fun_data_t *init_fun_data(char *name) {

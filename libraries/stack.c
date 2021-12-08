@@ -1,3 +1,9 @@
+/**
+ * @authors Matěj Žalmánek (xzalma00)
+ * @file stack.c
+ * @brief Implementace zásobníku s libovolnými daty
+ */ 
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
