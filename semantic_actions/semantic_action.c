@@ -22,14 +22,14 @@ int after_global_fun_call() {
 }
 
 // 3 - id
-int function_declaration(Token *token){
+int function_declaration(Token *token) {
     globals.cur_function = init_fun_data(token->attribute);
     RET_IF_NOT_SUCCESS(add_function_dec(globals.ft, globals.cur_function));
     return SEM_CORRECT;
 }
 
 // 12 - <first_type> / 15 - <type>
-int dec_init_arg_types(Token *token){
+int dec_init_arg_types(Token *token) {
     TS_data_t *arg = make_var_data(string_to_data_type(token->attribute), NULL, NULL);
     if (arg == NULL)
         return INTERNAL_ERROR;
@@ -38,7 +38,7 @@ int dec_init_arg_types(Token *token){
 }
 
 // 29 - <type> / 30 - <type>
-int dec_init_ret_vals(Token *token){
+int dec_init_ret_vals(Token *token) {
     return ret_val_dec(token);
 }
 
@@ -83,11 +83,11 @@ int fun_arg_definition(Token *token) {
 }
 
 // 23 - <function_body> / 22 - :
-int fun_arg_assignment(){
+int fun_arg_assignment() {
     ITOA(tmp, globals.ts->nested_identifier);
-    while(!q_is_empty(globals.q_assignments)){
+    while (!q_is_empty(globals.q_assignments)) {
         TS_data_t *data = q_pop(globals.q_assignments);
-        if(data != NULL)
+        if (data != NULL)
             RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, data->name, tmp))));
     }
     return SEM_CORRECT;
@@ -169,11 +169,11 @@ int push_parameter(Token *token) {
         break;
     case TOKEN_STRING:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, STRING, FUN_CALL_ERROR);
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_string(token->attribute))));
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("string", cg_format_string(token->attribute), NULL))));
         break;
     case TOKEN_NUMBER:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, NUMBER, FUN_CALL_ERROR);
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_float(token->attribute))));
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("float", cg_format_float(token->attribute), NULL))));
         break;
     case TOKEN_NUMBER_INT:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, INTEGER, FUN_CALL_ERROR);
@@ -201,18 +201,31 @@ int end_function_call() {
     RET_IF_NOT_SUCCESS(cg_envelope(cg_call_fun(globals.calling_fun->name)));
     globals.tmp = 0;
     if (globals.q_assignments->length != 0) {
-        if (globals.q_assignments->length > globals.calling_fun->ret_vals->length)
-            return FUN_CALL_ERROR;
-        for (int i = globals.calling_fun->ret_vals->length-1 ; i >= 0 && globals.q_assignments->length != 0; i--) {
-            TS_data_t *left = q_pop_back(globals.q_assignments);
-            Sym_table_t *foundIn;
-            find_variable(globals.ts, left->name, &foundIn);
-            ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
-            ITOA(suffix, foundIn->nested_identifier);
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(foundIn->prefix, left->name, suffix))));
+        if (((TS_data_t *)q_top(globals.q_assignments))->name != NULL) { // Kontrola jestli to neni return
+            if (globals.q_assignments->length > globals.calling_fun->ret_vals->length)
+                return FUN_CALL_ERROR;
+            for (int i = globals.calling_fun->ret_vals->length - 1; i >= 0 && globals.q_assignments->length != 0; i--) {
+                TS_data_t *left = q_pop_back(globals.q_assignments);
+                Sym_table_t *foundIn;
+                find_variable(globals.ts, left->name, &foundIn);
+                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
+                ITOA(suffix, foundIn->nested_identifier);
+                if (left->name != NULL)
+                    RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(foundIn->prefix, left->name, suffix))));
+            }
+        } else {
+            for (int i = 0; i < globals.calling_fun->ret_vals->length && globals.q_assignments->length != 0; i++) {
+                TS_data_t *left = q_pop(globals.q_assignments);
+                Sym_table_t *foundIn;
+                find_variable(globals.ts, left->name, &foundIn);
+                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
+                ITOA(suffix, foundIn->nested_identifier);
+                // if (left->name != NULL)
+                //     RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(foundIn->prefix, left->name, suffix))));
+            }
         }
-    }
-    RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_clear()));
+    } else
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_clear()));
     return SEM_CORRECT;
 }
 
@@ -227,7 +240,7 @@ int n_assignment_vars(Token *token) {
 
 //53 - <function_body>
 int end_n_assignment() {
-    if (globals.q_assignments->length != 0 && ((TS_data_t*)q_top(globals.q_assignments))->name != NULL) {
+    if (globals.q_assignments->length != 0 && ((TS_data_t *)q_top(globals.q_assignments))->name != NULL) {
         return FUN_CALL_ERROR;
     }
     return SEM_CORRECT;
@@ -247,17 +260,19 @@ int end_function_body() {
 }
 
 // 59 - return
-int start_return(){
+int start_return() {
     for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
+        //RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
         RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, fun_get_ret(globals.cur_function, i)));
     }
     return SEM_CORRECT;
 }
 
-int end_return(){
-    while(!q_is_empty(globals.q_assignments))
+int end_return() {
+    while (!q_is_empty(globals.q_assignments)) {
         q_pop(globals.q_assignments);
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
+    }
     RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_return()));
     return SEM_CORRECT;
