@@ -670,6 +670,7 @@ int cg_envelope(char *str) {
     } else {
         if(strncmp(str, "DEFVAR", 6) == 0){
           CODE_PRINT(printf("%s", str));
+          free(str);
         }
         else{
           q_push(globals.q_command, str);
