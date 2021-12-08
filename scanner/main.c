@@ -15,6 +15,10 @@ void normalPrint() {
         tokenPtr->attributeType = token.attributeType;
         tokenPtr->token_type = token.token_type;
         q_push(q, tokenPtr);
+        if(sc.actualState == STATE_ERR) {
+            printf("Chybaaa %d, %d\n", token.startPosRow, token.startPosCol);
+            return;
+        }
     }
     void *top;
     while((top = q_top(q)) != NULL) {
