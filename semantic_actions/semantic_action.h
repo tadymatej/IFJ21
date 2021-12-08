@@ -22,7 +22,7 @@
 #define INTERNAL_ERROR 99           // Interní chyba překladače
 #define SEM_CORRECT 0               // Chyba nenastala
 
-#define INCLUDE_BUILTIN 0
+#define INCLUDE_BUILTIN 1
 
 /**
  * Makro na kontrolu jestli to skončilo neuspěchem
