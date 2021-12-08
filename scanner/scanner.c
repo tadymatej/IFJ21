@@ -12,8 +12,6 @@ Token TokenCreate(TOKEN_TYPES token_type, ATTRIBUTE_TYPES attributeType, char *a
     return token;
 }
 
-#define COMMENT -10
-
 char *lex2String(int lex) {
     switch(lex) {
         case TOKEN_LEN: return "length"; break;
@@ -40,7 +38,6 @@ char *lex2String(int lex) {
         case TOKEN_END_BRACKET: return "end bracket";
         case TOKEN_NULL: return "null";
         case TOKEN_COMMA: return "comma";
-        case COMMENT: return "comment";
         case TOKEN_ID_F: return "id_f";
         case TOKEN_KEYWORD: return "keyword";
     }
@@ -140,7 +137,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
             else sc->actualState = STATE_ID_SPACE;
@@ -157,7 +157,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
             else sc->actualState = STATE_ID_SPACE;
@@ -174,7 +177,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
             else sc->actualState = STATE_ID_SPACE;
@@ -187,14 +193,20 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
             }
         } break;
         case STATE_ID_F: {
             sc->actualState = STATE_START;
             char *ptr = StringsArrayGetLastPointer(strArr);
-            StringsArrayPush(strArr, strArr->separator);
+            if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                ScSetMallocError(sc);
+                return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+            }
             updateScannerPosition(actualChar, sc);
             if(BinaryTreeFindByStr(sc->kw, ptr) != NULL) {
                 sc->col--;
@@ -230,7 +242,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         } break;
         case STATE_DOT: {
             if(actualChar == '.') sc->actualState = STATE_DOTF;
-            else sc->actualState = STATE_ERR;   //optional TODO: .0 aby vzalo jako 0.0
+            else sc->actualState = STATE_ERR;
         } break;
         case STATE_DOTF: {
             sc->actualState = STATE_START;
@@ -240,7 +252,7 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
         } break;
         case STATE_NOT: {
             if(actualChar == '=') sc->actualState = STATE_NOTEQ;
-            else sc->actualState = STATE_ERR;   //optional TODO: udělat negaci výrazu
+            else sc->actualState = STATE_ERR;
         } break;
         case STATE_NOTEQ: {
             sc->actualState = STATE_START;
@@ -359,7 +371,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             sc->actualState = STATE_START;
             sc->lastReadedChar = (int) actualChar;
             char *ptr = StringsArrayGetLastPointer(strArr);
-            StringsArrayPush(strArr, strArr->separator);
+            if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                ScSetMallocError(sc);
+                return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+            }
             return TokenCreate(TOKEN_STRING, ATTRIBUTE_STRING, ptr);
         } break;
         case STATE_NF1: {
@@ -371,7 +386,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_NUMBER_INT, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -391,7 +409,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -407,7 +428,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -427,7 +451,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
                 sc->actualState = STATE_START;
                 sc->lastReadedChar = (int) actualChar;
                 char *ptr = StringsArrayGetLastPointer(strArr);
-                StringsArrayPush(strArr, strArr->separator);
+                if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                    ScSetMallocError(sc);
+                    return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 return TokenCreate(TOKEN_NUMBER, ATTRIBUTE_STRING, ptr);
             }
         } break;
@@ -544,8 +571,7 @@ Token nextToken(ScannerContext *sc) {
         }
         if(statePushChar(sc)) {
             if(StringsArrayPush(strArr, c) == -1) {
-                sc->actualState = STATE_ERR;
-                sc->errorMalloc = true;
+                ScSetMallocError(sc);
                 TokenSetPosition(&token, row, col);
                 return token;
             }
@@ -565,7 +591,11 @@ Token nextToken(ScannerContext *sc) {
     if(c == EOF) {
         if(sc->actualState == STATE_ID_SPACE) { //NA ID čekal na not Whitespace, ale nedočkal se, tak ho donutím zde
             char *ptr = StringsArrayGetLastPointer(strArr);
-            StringsArrayPush(strArr, strArr->separator);
+            if(StringsArrayPush(strArr, strArr->separator) == -1) {
+                ScSetMallocError(sc);
+                TokenSetPosition(&token, row, col);
+                return token;
+            }
             token = TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
         }
     }
@@ -609,16 +639,18 @@ void TokenSetPosition(Token *token, int row, int col) {
     token->startPosCol = col;
 }
 
+void ScSetMallocError(ScannerContext *sc) {
+    sc->actualState = STATE_ERR;
+    sc->errorMalloc = true;
+}
+
 void NextTokens(ScannerContext *sc) {
-    Token token = TokenCreate(TOKEN_NONE, ATTRIBUTE_NONE, NULL);
-    token = nextToken(sc);
+    Token token = nextToken(sc);
     if(StringsArrayPush(strArr, '\0') == -1) {
         token.token_type = TOKEN_ERR;
-        sc->actualState = STATE_ERR;
-        sc->errorMalloc = true;
+        ScSetMallocError(sc);
         return;
     }
-    
     if(sc->actualState == STATE_ERR) {
         __TokenStore(token, sc);
         return;
@@ -628,7 +660,10 @@ void NextTokens(ScannerContext *sc) {
         if(BinaryTreeFindByStr(sc->kw, token.attribute) != NULL) {
             if(strcmp(token.attribute, "nil") == 0) token.token_type = TOKEN_NULL;
             else token.token_type = TOKEN_KEYWORD;
-            __TokenStore(token, sc);
+            if(__TokenStore(token, sc) == -1) {
+                ScSetMallocError(sc);
+                return;
+            }
         }
         else {
             Token token2 = nextToken(sc);
@@ -637,22 +672,26 @@ void NextTokens(ScannerContext *sc) {
                 else token2.token_type = TOKEN_KEYWORD;
             }
             if(sc->actualState == STATE_ERR) {
-                sc->actualState = STATE_START;  //Pokud narazil na chybu, vynuluju ji (aby neměla chyba přednost před výpisem tokenu)
                 token2.token_type = TOKEN_ERR;  //Uložím token.type = ERROR aby se později vědělo, že token byl chybný
                 __TokenStore(token, sc);
                 __TokenStore(token2, sc);
                 return;
             }
-
             if(token2.token_type == TOKEN_START_BRACKET)
                 token.token_type = TOKEN_ID_F;
             
-            __TokenStore(token, sc);
-            if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) __TokenStore(token2, sc);
-            token = token2;
+            if(__TokenStore(token, sc) == -1) 
+                ScSetMallocError(sc);
+            else if(token2.token_type != TOKEN_NONE && token2.token_type != TOKEN_START_BRACKET) {
+                if(__TokenStore(token2, sc) == -1) 
+                    ScSetMallocError(sc);   
+            }
         }
     }
-    else if(token.token_type != TOKEN_NONE) __TokenStore(token, sc);
+    else if(token.token_type != TOKEN_NONE) {
+        if(__TokenStore(token, sc) == -1)
+            ScSetMallocError(sc);
+    }
 }
 
 Token GetNextToken(ScannerContext *sc) {
@@ -667,7 +706,11 @@ Token GetNextToken(ScannerContext *sc) {
     if(sc->tokenLookAhead) { 
         if(!sc->getStoredToken) {
             void *tmp = q_top(sc->tokens);
-            TokenStore(token, sc);
+            if(TokenStore(token, sc) == -1) {
+                sc->actualState = STATE_ERR;
+                sc->errorMalloc = true;
+                return token;
+            }
             if(tmp != NULL) token = *((Token *) tmp);
             else token.token_type = TOKEN_NONE; //Pokud si uložili token a za uloženým tokenem nic není => byl tam EOF, vrátím TOKEN_NONE
             sc->tokenLookAhead = false;
@@ -707,7 +750,7 @@ int __TokenStore(Token token, ScannerContext *sc) {
     t->token_type = token.token_type;
     t->startPosRow = token.startPosRow;
     t->startPosCol = token.startPosCol;
-    q_push(sc->tokens, (void *) t);
+    if(q_push(sc->tokens, (void *) t) == 1) return -1;
     return 0;
 }
 
@@ -720,6 +763,6 @@ int TokenStore(Token token, ScannerContext *sc) {
     t->startPosRow = token.startPosRow;
     t->startPosCol = token.startPosCol;
     sc->getStoredToken = false;
-    q_push_front(sc->tokens, (void *) t);
+    if(q_push_front(sc->tokens, (void *) t) == 1) return -1;
     return 0;
 }

@@ -1,8 +1,13 @@
-#include "semantic_action.h"
+/**
+ * @brief Definice semantických akcí
+ * @author Igar Sauchanka (xsauch00)
+ * @file semantic_action.c
+ */ 
 
+#include "semantic_action.h"
+// Syntaktické pravidlo - token
 // 1 - require
 int jump_to_exec_point() {
-    //if((cg_envelope(cg_require("IFJcode21"))) != 0) return INTERNAL_ERROR;
     RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label("%exec_point", NULL, -1, globals.label_idx))));
     if (INCLUDE_BUILTIN)
         cg_builtin();
@@ -80,17 +85,6 @@ int fun_arg_definition(Token *token) {
     ITOA(tmp, globals.ts->nested_identifier);
     RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
-    return SEM_CORRECT;
-}
-
-// 23 - <function_body> / 22 - :
-int fun_arg_assignment() {
-    ITOA(tmp, globals.ts->nested_identifier);
-    while (!q_is_empty(globals.q_assignments)) {
-        TS_data_t *data = q_pop(globals.q_assignments);
-        if (data != NULL)
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, data->name, tmp))));
-    }
     return SEM_CORRECT;
 }
 
@@ -311,7 +305,7 @@ int end_n_assignment() {
 int end_function_body() {
     globals.nested_count = 0;
     globals.label_idx = 0;
-    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame()));  // Musi byt proveden pred zpracovanim return
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_pop_frame())); 
     for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
     }
@@ -324,7 +318,6 @@ int end_function_body() {
 // 59 - return
 int start_return() {
     for (int i = 0; i < globals.cur_function->ret_vals->length; i++) {
-        //RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
         RET_IF_NOT_SUCCESS(q_push(globals.q_assignments, fun_get_ret(globals.cur_function, i)));
     }
     return SEM_CORRECT;

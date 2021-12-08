@@ -8,6 +8,7 @@
 #define STRINGS_ARRAY 1
 
 #include "stdlib.h"
+#include "string.h"
 #include "queue.h"
 
 /**

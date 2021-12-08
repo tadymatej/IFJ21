@@ -30,20 +30,6 @@ char *cg_format_var(char *prefix, char *name, char *suffix) {
     return str;
 }
 
-/**
- * Muze vygenerovat lably dvou druhu (fun_name)_(name)_(n_id) nebo (fun_name)_(n_id)_(idx)
- * Kdyz name je zadano, tak vygeneruje (fun_name)_(name)_(n_id)  pro jump na konec ifu, zacatek/konec while
- * Kdyz name == NULL pak v zavislosti na idx a n_id vygeneruje vygeneruji ruzne lably
- *      idx > 0 && n_id > 0 - (fun_name)_(n_id)_(idx)   pro elseif jumpy
- *      idx < 0 && n_id < 0 - (fun_name)    pro volani
- *      idx > 0 && n_id < 0 - (fun_name)_(idx) pro generace exec_pointu
- *      idx < 0 && n_id > 0 - (fun_name)_(n_id) nevyuzito
- * @param fun_name - nazev funkce, ke ktere tento label patri
- * @param name - nazev konstrukce, ke ktere label patri
- * @param n_id - unikatni identifikator vnoreni konstrukce
- * @param idx - poradove cislo, ktere je pouzito pro lably pro opakijici se konstrukce
- * @return Vraci vygenerovany label. V pripade chyby NULL
-*/
 char *cg_format_label(char *fun_name, char *name, int n_id, int idx) {
     char *underscore = "_";
     char *id_str, *nid_str;

@@ -44,7 +44,7 @@ function main()
     local a : integer
     local b : number
     a = 1
-    b = 2
+    b = 2.5
     res = add(a, b)
     print(res)
     

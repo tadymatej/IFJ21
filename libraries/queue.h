@@ -15,7 +15,7 @@
  * Struktura sloužící jako element fronty 
  */ 
 typedef struct Q_Elem {
-    void *data; /**< Data prvku fronty */ 
+    void *data;             /**< Data prvku fronty */ 
     struct Q_Elem *next;    /**< Následovník prvku ve frontě */
 }Q_elem_t;
 
@@ -51,6 +51,7 @@ void* q_top(Queue_t *q);
 /**
  * Odebere z fronty první prvek
  * @param q Fronta, ze které má být odebrán první prvek
+ * @return Vrací data prvku ze začatku fronty
  */ 
 void* q_pop(Queue_t *q);
 
