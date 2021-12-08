@@ -84,7 +84,7 @@ Fun_table_t *init_fun_table() {
     table->defFunTree = NULL;
     table->builtinFunTree = NULL;
     if (__init_builtin(table) != 0){
-        dispose_fun_table(table);
+        dispose_fun_table(&table);
         return NULL;
     }
     return table;
