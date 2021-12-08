@@ -200,9 +200,13 @@ int push_parameter(Token *token) {
         RET_IF_NULL_ERR(globals.var, DEFINITON_ERROR);
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, globals.var->type, FUN_CALL_ERROR);
         ITOA(tmp, foundIn->nested_identifier);
-        if (fun_get_param(globals.calling_fun, globals.tmp)->type != globals.var->type)
+        if (fun_get_param(globals.calling_fun, globals.tmp)->type != globals.var->type){
             RET_IF_NOT_SUCCESS(cg_envelope(cg_int2float(cg_format_var("GF", "%cs", NULL), cg_format_var(foundIn->prefix, globals.var->name, tmp))));
-        string = cg_stack_push(cg_format_var("GF", "%cs", NULL));
+            string = cg_stack_push(cg_format_var("GF", "%cs", NULL));
+        }
+        else{
+            string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
+        }
         RET_IF_NULL(string);
         RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
