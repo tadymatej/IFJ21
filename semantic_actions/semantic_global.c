@@ -1,3 +1,9 @@
+/**
+ * @brief Definice funkcí pro práce s SemanticGlobals
+ * @author Igar Sauchanka (xsauch00)
+ * @file semantic_global.c
+ */ 
+
 #include "semantic_global.h"
 
 SemanticGlobals globals;

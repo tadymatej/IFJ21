@@ -32,19 +32,25 @@
 
 #define DATA_TYPES_COUNT 3  // pocet datovych typu v prog. jazyce
 
-typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t;
+typedef enum { NUMBER, INTEGER, STRING, BOOLEAN, NIL, NO_TYPE} DataTypes_t; // Výčtový typ reprezentující typ proměnné v tabulce symbolů
 
+/**
+ * Struktura reprezentující tabulku symbolů
+ */
 typedef struct Sym_table{
-  TreeNode *tree;
-  int nested_identifier;
-  char prefix[TF_LF_LEN];
-  struct Sym_table *upper;
+  TreeNode *tree;             /**< Binární strom, ve kterém budou uložené proměnné */
+  int nested_identifier;      /**< Úroven vnoření tabulky symbolů */
+  char prefix[TF_LF_LEN];     /**< Prefix tabulky stranek. Naleží do { "GF", "LF", "TF" } */
+  struct Sym_table *upper;    /**< Ukazatel na tabulku vyšší úrovni */
 }Sym_table_t;
 
+/**
+ * Struktura reprezentující proměnnou v tabulce symbolů
+ */
 typedef struct TS_data{
-  char *name;
-  DataTypes_t type;
-  char *value;
+  char *name;         /**< Název proměnné */
+  DataTypes_t type;   /**< Datový typ proměnné */
+  char *value;        /**< Hodnota proměnné */
 }TS_data_t;
 
 

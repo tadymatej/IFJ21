@@ -6,6 +6,12 @@
 
 #include "array.h"
 
+/**
+ * Zvětšuje velikost pole o dvakrát
+ * 
+ * @param arr  Ukazatel na inicializovanou strukturu Array_t
+ * @return Vrátí 0 v případě úspěchu. Jinak 1
+ */
 int __resize_array(Array_t *arr) {
     arr->size *= 2;
     void **tmp = (void **)realloc(arr->arr, sizeof(void *) * arr->size);
