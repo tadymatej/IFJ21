@@ -1153,15 +1153,6 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
             printf("---------------------------\n");
         #endif
 
-        #ifdef SEMANTIC_CONNECT
-            semantic = fun_arg_assignment();
-            if(semantic){
-                ErrMessage(semantic);
-                ErrMessagePossition(ptr);
-                return false;
-            }
-        #endif
-
         *ptr = Next(sc); if(errT != 0){return false;}
 
         // $24 <first_ret> => <type>
@@ -1247,12 +1238,6 @@ bool NReturn_fc(Token *ptr, ScannerContext *sc){
     #endif
 
     #ifdef SEMANTIC_CONNECT
-        semantic = fun_arg_assignment();
-        if(semantic){
-            ErrMessage(semantic);
-            ErrMessagePossition(ptr);
-            return false;
-        }
         semantic = is_dec_eq_to_def();
         if(semantic){
             ErrMessage(semantic);
