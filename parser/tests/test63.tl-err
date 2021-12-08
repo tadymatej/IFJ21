@@ -1,0 +1,13 @@
+require "ifj21"
+
+function main()
+    local a : integer = 0
+    local b : integer = 0
+
+    if a > 5 then
+        while b > 0 do
+            elseif a < 0 then
+        end
+    end 
+
+end

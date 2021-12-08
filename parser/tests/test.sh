@@ -27,7 +27,7 @@ for f in *.tl; do
     head -1 $f;
     #cat $f | ../parser > code/$f.code
     cat $f | ../parser > prg/$f.txt
-    cat comments/$f | ../parser > prg/comments/$f.txt
+    #cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
     #cat $f | ../parser  > vzor/$f.txt
 
@@ -69,8 +69,8 @@ for f in *.tl; do
 
     #diff vzor/$f.txt vzor/$f.vzor > $f.diff
 
-    #diff prg/$f.txt prg/$f.prg
-    diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
+    diff prg/$f.txt prg/$f.prg > $f.diff
+    #diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
     #tail -1 prg/$f.txt;
     echo "";
 done
@@ -84,7 +84,7 @@ for f in *.tl-err; do
     head -1 $f;
     #cat $f | ../parser > code/$f.code
     cat $f | ../parser > prg/$f.txt
-    cat comments/$f | ../parser > prg/comments/$f.txt
+    #cat comments/$f | ../parser > prg/comments/$f.txt
     # pro testovani po uprave PSA
     #cat $f | ../parser > vzor/$f.txt
 
@@ -126,8 +126,8 @@ for f in *.tl-err; do
 
     #diff vzor/$f.txt vzor/$f.vzor > $f.diff
 
-    #diff prg/$f.txt prg/$f.prg
-    diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
+    diff prg/$f.txt prg/$f.prg > $f.diff
+    #diff prg/comments/$f.txt prg/$f.prg > prg/comments/$f.diff
 
 done
 echo ""
