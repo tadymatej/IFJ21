@@ -74,8 +74,9 @@ char *cg_format_string(char *string) {
     int input_len = strlen(string) - 1;
     char *string_format = calloc(ESCAPE_LEN*input_len+1, 1);
     char buffer[ESCAPE_LEN+1] = {'0'};
-    if (string_format == NULL)
-        return NULL;
+    if (string_format == NULL){
+      return NULL;
+    }
     for (int input_index = 1, output_index = 0; input_index < input_len; input_index++, output_index++) {
         if(string[input_index] == '#' || string[input_index] <= ' '){
             snprintf(buffer, ESCAPE_LEN+1, "\\%03d", (int)string[input_index]);
