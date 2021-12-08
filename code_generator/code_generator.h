@@ -339,22 +339,49 @@ char *CG_JumpEQStack(char *label);
  */
 char *CG_JumpNEQStack(char *label);
 
+/**
+ * Implementácia funkcie reads z IFJ21 v IFJcode21
+ */
 void cg_reads();
 
+/**
+ * Implementácia funkcie readi z IFJ21 v IFJcode21
+ */
 void cg_readi();
 
+/**
+ * Implementácia funkcie readn z IFJ21 v IFJcode21
+ */
 void cg_readn();
 
+/**
+ * Implementácia funkcie tointeger z IFJ21 v IFJcode21
+ */
 void cg_tointeger();
 
+/**
+ * Implementácia funkcie substr z IFJ21 v IFJcode21
+ */
 void cg_substr();
 
+/**
+ * Implementácia funkcie ord z IFJ21 v IFJcode21
+ */
 void cg_ord();
 
+/**
+ * Implementácia funkcie chr z IFJ21 v IFJcode21
+ */
 void cg_chr();
 
+/**
+ * Implementácia funkcie write z IFJ21 v IFJcode21
+ */
 void cg_write();
 
+/**
+ * Združený výpis všetkých vstavaných funkcií
+ */
 void cg_builtin();
 /**
  * Obálka pre príkazy
