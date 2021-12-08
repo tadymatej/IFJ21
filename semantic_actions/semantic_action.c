@@ -274,7 +274,7 @@ int end_function_call() {
         } else {
             for (int i = 0; i < globals.calling_fun->ret_vals->length && globals.q_assignments->length != 0; i++) {
                 TS_data_t *left = q_pop(globals.q_assignments);
-                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);;
+                ASSIGNMENT_TYPE_CHECK(left->type, ((TS_data_t *)arr_get_element_at(globals.calling_fun->ret_vals, i))->type, FUN_CALL_ERROR);
             }
         }
     } else {
@@ -334,33 +334,29 @@ int end_return() {
 }
 
 //63 - if
-int enter_if(){
+int enter_if() {
     RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
-    if(!stack_empty(globals.blockStack)){
-        if(Stack_push(globals.label_stack, (void*)globals.label_idx, sizeof(int)) == -1)
-            return INTERNAL_ERROR;
-        globals.label_idx = 0;
-    }
+    if (Stack_push(globals.label_stack, (void *)globals.label_idx, sizeof(int)) == -1)
+        return INTERNAL_ERROR;
+    globals.label_idx = 0;
     stack_push(globals.blockStack, 'i');
     RET_IF_NOT_SUCCESS(error_e_stack);
     return SEM_CORRECT;
 }
 
 // 64 - elseif / 65 - else
-int next_cond_block(){
+int next_cond_block() {
     RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label(globals.cur_function->name, "end", globals.ts->nested_identifier, -1))));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
     return SEM_CORRECT;
 }
 
 // 62 - while
-int enter_while(){
+int enter_while() {
     RET_IF_NOT_SUCCESS(new_stack_frame(&globals.ts, "LF"));
-    if(!stack_empty(globals.blockStack)){
-        if(Stack_push(globals.label_stack, (void*)globals.label_idx, sizeof(int)) == -1)
-            return INTERNAL_ERROR;
-        globals.label_idx = 0;
-    }
+    if (Stack_push(globals.label_stack, (void *)globals.label_idx, sizeof(int)) == -1)
+        return INTERNAL_ERROR;
+    globals.label_idx = 0;
     stack_push(globals.blockStack, 'w');
     RET_IF_NOT_SUCCESS(error_e_stack);
     globals.inside_while++;
@@ -369,30 +365,30 @@ int enter_while(){
 }
 
 // 67 - end
-int exit_construction(){
-    switch(stack_top(globals.blockStack)){
-        case 'i':
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, "end", globals.ts->nested_identifier, -1))));
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
-            break;
-        case 'w':
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label(globals.cur_function->name, "startWhile", globals.ts->nested_identifier, -1))));
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
-            globals.inside_while--;
-            // if((--globals.inside_while) == 0){
-            //     print_command_queue()
-            // }
-            break;
-        default:
-            return OTHER_SEM_ERRORS;
-            break;
+int exit_construction() {
+    switch (stack_top(globals.blockStack)) {
+    case 'i':
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, "end", globals.ts->nested_identifier, -1))));
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
+        break;
+    case 'w':
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_jump(cg_format_label(globals.cur_function->name, "startWhile", globals.ts->nested_identifier, -1))));
+        RET_IF_NOT_SUCCESS(cg_envelope(cg_label(cg_format_label(globals.cur_function->name, NULL, globals.ts->nested_identifier, globals.label_idx++))));
+        globals.inside_while--;
+        // if((--globals.inside_while) == 0){
+        //     print_command_queue()
+        // }
+        break;
+    default:
+        return OTHER_SEM_ERRORS;
+        break;
     }
     StackItem *tmp = StackGetLast(globals.label_stack);
     RET_IF_NULL(tmp);
     globals.label_idx = (int)tmp->value;
     dispose_stack_frame(&globals.ts);
     stack_pop(globals.blockStack);
-    if(stack_empty(globals.blockStack))
+    if (stack_empty(globals.blockStack))
         globals.label_idx = 0;
     return SEM_CORRECT;
 }
