@@ -362,8 +362,10 @@ Token FSM(char actualChar, ScannerContext *sc, int *row, int *col) {
             if(b(actualChar)) {
                 char num[4] = {strArr->arr[strArr->len - 2], strArr->arr[strArr->len - 1], actualChar, '\0'};
                 int number = atoi(num);
-                if(number < 0 || number >= 256) 
+                if(number < 0 || number >= 256) {
+                    sc->actualState = STATE_ERR;
                     return TokenCreate(TOKEN_ERR, ATTRIBUTE_NONE, NULL);
+                }
                 sc->actualState = STATE_S3;
             }
             else sc->actualState = STATE_ERR;   //Špatný escape
