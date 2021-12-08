@@ -310,6 +310,11 @@ int precedence_analyzer(ScannerContext *sc, call_type_t call_type) {
     operator = precedence_table[symb_to_index(top_stack_operand)][symb_to_index(token_operator)];
 
     top = stack_top(stack);
+    if(top == NT && symb_syntax_index(token_operator) == 0) {
+      TokenStore(token, sc);
+      error_code = SYNTAX_ERR;
+      break;
+    }
     syntax_check = syntax_table[symb_syntax_index(top)][symb_syntax_index(token_operator)];
     if(!syntax_check){
       TokenStore(token, sc);
