@@ -120,9 +120,13 @@ char *cg_format_string(char *string) {
                     break;
                 default:
                     if(isdigit(string[input_index+1])){
-                        string_format[output_index++] = string[input_index++];
-                        string_format[output_index++] = string[input_index++];
-                        string_format[output_index] = string[input_index];
+                      memcpy(&string_format[output_index], &string[input_index], ESCAPE_LEN);
+                      output_index += ESCAPE_LEN - 1;
+                      input_index += ESCAPE_LEN - 1;
+                      if(strtol(&string_format[output_index - 2], NULL, 10) > 255) {
+                          free(string_format);
+                          return NULL;
+                      }
                     }
             }
         }
@@ -659,17 +663,12 @@ void cg_builtin(){
 int cg_envelope(char *str) {
     if (str == NULL)
         return 99;
-    if (globals.inside_while == 0) {
+    if (globals.inside_while == 0 || strncmp(str, "DEFVAR", 6) == 0) {
         print_command_queue(globals.q_command);
         CODE_PRINT(printf("%s", str));
         free(str);
     } else {
-        if(strncmp(str, "DEFVAR", 6) == 0){
-          CODE_PRINT(printf("%s", str));
-        }
-        else{
-          q_push(globals.q_command, str);
-        }
+        q_push(globals.q_command, str);
     }
     return 0;
 }
