@@ -29,13 +29,13 @@ FILES_TO_PACK = ./Makefile ./main.c ${SCANNER_PATH}scanner.c ${SCANNER_PATH}scan
 				${LIB_PATH}fun_data.c ${LIB_PATH}fun_data.h ${LIB_PATH}fun_table.c ${LIB_PATH}fun_table.h ${LIB_PATH}queue.c ${LIB_PATH}queue.h \
 				${LIB_PATH}simple_stack.c ${LIB_PATH}simple_stack.h ${LIB_PATH}stack.c ${LIB_PATH}stack.h ${LIB_PATH}symtable.c ${LIB_PATH}symtable.h \
 				${LIB_PATH}ts_handler.c ${LIB_PATH}ts_handler.h ${LIB_PATH}strings_array.h ${LIB_PATH}strings_array.c ${LIB_PATH}cg_expression_tree.c \
-				rozdeleni #${DOC_PATH}dokumentace.pdf
+				rozdeleni ${DOC_PATH}dokumentace.pdf
 
 FILES_TO_PACK_REMOVE = ./Makefile ./main.c scanner.c scanner.h parser.c parser.h precedence_analyzer.c precedence_analyzer.h semantic_action.c \
 						semantic_action.h semantic_global.c semantic_global.h semantic_bottom_up.c semantic_bottom_up.h code_generator.c \
 						code_generator.h array.c array.h expression_tree.c expression_tree.h fun_data.c fun_data.h fun_table.c fun_table.h \
 						queue.c queue.h simple_stack.c simple_stack.h stack.c stack.h symtable.c symtable.h ts_handler.c ts_handler.h strings_array.c strings_array.h \
-						cg_expression_tree.c rozdeleni #dokumentace.pdf
+						cg_expression_tree.c rozdeleni dokumentace.pdf
 
 SEMANTIC_BOTTOM_UP_DEPS=$(CODE_GEN_PATH)$(CODE_GEN).c $(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_ACTION).c $(SEMANTIC_ACTIONS_PATH)$(SEMANTIC_GLOBAL).c $(SCANNER_PATH)scanner.c $(ANALYZER_PATH)$(ANALYZER).c $(SEMANTIC_BOTTOM_PATH)*.c $(LIB_PATH)*.c
 PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
@@ -83,7 +83,7 @@ pack:
 	if [ -s "${DIR_BEFORE_REPO}xzalma00.zip" ]; then rm -rf ${DIR_BEFORE_REPO}xzalma00.zip; fi
 	cp ${FILES_TO_PACK} ${DIR_BEFORE_REPO}
 	python3 makefile_changes.py > ${DIR_BEFORE_REPO}Makefile
-	cd ${DIR_BEFORE_REPO} && zip xzalma00.zip ${FILES_TO_PACK_REMOVE} && rm ${FILES_TO_PACK_REMOVE}
+	cd ${DIR_BEFORE_REPO} && zip -9 -r xzalma00.zip ${FILES_TO_PACK_REMOVE} && rm ${FILES_TO_PACK_REMOVE}
 
 clean:
 	rm -f *.o build/$(PROGS)
