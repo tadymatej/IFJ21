@@ -1,13 +1,14 @@
 /********************************************************************************
  *  Projekt - Prekladač
- *  Súbor: code_generator.c
- *  Popis: Metódy na výpis a formátovanie inštrukcíi kódu
+ *  @file code_generator.c
+ *  @brief Metódy na výpis a formátovanie inštrukcíi kódu
+ *  @author Igar Sauchanka (xsauch00) Juraj Novosád(xnovos13)
  ********************************************************************************
 */
 
 #include "code_generator.h"
 
-char *cg_format_var(char *prefix, char *name, char *suffix) {  //TODO function to convert string to ifjcode compatible format
+char *cg_format_var(char *prefix, char *name, char *suffix) {
     char *underscore = "_";
     if (suffix == NULL) {  //konstanty nemaju suffix
         suffix = "";
@@ -494,7 +495,7 @@ char *CG_JumpNEQStack(char *label){
 }
 
 void cg_reads(){
-  CODE_PRINT(printf("LABEL reads\n"
+  CODE_PRINT(printf("\nLABEL $reads\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_string\n"
                     "READ LF@ret_string string\n"
@@ -504,7 +505,7 @@ void cg_reads(){
 }
 
 void cg_readi(){
-  CODE_PRINT(printf("LABEL readi\n"
+  CODE_PRINT(printf("\nLABEL $readi\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_int\n"
                     "READ LF@ret_int int\n"
@@ -514,7 +515,7 @@ void cg_readi(){
 }
 
 void cg_readn(){
-  CODE_PRINT(printf("LABEL readn\n"
+  CODE_PRINT(printf("\nLABEL $readn\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@ret_num\n"
                     "READ LF@ret_num float\n"
@@ -524,7 +525,7 @@ void cg_readn(){
 }
 
 void cg_tointeger(){
-  CODE_PRINT(printf("LABEL tointeger\n"
+  CODE_PRINT(printf("\nLABEL $tointeger\n"
                     "PUSHFRAME\n \n"
                     "DEFVAR LF@number\n"
                     "DEFVAR LF@cv_0\n"
@@ -543,7 +544,7 @@ void cg_tointeger(){
 }
 
 void cg_substr(){
-  CODE_PRINT(printf("LABEL substr\n"
+  CODE_PRINT(printf("\nLABEL $substr\n"
                     "PUSHFRAME\n\n"
                     "DEFVAR LF@s\n"
                     "POPS LF@s\n"
@@ -581,7 +582,7 @@ void cg_substr(){
 }
 
 void cg_ord(){
-  CODE_PRINT(printf("LABEL ord\n"
+  CODE_PRINT(printf("\nLABEL $ord\n"
                     "PUSHFRAME\n"
                     "DEFVAR LF@s\n"
                     "POPS LF@s\n"
@@ -607,7 +608,7 @@ void cg_ord(){
 }
 
 void cg_chr(){
-  CODE_PRINT(printf("LABEL chr\n"
+  CODE_PRINT(printf("\nLABEL $chr\n"
                     "PUSHFRAME\n \n"
                     "DEFVAR LF@i\n"
                     "POPS LF@i \n"
@@ -626,7 +627,7 @@ void cg_chr(){
 }
 
 void cg_write(){
-  CODE_PRINT(printf("LABEL write\n"
+  CODE_PRINT(printf("\nLABEL $write\n"
                     "PUSHFRAME\n\n"
                     "DEFVAR LF@value\n"
                     "POPS LF@value\n"
@@ -657,15 +658,19 @@ int cg_envelope(char *str) {
     if (str == NULL)
         return 99;
     if (!globals.inside_while || strncmp(str, "DEFVAR", 6) == 0) {
-        while (q_top(globals.q_command) != NULL) {
-            char *tmp = (char *)q_pop(globals.q_command);
-            CODE_PRINT(printf("%s", tmp));
-            free(tmp);
-        }
+        print_command_queue(globals.q_command);
         CODE_PRINT(printf("%s", str));
         free(str);
     } else {
         q_push(globals.q_command, str);
     }
     return 0;
+}
+
+void print_command_queue(Queue_t *q){
+  while (q_top(q) != NULL) {
+    char *tmp = (char *)q_pop(q);
+    CODE_PRINT(printf("%s", tmp));
+    free(tmp);
+  }
 }

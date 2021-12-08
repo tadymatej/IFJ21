@@ -40,7 +40,7 @@ PARSER_DEPS=$(SEMANTIC_BOTTOM_UP_DEPS) main.c $(PARSER_PATH)parser.c
 CC=gcc
 CFLAGS=-std=c99 -Wall -Wextra -pedantic -lm -I$(LIB_PATH) -I$(ANALYZER_PATH) -I$(SCANNER_PATH) -I$(SEMANTIC_BOTTOM_PATH) -I$(SEMANTIC_ACTIONS_PATH) -I$(PARSER_PATH) -I$(CODE_GEN_PATH) -I$(CODE_GENERATOR_PATH) -fcommon -g
 
-.PHONY: run_stack run_analyzer run_bottom_up run_parser clean
+.PHONY: run_stack run_analyzer run_bottom_up run_parser clean parser
 
 all: $(PROGS)
 

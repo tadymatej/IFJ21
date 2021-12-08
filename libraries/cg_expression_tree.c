@@ -134,8 +134,8 @@ int exp_cg_cond(exp_node_t *dest, exp_node_t *left_side, exp_node_t *right_side)
   left_string = exp_format_node(left_side);
   right_string = exp_format_node(right_side);
   dest_string = exp_format_node(dest);
-  label = cg_format_label(globals.cur_function->name, "end", globals.nested_count, -1);
-  //label = cg_format_label(globals.cur_function->name,  NULL, globals.ts->nested_identifier,  globals.label_idx);
+  //label = cg_format_label(globals.cur_function->name, "end", globals.nested_count, -1);
+  label = cg_format_label(globals.cur_function->name,  NULL, globals.ts->nested_identifier,  globals.label_idx);
   if (label == NULL || dest_string == NULL || right_string == NULL || left_string == NULL) return COMPILER_ERR;
 
   switch(dest->type){

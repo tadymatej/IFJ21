@@ -80,8 +80,8 @@ int fun_arg_definition(Token *token) {
         return INTERNAL_ERROR;
     RET_IF_NOT_SUCCESS(fun_add_param(globals.cur_function, copy));
     ITOA(tmp, globals.ts->nested_identifier);
-    RET_IF_NOT_SUCCESS(q_push_front(globals.q_assignments, globals.var));
     RET_IF_NOT_SUCCESS(cg_envelope(cg_define_var(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
+    RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_pop(cg_format_var(globals.ts->prefix, globals.var->name, tmp))));
     return SEM_CORRECT;
 }
 
@@ -156,31 +156,43 @@ int start_function_call(Token *token) {
 int push_parameter(Token *token) {
     if (globals.calling_fun->params->length == -1) {
         Sym_table_t *foundIn;
-        char *string;
+        char *string, *str2;
         switch (token->token_type) {
         case TOKEN_ID:
             globals.var = find_variable(globals.ts, token->attribute, &foundIn);
             if (globals.var == NULL)
                 return DEFINITON_ERROR;
             ITOA(tmp, foundIn->nested_identifier);
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp))));
+            string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
+            if(string == NULL)
+                return INTERNAL_ERROR;
+            RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
             break;
         case TOKEN_STRING:
             string = cg_format_string(token->attribute);
             if (string == NULL)
                 return INTERNAL_ERROR;
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("string", string, NULL))));
+            str2 = cg_stack_push(cg_format_var("string", string, NULL));
+            if(str2 == NULL)
+                return INTERNAL_ERROR;
+            RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
             free(string);
             break;
         case TOKEN_NUMBER:
             string = cg_format_float(token->attribute);
             if (string == NULL)
                 return INTERNAL_ERROR;
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("float", string, NULL))));
+            str2 = cg_stack_push(cg_format_var("float", string, NULL));
+            if(str2 == NULL)
+                return INTERNAL_ERROR;
+            RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
             free(string);
             break;
         case TOKEN_NUMBER_INT:
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("int", token->attribute, NULL))));
+            string = cg_stack_push(cg_format_var("int", token->attribute, NULL));
+            if(string == NULL)
+                return INTERNAL_ERROR;
+            RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
             break;
         case TOKEN_NULL:
             break;
@@ -194,6 +206,7 @@ int push_parameter(Token *token) {
         return FUN_CALL_ERROR;
     Sym_table_t *foundIn;
     char *string;
+    char *str2;
     switch (token->token_type) {
     case TOKEN_ID:
         globals.var = find_variable(globals.ts, token->attribute, &foundIn);
@@ -203,14 +216,20 @@ int push_parameter(Token *token) {
         ITOA(tmp, foundIn->nested_identifier);
         if (fun_get_param(globals.calling_fun, globals.tmp)->type != globals.var->type)
             RET_IF_NOT_SUCCESS(cg_envelope(cg_int2float(cg_format_var(foundIn->prefix, globals.var->name, tmp), cg_format_var(foundIn->prefix, globals.var->name, tmp))));
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp))));
+        string = cg_stack_push(cg_format_var(foundIn->prefix, globals.var->name, tmp));
+        if(string == NULL)
+            return INTERNAL_ERROR;
+        RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     case TOKEN_STRING:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, STRING, FUN_CALL_ERROR);
         string = cg_format_string(token->attribute);
         if (string == NULL)
             return INTERNAL_ERROR;
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("string", string, NULL))));
+        str2 = cg_stack_push(cg_format_var("string", string, NULL));
+        if(str2 == NULL)
+            return INTERNAL_ERROR;
+        RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
         free(string);
         break;
     case TOKEN_NUMBER:
@@ -218,19 +237,28 @@ int push_parameter(Token *token) {
         string = cg_format_float(token->attribute);
         if (string == NULL)
             return INTERNAL_ERROR;
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("float", string, NULL))));
+        str2 = cg_stack_push(cg_format_var("float", string, NULL));
+        if(str2 == NULL)
+            return INTERNAL_ERROR;
+        RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, str2));
         free(string);
         break;
     case TOKEN_NUMBER_INT:
         ASSIGNMENT_TYPE_CHECK(fun_get_param(globals.calling_fun, globals.tmp)->type, INTEGER, FUN_CALL_ERROR);
         if ((fun_get_param(globals.calling_fun, globals.tmp)->type) != INTEGER) {
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("float", token->attribute, NULL))));
+            string = cg_stack_push(cg_format_var("float", token->attribute, NULL));
         } else {
-            RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("int", token->attribute, NULL))));
+            string = cg_stack_push(cg_format_var("int", token->attribute, NULL));
         }
+        if(string == NULL)
+            return INTERNAL_ERROR;
+        RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     case TOKEN_NULL:
-        RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
+        string = cg_stack_push(cg_format_var("nil", "nil", NULL));
+        if(string == NULL)
+            return INTERNAL_ERROR;
+        RET_IF_NOT_SUCCESS(q_push_front(globals.q_args, string));
         break;
     default:
         return OTHER_SEM_ERRORS;
@@ -245,6 +273,7 @@ int end_function_call() {
     if (globals.calling_fun->params->length == -1) {
         RET_IF_NOT_SUCCESS(cg_envelope(cg_stack_push(cg_format_var("nil", "nil", NULL))));
     }
+    print_command_queue(globals.q_args);
     if (globals.calling_fun->params->length != globals.tmp && globals.calling_fun->params->length != -1)
         return FUN_CALL_ERROR;
     RET_IF_NOT_SUCCESS(cg_envelope(cg_call_fun(globals.calling_fun->name)));
