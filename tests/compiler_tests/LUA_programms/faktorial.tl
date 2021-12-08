@@ -11,7 +11,7 @@ function main()
     -- Vypíše prvních faktoriál čísel <0, 10>
     local a : integer = 0
     while a < 11 do
-        local fact : integer = factorial(a)
+        local fact = factorial(a)
         print(fact)
         a = a + 1
     end
