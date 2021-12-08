@@ -23,7 +23,6 @@ int after_global_fun_call() {
 
 // 3 - id
 int function_declaration(Token *token){
-    printf("%s\n", token->attribute);
     globals.cur_function = init_fun_data(token->attribute);
     RET_IF_NOT_SUCCESS(add_function_dec(globals.ft, globals.cur_function));
     return SEM_CORRECT;
@@ -228,7 +227,7 @@ int n_assignment_vars(Token *token) {
 
 //53 - <function_body>
 int end_n_assignment() {
-    if (globals.q_assignments->length != 0) {
+    if (globals.q_assignments->length != 0 && ((TS_data_t*)q_top(globals.q_assignments))->name != NULL) {
         return FUN_CALL_ERROR;
     }
     return SEM_CORRECT;
