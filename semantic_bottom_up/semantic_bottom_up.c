@@ -177,7 +177,10 @@ int make_assignment(exp_tree_stack_t *stack, call_type_t call_type){
   if(left_data != NULL){
     GET_OPERAND(right_side, stack);
     ret_type = ret_types_table[map_token_types(TOKEN_SET)][left_data->type][right_side->data->type];
-    if(ret_type == NO_TYPE) return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
+    if(ret_type == NO_TYPE) {
+      destroy_tree(right_side);
+      return SEMANTIC_TYPE_ERR; // ak nie su typovo kompatibilne
+    }
     CONVERSION_MACRO(right_side, NULL, ret_type, as_count, AS_NAME);
 
     if(left_data->name == NULL){
@@ -192,7 +195,10 @@ int make_assignment(exp_tree_stack_t *stack, call_type_t call_type){
         return COMPILER_ERR;
       }
       retval = add_id_node(stack, left_data, temp_table->nested_identifier, TOKEN_ID, temp_table->prefix);
-      if(retval != 0) return COMPILER_ERR;
+      if(retval != 0) {
+        destroy_tree(right_side);
+        return COMPILER_ERR;
+      }
       GET_OPERAND(left_side, stack);
       operator_merge(stack, TOKEN_SET, NULL, 0, "", left_side, right_side);
       CODE_PRINT(retval = exp_cg_set(left_side, right_side));

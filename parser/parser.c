@@ -99,7 +99,6 @@ Token Next(ScannerContext *sc){
     else if(token.token_type == TOKEN_NONE){
         // doceten vstup do konce
 
-        // TODO
         isEnd = true;
     } else {
         #ifdef SHOW_TOKENS
@@ -833,8 +832,6 @@ bool NRet(Token *ptr, ScannerContext *sc){
         printf("$61 <list> => <function_body>\n");
         printf("---------------------------\n");
     #endif
-
-    // TODO mrtvy kod
     */
     return ret;
 } 
@@ -1665,7 +1662,7 @@ int Parse(){
 
     //printf("%d\n", semantic);
 
-    if(psa == 0 && OK != true && semantic == 0){
+    if(psa == 0 && OK != true && semantic == 0 && errT != 1){
         ErrMessage(SYNTAX_ERR);
         ErrMessagePossition(token);
     }

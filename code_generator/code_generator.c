@@ -106,9 +106,13 @@ char *cg_format_string(char *string) {
                     break;
                 default:
                     if(isdigit(string[input_index+1])){
-                        string_format[output_index++] = string[input_index++];
-                        string_format[output_index++] = string[input_index++];
-                        string_format[output_index] = string[input_index];
+                      memcpy(&string_format[output_index], &string[input_index], ESCAPE_LEN);
+                      output_index += ESCAPE_LEN - 1;
+                      input_index += ESCAPE_LEN - 1;
+                      if(strtol(&string_format[output_index - 2], NULL, 10) > 255) {
+                          free(string_format);
+                          return NULL;
+                      }
                     }
             }
         }
@@ -295,7 +299,7 @@ char *cg_jumpeq(char *label, char *left, char *right){
     free(left);
     return NULL;
   }
-  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ %s %s %s\n") , (sprintf(str, "JUMPIFEQ %s %s %s\n", label, left, right), free(label), free(left)));
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFEQ $%s %s %s\n") , (sprintf(str, "JUMPIFEQ $%s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *cg_jumpneq(char *label, char *left, char *right){
@@ -304,7 +308,7 @@ char *cg_jumpneq(char *label, char *left, char *right){
     free(left);
     return NULL;
   }
-  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ %s %s %s\n") , (sprintf(str, "JUMPIFNEQ %s %s %s\n", label, left, right), free(label), free(left)));
+  function_templ(strlen(label) + strlen(left) + strlen(right) + strlen("JUMPIFNEQ $%s %s %s\n") , (sprintf(str, "JUMPIFNEQ $%s %s %s\n", label, left, right), free(label), free(left)));
 }
 
 char *CG_GetChar(char *dest, char *string, char *index){
