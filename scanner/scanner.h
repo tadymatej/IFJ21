@@ -180,5 +180,12 @@ bool statePushChar(ScannerContext *sc);
  */
 Token processOnceReadedChar(ScannerContext *sc, int *row, int *col);
 
+/**
+ * Upraví pozici tokenu
+ * @param token Token, kterému se má upravit pozice
+ * @param row Řádek, na kterém se token nachází
+ * @param col Sloupec, na kterém se token nachází
+ */ 
+void TokenSetPosition(Token *token, int row, int col);
 
 #endif

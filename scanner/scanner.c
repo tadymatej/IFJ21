@@ -552,8 +552,11 @@ Token nextToken(ScannerContext *sc) {
         }
     }
     if(c == EOF) {
-        sc->row = row;
-        sc->col = col;
+        if(sc->actualState == STATE_ID_SPACE) { //NA ID čekal na not Whitespace, ale nedočkal se, tak ho donutím zde
+            char *ptr = StringsArrayGetLastPointer(strArr);
+            StringsArrayPush(strArr, strArr->separator);
+            token = TokenCreate(TOKEN_ID, ATTRIBUTE_STRING, ptr);
+        }
     }
     TokenSetPosition(&token, row, col);
     return token;
